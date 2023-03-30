@@ -1,0 +1,318 @@
+﻿@model IEnumerable<CollegeSchedule.Models.Schedule>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - CollegeSchedule</title>
+    <link rel="stylesheet" href="~/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <table class="schedule_table">
+        <tr>
+            <th class="days">Дни</th>
+            <th class="number">№</th>
+            <th class="time">Время</th>
+            <th class="cabinet">Кабинет</th>
+            <th class="group">@ViewData["group"]</th>
+            <th class="teacher">Препод.</th>
+        </tr>
+        <tr>
+            <th rowspan="4" class="day_of_the_week">Понедельник</th>
+            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 1 && s.SubjectNumber == 1))
+            {
+                <th>@item.SubjectNumber</th>
+                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
+                <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
+                <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
+                <th><input class="schedule_input" type="text" onchange="editTeacher(@item.Id, this.value)" autocomplete="off" value="@item.Teacher" /></th>
+            }
+        </tr>
+        <tr>
+            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 1 && s.SubjectNumber == 2))
+            {
+                <th>@item.SubjectNumber</th>
+                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
+                <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
+                <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
+                <th><input class="schedule_input" type="text" onchange="editTeacher(@item.Id, this.value)" autocomplete="off" value="@item.Teacher" /></th>
+            }
+        </tr>
+        <tr>
+            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 1 && s.SubjectNumber == 3))
+            {
+                <th>@item.SubjectNumber</th>
+                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
+                <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
+                <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
+                <th><input class="schedule_input" type="text" onchange="editTeacher(@item.Id, this.value)" autocomplete="off" value="@item.Teacher" /></th>
+            }
+        </tr>
+        <tr>
+            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 1 && s.SubjectNumber == 4))
+            {
+                <th>@item.SubjectNumber</th>
+                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
+                <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
+                <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
+                <th><input class="schedule_input" type="text" onchange="editTeacher(@item.Id, this.value)" autocomplete="off" value="@item.Teacher" /></th>
+            }
+        </tr>
+        <tr>
+            <th rowspan="4" class="day_of_the_week">Вторник</th>
+            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 2 && s.SubjectNumber == 1))
+            {
+                <th>@item.SubjectNumber</th>
+                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
+                <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
+                <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
+                <th><input class="schedule_input" type="text" onchange="editTeacher(@item.Id, this.value)" autocomplete="off" value="@item.Teacher" /></th>
+            }
+        </tr>
+        <tr>
+            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 2 && s.SubjectNumber == 2))
+            {
+                <th>@item.SubjectNumber</th>
+                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
+                <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
+                <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
+                <th><input class="schedule_input" type="text" onchange="editTeacher(@item.Id, this.value)" autocomplete="off" value="@item.Teacher" /></th>
+            }
+        </tr>
+        <tr>
+            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 2 && s.SubjectNumber == 3))
+            {
+                <th>@item.SubjectNumber</th>
+                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
+                <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
+                <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
+                <th><input class="schedule_input" type="text" onchange="editTeacher(@item.Id, this.value)" autocomplete="off" value="@item.Teacher" /></th>
+            }
+        </tr>
+        <tr>
+            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 2 && s.SubjectNumber == 4))
+            {
+                <th>@item.SubjectNumber</th>
+                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
+                <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
+                <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
+                <th><input class="schedule_input" type="text" onchange="editTeacher(@item.Id, this.value)" autocomplete="off" value="@item.Teacher" /></th>
+            }
+        </tr>
+        <tr>
+            <th rowspan="4" class="day_of_the_week">Среда</th>
+            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 3 && s.SubjectNumber == 1))
+            {
+                <th>@item.SubjectNumber</th>
+                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
+                <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
+                <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
+                <th><input class="schedule_input" type="text" onchange="editTeacher(@item.Id, this.value)" autocomplete="off" value="@item.Teacher" /></th>
+            }
+        </tr>
+        <tr>
+            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 3 && s.SubjectNumber == 2))
+            {
+                <th>@item.SubjectNumber</th>
+                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
+                <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
+                <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
+                <th><input class="schedule_input" type="text" onchange="editTeacher(@item.Id, this.value)" autocomplete="off" value="@item.Teacher" /></th>
+            }
+        </tr>
+        <tr>
+            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 3 && s.SubjectNumber == 3))
+            {
+                <th>@item.SubjectNumber</th>
+                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
+                <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
+                <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
+                <th><input class="schedule_input" type="text" onchange="editTeacher(@item.Id, this.value)" autocomplete="off" value="@item.Teacher" /></th>
+            }
+        </tr>
+        <tr>
+            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 3 && s.SubjectNumber == 4))
+            {
+                <th>@item.SubjectNumber</th>
+                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
+                <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
+                <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
+                <th><input class="schedule_input" type="text" onchange="editTeacher(@item.Id, this.value)" autocomplete="off" value="@item.Teacher" /></th>
+            }
+        </tr>
+        <tr>
+            <th rowspan="4" class="day_of_the_week">Четверг</th>
+            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 4 && s.SubjectNumber == 1))
+            {
+                <th>@item.SubjectNumber</th>
+                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
+                <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
+                <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
+                <th><input class="schedule_input" type="text" onchange="editTeacher(@item.Id, this.value)" autocomplete="off" value="@item.Teacher" /></th>
+            }
+        </tr>
+        <tr>
+            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 4 && s.SubjectNumber == 2))
+            {
+                <th>@item.SubjectNumber</th>
+                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
+                <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
+                <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
+                <th><input class="schedule_input" type="text" onchange="editTeacher(@item.Id, this.value)" autocomplete="off" value="@item.Teacher" /></th>
+            }
+        </tr>
+        <tr>
+            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 4 && s.SubjectNumber == 3))
+            {
+                <th>@item.SubjectNumber</th>
+                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
+                <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
+                <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
+                <th><input class="schedule_input" type="text" onchange="editTeacher(@item.Id, this.value)" autocomplete="off" value="@item.Teacher" /></th>
+            }
+        </tr>
+        <tr>
+            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 4 && s.SubjectNumber == 4))
+            {
+                <th>@item.SubjectNumber</th>
+                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
+                <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
+                <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
+                <th><input class="schedule_input" type="text" onchange="editTeacher(@item.Id, this.value)" autocomplete="off" value="@item.Teacher" /></th>
+            }
+        </tr>
+        <tr>
+            <th rowspan="4" class="day_of_the_week">Пятница</th>
+            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 5 && s.SubjectNumber == 1))
+            {
+                <th>@item.SubjectNumber</th>
+                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
+                <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
+                <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
+                <th><input class="schedule_input" type="text" onchange="editTeacher(@item.Id, this.value)" autocomplete="off" value="@item.Teacher" /></th>
+            }
+        </tr>
+        <tr>
+            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 5 && s.SubjectNumber == 2))
+            {
+                <th>@item.SubjectNumber</th>
+                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
+                <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
+                <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
+                <th><input class="schedule_input" type="text" onchange="editTeacher(@item.Id, this.value)" autocomplete="off" value="@item.Teacher" /></th>
+            }
+        </tr>
+        <tr>
+            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 5 && s.SubjectNumber == 3))
+            {
+                <th>@item.SubjectNumber</th>
+                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
+                <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
+                <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
+                <th><input class="schedule_input" type="text" onchange="editTeacher(@item.Id, this.value)" autocomplete="off" value="@item.Teacher" /></th>
+            }
+        </tr>
+        <tr>
+            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 5 && s.SubjectNumber == 4))
+            {
+                <th>@item.SubjectNumber</th>
+                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
+                <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
+                <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
+                <th><input class="schedule_input" type="text" onchange="editTeacher(@item.Id, this.value)" autocomplete="off" value="@item.Teacher" /></th>
+            }
+        </tr>
+    </table>
+
+    <div class="back_to_main">
+        <a class="back_btn" asp-action="GroupList" asp-controller="Home" asp-route-cource="@ViewData["cource"]"><i class="fa-solid fa-chevron-left"></i></a>
+    </div>
+
+
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/js/jquery-3.6.3.js"></script>
+    <script src="~/js/jquery-3.6.3.min.js"></script>
+</body>
+</html>
+
+<script type="text/javascript">
+    function editTime(scheduleId, lessonTime) {
+        $.ajax({
+            url: "/home/EditLessonTime",
+            method: "POST",
+            dataType: "json",
+            data: { id: scheduleId, time: lessonTime },
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+
+    function editRoom(scheduleId, roomNumber) {
+        $.ajax({
+            url: "/home/EditRoom",
+            method: "POST",
+            dataType: "json",
+            data: { id: scheduleId, room: roomNumber },
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+
+    function editDenominator(scheduleId, denominatorName) {
+        $.ajax({
+            url: "/home/EditDenominator",
+            method: "POST",
+            dataType: "json",
+            data: { id: scheduleId, denominator: denominatorName },
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+
+    function editNumerator(scheduleId, numeratorName) {
+        $.ajax({
+            url: "/home/EditNumerator",
+            method: "POST",
+            dataType: "json",
+            data: { id: scheduleId, numerator: numeratorName },
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+
+    function editTeacher(scheduleId, teacherName) {
+        $.ajax({
+            url: "/home/EditTeacher",
+            method: "POST",
+            dataType: "json",
+            data: { id: scheduleId, teacher: teacherName },
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+</script>
