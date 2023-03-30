@@ -150,14 +150,9 @@
 }
 
 .group_btn {
-    width: 87%;
-    margin-top: 19px;
-    padding-left: 20px;
-    padding-bottom: 13px;
-    padding-top: 13px;
+    width: 70%;
     border: 0px;
     border-radius: 5px;
-    background: linear-gradient(87.77deg, #4794C5 1.87%, #90BAD3 110.82%);
     color: #FAFAFA;
     font-weight: 600;
     font-size: 20px;
@@ -172,7 +167,19 @@
     font-size: 30px;
 }
 
-.group_list a{
+.group_list {
+    background: linear-gradient(87.77deg, #4794C5 1.87%, #90BAD3 110.82%);
+    margin-top: 20px;
+    margin-left: 5%;
+    margin-right: 5%;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    border-radius: 7px;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.group_list a {
     display: inline-block;
     text-decoration: none;
 }
@@ -246,6 +253,10 @@ th {
     width: 2%;
 }
 
+.denominator {
+
+}
+
 .time {
     width: 1%;
 }
@@ -259,4 +270,203 @@ th {
     color: #FAFAFA;
     font-size: 20px;
     margin-left: 10px;
+}
+
+.sign_in_btn:hover {
+    color: #FAFAFA;
+}
+
+.logout_btn {
+    text-decoration: none;
+    color: #FAFAFA;
+    font-size: 20px;
+}
+
+.logout_btn:hover {
+    color: black;
+}
+
+.login_text {
+    color: black;
+}
+
+.login_block {
+    position: absolute;
+    top: 30%;
+    left: 40%;
+}
+
+.input_block {
+    background-color: transparent;
+    border: 2px solid #FAFAFA;
+    width: 130%;
+    color: black;
+    padding: 4px 10px;
+    border-radius: 5px;
+    outline: none;
+}
+
+.input_block::-webkit-input-placeholder {
+    color: black;
+}
+
+.login_input {
+    position: absolute;
+    top: 39%;
+    left: 40%;
+}
+
+.pass_input {
+    position: absolute;
+    top: 48%;
+    left: 40%;
+}
+
+.login_btn {
+    position: absolute;
+    top: 58%;
+    left: 40%;
+    padding: 5px 110px;
+    background: linear-gradient(92.42deg, #367AA5 0%, #4794C6 100%);
+    width: 20.8%;
+    padding: 5px 5px;
+    border: 0px;
+    border-radius: 3px;
+    color: black;
+}
+
+.validation {
+    color: black;
+    padding-top: 7px;
+}
+
+.fixed-button {
+    z-index: 99;
+    position: fixed;
+    bottom: 50px;
+    right: 50px;
+    background: linear-gradient(92.42deg, #367AA5 0%, #4794C6 100%);
+    color: #FAFAFA;
+    width: 48px;
+    height: 48px;
+    border: none;
+    border-radius: 50%;
+    transition: 0.3s ease-in-out;
+}
+
+.fixed-button i {
+    position: relative;
+    top: 12px;
+    left: 17px;
+}
+
+.fixed-button:hover {
+    color: #FAFAFA;
+}
+
+.group_input {
+    background-color: transparent;
+    border: 2px solid black;
+    color: black;
+    padding: 4px 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    outline: none;
+    margin-left: 10px;
+}
+
+.group_input::-webkit-input-placeholder {
+    color: black;
+}
+
+
+.save_group {
+    background: linear-gradient(92.42deg, #367AA5 0%, #4794C6 100%);
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: none;
+    color: #FAFAFA;
+}
+
+.mainModal {
+    background: linear-gradient(92.42deg, #367AA5 0%, #4794C6 100%);
+    color: #FAFAFA;
+}
+
+.close_modal {
+    background-color: transparent;
+    border: none;
+}
+
+.edit_group i{
+    color: #FAFAFA;
+    font-size: 20px;
+}
+
+.delete_group {
+    background-color: transparent;
+    border: none;
+    margin-left: 10px;
+}
+
+.delete_group i {
+    color: #FAFAFA;
+    font-size: 20px;
+}
+
+.change_group {
+    margin-right: 10px;
+    float: right;
+}
+
+.delete_form {
+    float: right;
+}
+
+.group_list div {
+    display: inline;
+}
+
+.select_btn {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.select_btn div {
+    display: inline-block;
+}
+
+.edit_schedule {
+    padding: 10px 10px;
+    background: linear-gradient(87.77deg, #4794C5 1.87%, #90BAD3 110.82%);
+    text-decoration: none;
+    color: #FAFAFA;
+    border-radius: 5px;
+    margin-right: 21px;
+}
+
+.check_schedule {
+    padding: 10px 10px;
+    background: linear-gradient(87.77deg, #4794C5 1.87%, #90BAD3 110.82%);
+    text-decoration: none;
+    color: #FAFAFA;
+    border-radius: 5px;
+    margin-right: 21px;
+}
+
+.schedule_input {
+    width: 100%;
+    text-align: center;
+    font-size: 17px;
+}
+
+.numeratorCell {
+    border-left: 2px solid; 
+    border-right: 1px solid #FAFAFA;
+    border-bottom: 1px solid #FAFAFA;
+    border-top: 1px solid #FAFAFA;
+}
+
+.delimiter {
+    height: 100%;
 }

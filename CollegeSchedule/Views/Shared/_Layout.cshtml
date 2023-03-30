@@ -10,7 +10,14 @@
 </head>
 <body>
     <header class="main_header">
-       <a class="sign_in_btn">Вход</a>
+        @if (User.Identity.IsAuthenticated)
+        {
+            <a class="sign_in_btn" asp-action="Index" asp-controller="Home">@User.Identity.Name / </a>
+            <a class="logout_btn" asp-action="Logout" asp-controller="Home">Выйти</a>
+        } else
+        {
+            <a class="sign_in_btn" asp-action="Login" asp-controller="Home">Вход</a>
+        }
         <div class="main_logo">
             <img src="~/StaticFiles/INTC_LOGO.png"/>
         </div>

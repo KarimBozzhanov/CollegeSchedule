@@ -8,7 +8,8 @@ namespace CollegeSchedule.Models
         public DbSet<Group> Groups { get; set; }
         public DbSet<Schedule> Schedules { get; set; }
         public DbSet<PracticeSchedule> PracticeSchedules { get; set; }
-        public DbSet<Teachers> GetTeachers { get; set; }
+        public DbSet<Teacher> Teachers { get; set; }
+        public DbSet<Subject> Subjects { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
