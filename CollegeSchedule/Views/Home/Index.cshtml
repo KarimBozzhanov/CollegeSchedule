@@ -10,7 +10,7 @@
 </head>
 <body>
     
-    <div class="main_buttons">
+    <div class="main_buttons" align="center">
         <div class="main_schedule" align="center">
             <button class="main_schedule_btn" onclick="scheduleDropdown()" id="schedule_btn">
                 Расписание пар
@@ -37,10 +37,10 @@
             <a class="fourth_cource">4 курс</a>
         </div>
 
-        <div class="teachers_schedule" align="center" id="teachers_schedule">
-            <button class="teachers_schedule_btn">
+        <div class="hidden_practice_schedule">
+            <a class="teachers_schedule_btn" asp-action="TeachersList" asp-controller="home">
                 Расписание преподавателей
-            </button>
+            </a>
         </div>
     </div>
 

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<CollegeSchedule.Models.Schedule>
+﻿@model CollegeSchedule.Models.AllModels;
 
 <!DOCTYPE html>
 <html lang="en">
@@ -22,207 +22,480 @@
         </tr>
         <tr>
             <th rowspan="4" class="day_of_the_week">Понедельник</th>
-            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 1 && s.SubjectNumber == 1))
+            @foreach (var item in Model.Schedules.Where(s => s.DayOfTheWeek == 1 && s.SubjectNumber == 1))
             {
                 <th>@item.SubjectNumber</th>
                 <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
                 <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
                 <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
-                <th><input class="schedule_input" type="text" onchange="editTeacher(@item.Id, this.value)" autocomplete="off" value="@item.Teacher" /></th>
+                <th class="select_teachers">
+                    <select class="select_options" onchange="editTeacher(@item.Id, this.value)">
+                        @foreach (var teacher in Model.Teachers)
+                        {
+                            @if(teacher.Id == item.Teacher?.Id)
+                            {
+                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                            } else
+                            {
+                                <option value="@teacher.Id">@teacher.teacherFullName</option>
+                            }
+                        }
+                    </select>
+                </th>
             }
         </tr>
         <tr>
-            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 1 && s.SubjectNumber == 2))
+            @foreach (var item in Model.Schedules.Where(s => s.DayOfTheWeek == 1 && s.SubjectNumber == 2))
             {
                 <th>@item.SubjectNumber</th>
                 <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
                 <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
                 <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
-                <th><input class="schedule_input" type="text" onchange="editTeacher(@item.Id, this.value)" autocomplete="off" value="@item.Teacher" /></th>
+                <th class="select_teachers">
+                    <select class="select_options" onchange="editTeacher(@item.Id, this.value)">
+                        @foreach (var teacher in Model.Teachers)
+                        {
+                            @if (teacher.Id == item.Teacher?.Id)
+                            {
+                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                            }
+                            else
+                            {
+                                <option value="@teacher.Id">@teacher.teacherFullName</option>
+                            }
+                        }
+                    </select>
+                </th>
             }
         </tr>
         <tr>
-            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 1 && s.SubjectNumber == 3))
+            @foreach (var item in Model.Schedules.Where(s => s.DayOfTheWeek == 1 && s.SubjectNumber == 3))
             {
                 <th>@item.SubjectNumber</th>
                 <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
                 <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
                 <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
-                <th><input class="schedule_input" type="text" onchange="editTeacher(@item.Id, this.value)" autocomplete="off" value="@item.Teacher" /></th>
+                <th class="select_teachers">
+                    <select class="select_options" onchange="editTeacher(@item.Id, this.value)">
+                        @foreach (var teacher in Model.Teachers)
+                        {
+                            @if(teacher.Id == item.Teacher?.Id)
+                            {
+                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                            } else
+                            {
+                                <option value="@teacher.Id">@teacher.teacherFullName</option>
+                            }
+                        }
+                    </select>
+                </th>
             }
         </tr>
         <tr>
-            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 1 && s.SubjectNumber == 4))
+            @foreach (var item in Model.Schedules.Where(s => s.DayOfTheWeek == 1 && s.SubjectNumber == 4))
             {
                 <th>@item.SubjectNumber</th>
                 <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
                 <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
                 <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
-                <th><input class="schedule_input" type="text" onchange="editTeacher(@item.Id, this.value)" autocomplete="off" value="@item.Teacher" /></th>
+                <th class="select_teachers">
+                    <select class="select_options" onchange="editTeacher(@item.Id, this.value)">
+                        @foreach (var teacher in Model.Teachers)
+                        {
+                            @if (teacher.Id == item.Teacher?.Id)
+                            {
+                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                            }
+                            else
+                            {
+                                <option value="@teacher.Id">@teacher.teacherFullName</option>
+                            }
+                        }
+                    </select>
+                </th>
             }
         </tr>
         <tr>
             <th rowspan="4" class="day_of_the_week">Вторник</th>
-            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 2 && s.SubjectNumber == 1))
+            @foreach (var item in Model.Schedules.Where(s => s.DayOfTheWeek == 2 && s.SubjectNumber == 1))
             {
                 <th>@item.SubjectNumber</th>
                 <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
                 <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
                 <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
-                <th><input class="schedule_input" type="text" onchange="editTeacher(@item.Id, this.value)" autocomplete="off" value="@item.Teacher" /></th>
+                <th class="select_teachers">
+                    <select class="select_options" onchange="editTeacher(@item.Id, this.value)">
+                        @foreach (var teacher in Model.Teachers)
+                        {
+                            @if (teacher.Id == item.Teacher?.Id)
+                            {
+                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                            }
+                            else
+                            {
+                                <option value="@teacher.Id">@teacher.teacherFullName</option>
+                            }
+                        }
+                    </select>
+                </th>
             }
         </tr>
         <tr>
-            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 2 && s.SubjectNumber == 2))
+            @foreach (var item in Model.Schedules.Where(s => s.DayOfTheWeek == 2 && s.SubjectNumber == 2))
             {
                 <th>@item.SubjectNumber</th>
                 <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
                 <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
                 <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
-                <th><input class="schedule_input" type="text" onchange="editTeacher(@item.Id, this.value)" autocomplete="off" value="@item.Teacher" /></th>
+                <th class="select_teachers">
+                    <select class="select_options" onchange="editTeacher(@item.Id, this.value)">
+                        @foreach (var teacher in Model.Teachers)
+                        {
+                            @if(teacher.Id == item.Teacher?.Id)
+                            {
+                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                            } else
+                            {
+                                <option value="@teacher.Id">@teacher.teacherFullName</option>
+                            }
+                        }
+                    </select>
+                </th>
             }
         </tr>
         <tr>
-            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 2 && s.SubjectNumber == 3))
+            @foreach (var item in Model.Schedules.Where(s => s.DayOfTheWeek == 2 && s.SubjectNumber == 3))
             {
                 <th>@item.SubjectNumber</th>
                 <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
                 <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
                 <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
-                <th><input class="schedule_input" type="text" onchange="editTeacher(@item.Id, this.value)" autocomplete="off" value="@item.Teacher" /></th>
+                <th class="select_teachers">
+                    <select class="select_options" onchange="editTeacher(@item.Id, this.value)">
+                        @foreach (var teacher in Model.Teachers)
+                        {
+                            @if (teacher.Id == item.Teacher?.Id)
+                            {
+                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                            }
+                            else
+                            {
+                                <option value="@teacher.Id">@teacher.teacherFullName</option>
+                            }
+                        }
+                    </select>
+                </th>
             }
         </tr>
         <tr>
-            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 2 && s.SubjectNumber == 4))
+            @foreach (var item in Model.Schedules.Where(s => s.DayOfTheWeek == 2 && s.SubjectNumber == 4))
             {
                 <th>@item.SubjectNumber</th>
                 <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
                 <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
                 <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
-                <th><input class="schedule_input" type="text" onchange="editTeacher(@item.Id, this.value)" autocomplete="off" value="@item.Teacher" /></th>
+                <th class="select_teachers">
+                    <select class="select_options" onchange="editTeacher(@item.Id, this.value)">
+                        @foreach (var teacher in Model.Teachers)
+                        {
+                            @if (teacher.Id == item.Teacher?.Id)
+                            {
+                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                            }
+                            else
+                            {
+                                <option value="@teacher.Id">@teacher.teacherFullName</option>
+                            }
+                        }
+                    </select>
+                </th>
             }
         </tr>
         <tr>
             <th rowspan="4" class="day_of_the_week">Среда</th>
-            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 3 && s.SubjectNumber == 1))
+            @foreach (var item in Model.Schedules.Where(s => s.DayOfTheWeek == 3 && s.SubjectNumber == 1))
             {
                 <th>@item.SubjectNumber</th>
                 <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
                 <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
                 <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
-                <th><input class="schedule_input" type="text" onchange="editTeacher(@item.Id, this.value)" autocomplete="off" value="@item.Teacher" /></th>
+                <th class="select_teachers">
+                    <select class="select_options" onchange="editTeacher(@item.Id, this.value)">
+                        @foreach (var teacher in Model.Teachers)
+                        {
+                            @if (teacher.Id == item.Teacher?.Id)
+                            {
+                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                            }
+                            else
+                            {
+                                <option value="@teacher.Id">@teacher.teacherFullName</option>
+                            }
+                        }
+                    </select>
+                </th>
             }
         </tr>
         <tr>
-            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 3 && s.SubjectNumber == 2))
+            @foreach (var item in Model.Schedules.Where(s => s.DayOfTheWeek == 3 && s.SubjectNumber == 2))
             {
                 <th>@item.SubjectNumber</th>
                 <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
                 <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
                 <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
-                <th><input class="schedule_input" type="text" onchange="editTeacher(@item.Id, this.value)" autocomplete="off" value="@item.Teacher" /></th>
+                <th class="select_teachers">
+                    <select class="select_options" onchange="editTeacher(@item.Id, this.value)">
+                        @foreach (var teacher in Model.Teachers)
+                        {
+                            @if (teacher.Id == item.Teacher?.Id)
+                            {
+                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                            }
+                            else
+                            {
+                                <option value="@teacher.Id">@teacher.teacherFullName</option>
+                            }
+                        }
+                    </select>
+                </th>
             }
         </tr>
         <tr>
-            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 3 && s.SubjectNumber == 3))
+            @foreach (var item in Model.Schedules.Where(s => s.DayOfTheWeek == 3 && s.SubjectNumber == 3))
             {
                 <th>@item.SubjectNumber</th>
                 <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
                 <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
                 <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
-                <th><input class="schedule_input" type="text" onchange="editTeacher(@item.Id, this.value)" autocomplete="off" value="@item.Teacher" /></th>
+                <th class="select_teachers">
+                    <select class="select_options" onchange="editTeacher(@item.Id, this.value)">
+                        @foreach (var teacher in Model.Teachers)
+                        {
+                            @if(teacher.Id == item.Teacher?.Id)
+                            {
+                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                            } else
+                            {
+                                <option value="@teacher.Id">@teacher.teacherFullName</option>
+                            }
+                        }
+                    </select>
+                </th>
             }
         </tr>
         <tr>
-            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 3 && s.SubjectNumber == 4))
+            @foreach (var item in Model.Schedules.Where(s => s.DayOfTheWeek == 3 && s.SubjectNumber == 4))
             {
                 <th>@item.SubjectNumber</th>
                 <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
                 <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
                 <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
-                <th><input class="schedule_input" type="text" onchange="editTeacher(@item.Id, this.value)" autocomplete="off" value="@item.Teacher" /></th>
+                <th class="select_teachers">
+                    <select class="select_options" onchange="editTeacher(@item.Id, this.value)">
+                        @foreach (var teacher in Model.Teachers)
+                        {
+                            @if (teacher.Id == item.Teacher?.Id)
+                            {
+                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                            }
+                            else
+                            {
+                                <option value="@teacher.Id">@teacher.teacherFullName</option>
+                            }
+                        }
+                    </select>
+                </th>
             }
         </tr>
         <tr>
             <th rowspan="4" class="day_of_the_week">Четверг</th>
-            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 4 && s.SubjectNumber == 1))
+            @foreach (var item in Model.Schedules.Where(s => s.DayOfTheWeek == 4 && s.SubjectNumber == 1))
             {
                 <th>@item.SubjectNumber</th>
                 <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
                 <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
                 <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
-                <th><input class="schedule_input" type="text" onchange="editTeacher(@item.Id, this.value)" autocomplete="off" value="@item.Teacher" /></th>
+                <th class="select_teachers">
+                    <select class="select_options" onchange="editTeacher(@item.Id, this.value)">
+                        @foreach (var teacher in Model.Teachers)
+                        {
+                            @if (teacher.Id == item.Teacher?.Id)
+                            {
+                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                            }
+                            else
+                            {
+                                <option value="@teacher.Id">@teacher.teacherFullName</option>
+                            }
+                        }
+                    </select>
+                </th>
             }
         </tr>
         <tr>
-            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 4 && s.SubjectNumber == 2))
+            @foreach (var item in Model.Schedules.Where(s => s.DayOfTheWeek == 4 && s.SubjectNumber == 2))
             {
                 <th>@item.SubjectNumber</th>
                 <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
                 <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
                 <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
-                <th><input class="schedule_input" type="text" onchange="editTeacher(@item.Id, this.value)" autocomplete="off" value="@item.Teacher" /></th>
+                <th class="select_teachers">
+                    <select class="select_options" onchange="editTeacher(@item.Id, this.value)">
+                        @foreach (var teacher in Model.Teachers)
+                        {
+                            @if (teacher.Id == item.Teacher?.Id)
+                            {
+                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                            }
+                            else
+                            {
+                                <option value="@teacher.Id">@teacher.teacherFullName</option>
+                            }
+                        }
+                    </select>
+                </th>
             }
         </tr>
         <tr>
-            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 4 && s.SubjectNumber == 3))
+            @foreach (var item in Model.Schedules.Where(s => s.DayOfTheWeek == 4 && s.SubjectNumber == 3))
             {
                 <th>@item.SubjectNumber</th>
                 <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
                 <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
                 <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
-                <th><input class="schedule_input" type="text" onchange="editTeacher(@item.Id, this.value)" autocomplete="off" value="@item.Teacher" /></th>
+                <th class="select_teachers">
+                    <select class="select_options" onchange="editTeacher(@item.Id, this.value)">
+                        @foreach (var teacher in Model.Teachers)
+                        {
+                            @if (teacher.Id == item.Teacher?.Id)
+                            {
+                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                            }
+                            else
+                            {
+                                <option value="@teacher.Id">@teacher.teacherFullName</option>
+                            }
+                        }
+                    </select>
+                </th>
             }
         </tr>
         <tr>
-            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 4 && s.SubjectNumber == 4))
+            @foreach (var item in Model.Schedules.Where(s => s.DayOfTheWeek == 4 && s.SubjectNumber == 4))
             {
                 <th>@item.SubjectNumber</th>
                 <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
                 <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
                 <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
-                <th><input class="schedule_input" type="text" onchange="editTeacher(@item.Id, this.value)" autocomplete="off" value="@item.Teacher" /></th>
+                <th class="select_teachers">
+                    <select class="select_options" onchange="editTeacher(@item.Id, this.value)">
+                        @foreach (var teacher in Model.Teachers)
+                        {
+                            @if(teacher.Id == item.Teacher?.Id)
+                            {
+                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                            } else
+                            {
+                                <option value="@teacher.Id">@teacher.teacherFullName</option>
+                            }
+                        }
+                    </select>
+                </th>
             }
         </tr>
         <tr>
             <th rowspan="4" class="day_of_the_week">Пятница</th>
-            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 5 && s.SubjectNumber == 1))
+            @foreach (var item in Model.Schedules.Where(s => s.DayOfTheWeek == 5 && s.SubjectNumber == 1))
             {
                 <th>@item.SubjectNumber</th>
                 <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
                 <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
                 <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
-                <th><input class="schedule_input" type="text" onchange="editTeacher(@item.Id, this.value)" autocomplete="off" value="@item.Teacher" /></th>
+                <th class="select_teachers">
+                    <select class="select_options" onchange="editTeacher(@item.Id, this.value)">
+                        @foreach (var teacher in Model.Teachers)
+                        {
+                            @if (teacher.Id == item.Teacher?.Id)
+                            {
+                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                            }
+                            else
+                            {
+                                <option value="@teacher.Id">@teacher.teacherFullName</option>
+                            }
+                        }
+                    </select>
+                </th>
             }
         </tr>
         <tr>
-            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 5 && s.SubjectNumber == 2))
+            @foreach (var item in Model.Schedules.Where(s => s.DayOfTheWeek == 5 && s.SubjectNumber == 2))
             {
                 <th>@item.SubjectNumber</th>
                 <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
                 <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
                 <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
-                <th><input class="schedule_input" type="text" onchange="editTeacher(@item.Id, this.value)" autocomplete="off" value="@item.Teacher" /></th>
+                <th class="select_teachers">
+                    <select class="select_options" onchange="editTeacher(@item.Id, this.value)">
+                        @foreach (var teacher in Model.Teachers)
+                        {
+                            @if(teacher.Id == item.Teacher?.Id)
+                            {
+                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                            } else
+                            {
+                                <option value="@teacher.Id">@teacher.teacherFullName</option>
+                            }
+                        }
+                    </select>
+                </th>
             }
         </tr>
         <tr>
-            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 5 && s.SubjectNumber == 3))
+            @foreach (var item in Model.Schedules.Where(s => s.DayOfTheWeek == 5 && s.SubjectNumber == 3))
             {
                 <th>@item.SubjectNumber</th>
                 <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
                 <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
                 <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
-                <th><input class="schedule_input" type="text" onchange="editTeacher(@item.Id, this.value)" autocomplete="off" value="@item.Teacher" /></th>
+                <th class="select_teachers">
+                    <select class="select_options" onchange="editTeacher(@item.Id, this.value)">
+                        @foreach (var teacher in Model.Teachers)
+                        {
+                            @if (teacher.Id == item.Teacher?.Id)
+                            {
+                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                            }
+                            else
+                            {
+                                <option value="@teacher.Id">@teacher.teacherFullName</option>
+                            }
+                        }
+                    </select>
+                </th>
             }
         </tr>
         <tr>
-            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 5 && s.SubjectNumber == 4))
+            @foreach (var item in Model.Schedules.Where(s => s.DayOfTheWeek == 5 && s.SubjectNumber == 4))
             {
                 <th>@item.SubjectNumber</th>
                 <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
                 <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
                 <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
-                <th><input class="schedule_input" type="text" onchange="editTeacher(@item.Id, this.value)" autocomplete="off" value="@item.Teacher" /></th>
+                <th class="select_teachers">
+                    <select class="select_options" onchange="editTeacher(@item.Id, this.value)">
+                        @foreach (var teacher in Model.Teachers)
+                        {
+                            @if(teacher.Id == item.Teacher?.Id)
+                            {
+                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                            } else
+                            {
+                                <option value="@teacher.Id">@teacher.teacherFullName</option>
+                            }
+                        }
+                    </select>
+                </th>
             }
         </tr>
     </table>
@@ -301,12 +574,12 @@
         });
     }
 
-    function editTeacher(scheduleId, teacherName) {
+    function editTeacher(scheduleId, teacherNameId) {
         $.ajax({
             url: "/home/EditTeacher",
             method: "POST",
             dataType: "json",
-            data: { id: scheduleId, teacher: teacherName },
+            data: { id: scheduleId, teacherId: teacherNameId },
             success: function (data) {
                 console.log(data);
             },

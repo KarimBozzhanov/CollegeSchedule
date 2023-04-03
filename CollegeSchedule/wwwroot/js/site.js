@@ -26,12 +26,12 @@ function practiceScheduleDropdown() {
         practice_schedule_btn.style.background = "#FAFAFA";
         practice_schedule_btn.style.color = "#4794C6";
         practice_schedule_btn.style.border = "2px solid #4794C6";
-        teachers_schedule.style.marginTop = "15px";
+        teachers_schedule.style.marginTop = "25px";
     } else {
         practice_schedule.style.display = "none";
         practice_schedule_btn.style.background = "linear-gradient(87.77deg, #367AA5 1.87%, #4794C6 110.82%)";
         practice_schedule_btn.style.color = "#FAFAFA";
         practice_schedule_btn.style.border = "0px";
-        teachers_schedule.style.marginTop = "0px";
+        teachers_schedule.style.marginTop = "19px";
     }
 }

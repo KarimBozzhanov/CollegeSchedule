@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -46,7 +47,7 @@ namespace CollegeSchedule.Controllers
             Group group = await db.Groups.FirstOrDefaultAsync(g => g.Id == groupId);
             ViewData["group"] = group.GroupName;
             ViewData["cource"] = group.GroupCource;
-            return View(await db.Schedules.Where(s => s.Group.Id == groupId).ToListAsync());
+            return View(await db.Schedules.Include(s => s.Teacher).Include(s => s.Group).Where(s => s.Group.Id == groupId).ToListAsync());
         }
 
         [HttpGet]
@@ -161,9 +162,14 @@ namespace CollegeSchedule.Controllers
         public async Task<IActionResult> EditSchedule(int groupId)
         {
             Group group = await db.Groups.FirstOrDefaultAsync(g => g.Id == groupId);
+            SelectList teachers = new SelectList(db.Teachers, "Id", "fullTeacherName");
+            ViewBag.teachers = teachers;
+            var allModels = new AllModels();
+            allModels.Schedules = await db.Schedules.Where(g => g.GroupId == groupId).ToListAsync();
+            allModels.Teachers = await db.Teachers.ToListAsync();
             ViewData["group"] = group.GroupName;
             ViewData["cource"] = group.GroupCource;
-            return View(await db.Schedules.Where(g => g.GroupId == groupId).ToListAsync());
+            return View(allModels);
         }
 
         [HttpPost]
@@ -227,18 +233,78 @@ namespace CollegeSchedule.Controllers
         }
 
         [HttpPost]
-        public JsonResult EditTeacher(int? id, string teacher)
+        public JsonResult EditTeacher(int? id, int teacherId)
         {
             if (id != null)
             {
                 Schedule schedule = db.Schedules.FirstOrDefault(s => s.Id == id);
                 var updateSchedule = db.Schedules.Where(s => s.Id == id).AsQueryable().FirstOrDefault();
+                Teacher teacher = db.Teachers.FirstOrDefault(t => t.Id == teacherId);
                 updateSchedule.Teacher = teacher;
                 db.Schedules.UpdateRange(updateSchedule);
                 db.SaveChanges();
                 return Json("Преподаватель изменен");
             }
             return Json(NotFound());
+        }
+
+        public async Task<IActionResult> TeachersList()
+        {
+            return View(await db.Teachers.ToListAsync());
+        }
+
+        public async Task<IActionResult> AddTeacher(string teacherName)
+        {
+            if (ModelState.IsValid)
+            {
+                Teacher teacher = await db.Teachers.FirstOrDefaultAsync(t => t.teacherFullName == teacherName);
+                if (teacher == null)
+                {
+                    await db.Teachers.AddAsync(new Teacher { teacherFullName = teacherName});
+                    await db.SaveChangesAsync();
+                    return RedirectToAction("TeachersList");
+                } else
+                {
+                    ModelState.AddModelError("", "Преподаватель с таким ФИО уже добавлен");
+                }
+            }
+            return View(teacherName);
+        }
+
+
+        public JsonResult GetTeacherInfo(int? id)
+        {
+            Teacher teacher = db.Teachers.FirstOrDefault(t => t.Id == id);
+            if (teacher != null)
+            {
+                var teacherJson = JsonConvert.SerializeObject(teacher);
+                return Json(teacherJson);
+            }
+            return Json(NotFound());
+        }
+
+        public async Task<IActionResult> EditTeacher(int? id, string teacherName)
+        {
+            if (id != null)
+            {
+                if (ModelState.IsValid)
+                {
+                    Teacher teacher = await db.Teachers.FirstOrDefaultAsync(t => t.teacherFullName == teacherName);
+                    if (teacher == null)
+                    {
+                        var teacherUpdate = db.Teachers.Where(t => t.Id == id).AsQueryable().FirstOrDefault();
+                        teacherUpdate.teacherFullName = teacherName;
+                        db.Teachers.UpdateRange(teacherUpdate);
+                        await db.SaveChangesAsync();
+                        return RedirectToAction("TeachersList");
+                    }
+                    ModelState.AddModelError("", "Преподаватель с таким ФИО уже добавлен");
+                } else
+                {
+                    return View(teacherName);
+                }
+            }
+            return NotFound();
         }
 
 

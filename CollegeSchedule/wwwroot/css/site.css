@@ -44,17 +44,23 @@
 
 .teachers_schedule_btn {
     width: 87%;
-    margin-top: 19px;
-    padding-left: 20px;
-    padding-bottom: 13px;
-    padding-top: 13px;
     border: 0px;
+    text-decoration: none;
     border-radius: 5px;
     background: linear-gradient(87.77deg, #367AA5 1.87%, #4794C6 110.82%);
+    padding-bottom: 13px;
+    padding-top: 13px;
     color: #FAFAFA;
     font-weight: 600;
     font-size: 20px;
     text-align: left;
+    margin-top: 19px;
+    padding-left: 20px;
+}
+
+
+.teachers_schedule_btn:hover {
+    color: #FAFAFA;
 }
 
 .burger_menu {  
@@ -458,6 +464,11 @@ th {
     width: 100%;
     text-align: center;
     font-size: 17px;
+    border: none;
+}
+
+.schedule_input:focus {
+    outline: none;
 }
 
 .numeratorCell {
@@ -469,4 +480,20 @@ th {
 
 .delimiter {
     height: 100%;
+}
+
+.select_teachers select{
+    width: 100%;
+    font-size: 17px;
+    text-align: center;
+    border: none;
+}
+
+.select_teachers select:focus {
+    outline: none;
+}
+
+.teachers_block{
+    margin-top: 30px;
+    width: 100%;
 }

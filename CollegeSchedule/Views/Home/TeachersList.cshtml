@@ -1,0 +1,134 @@
+﻿@model IEnumerable<CollegeSchedule.Models.Teacher>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - CollegeSchedule</title>
+    <link rel="stylesheet" href="~/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <a class="fixed-button" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <i class="fa-solid fa-plus"></i>
+        </a>
+    }
+
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="mainModal modal-header">
+                    <h5 class="modal-title fs-5" id="exampleModalLabel">Добавить преподавателя</h5>
+                    <button class="close_modal" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark fa-lg" style="color: #e60a0a;"></i></button>
+                </div>
+                <div class="modal-body">
+                    <form asp-action="AddTeacher" asp-controller="Home">
+                        <div class="groupName">
+                            <h5>ФИО преподавателя</h5>
+                            <input class="group_input" type="text" placeholder="ФИО" name="teacherName" autocomplete="off" required />
+                        </div>
+                        <div class="save_group_block" align="right">
+                            <button type="submit" class="save_group">Добавить</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container">
+        <div class="group_buttons">
+            @foreach (var teacher in Model)
+            {
+                <div class="group_list" align="center">
+                    <div class="group_info" align="left">
+                        <a class="group_btn" asp-action="ScheduleTable" asp-controller="Home" asp-route-groupId="@teacher.Id">@teacher.teacherFullName</a>
+                    </div>
+                    <div class="change_group" align="right">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <a class="edit_group" data-bs-toggle="modal" data-bs-target="#editGroupModal" onclick="getGroupInfo(@teacher.Id)">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </a>
+                            <form class="delete_form" asp-action="DeleteGroup" asp-controller="Home" asp-route-groupId="@teacher.Id">
+                                <button class="delete_group">
+                                    <i class="fa-solid fa-square-minus"></i>
+                                </button>
+                            </form>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="modal fade" id="editGroupModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="mainModal modal-header">
+                    <h5 class="modal-title fs-5" id="exampleModalLabel">Редактировать группу</h5>
+                    <button class="close_modal" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark fa-lg" style="color: #e60a0a;"></i></button>
+                </div>
+                <div class="modal-body">
+                    <form asp-action="EditGroup" asp-controller="Home" asp-route-currentCource="@ViewData["cource"]">
+                        <div class="groupName">
+                            <h5>Название группы</h5>
+                            <input class="group_input" id="groupName" type="text" placeholder="Название" name="groupName" autocomplete="off" required />
+                        </div>
+                        <div class="groupCource">
+                            <h5>Курс группы</h5>
+                            <input class="group_input" id="groupCource" type="number" placeholder="Курс" name="groupCource" autocomplete="off" required />
+                        </div>
+                        <div class="groupId">
+                            <input class="group_input" id="groupId" type="text" placeholder="Id" name="groupId" autocomplete="off" required hidden />
+                        </div>
+                        <div class="save_group_block" align="right">
+                            <button type="submit" class="save_group">Изменить</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="back_to_main">
+        <a class="back_btn" asp-action="Index" asp-controller="Home"><i class="fa-solid fa-chevron-left"></i></a>
+    </div>
+
+
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/js/jquery-3.6.3.js"></script>
+    <script src="~/js/jquery-3.6.3.min.js"></script>
+</body>
+</html>
+
+<script type="text/javascript">
+    function getGroupInfo(id) {
+        $.ajax({
+            url: "/home/getGroupInfo/" + id,
+            method: "GET",
+            type: "json",
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                data = JSON.parse(data);
+                console.log(data);
+                $("#groupName").val(data.GroupName);
+                $("#groupCource").val(data.GroupCource);
+                $("#groupId").val(data.Id);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+</script>
