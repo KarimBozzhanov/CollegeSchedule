@@ -1,0 +1,99 @@
+﻿@model IEnumerable<CollegeSchedule.Models.Schedule>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - CollegeSchedule</title>
+    <link rel="stylesheet" href="~/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <table class="schedule_table">
+        <tr>
+            <th class="days">Дни</th>
+            <th class="number">№</th>
+            <th class="time">Время</th>
+            <th class="cabinet">Кабинет</th>
+            <th class="group">@ViewData["teacherName"]</th>
+            <th class="teacher">Группа</th>
+        </tr>
+        <tr>
+            <th rowspan="@ViewData["MondayLessons"]" class="day_of_the_week">Понедельник</th>
+        </tr>
+        @foreach (var item in Model.Where(s => s.DayOfTheWeek == 1).OrderBy(s => s.SubjectNumber))
+        {
+            <tr>
+                <th>@item.SubjectNumber</th>
+                <th>@item.LessonTime</th>
+                <th>@item.RoomDenominator</th>
+                <th>@item.SubjectDenominator</th>
+                <th>@item.Group?.GroupName</th>
+            </tr>
+        }
+        <tr>
+            <th rowspan="@ViewData["TuesdayLessons"]" class="day_of_the_week">Вторник</th>
+        </tr>
+        @foreach (var item in Model.Where(s => s.DayOfTheWeek == 2).OrderBy(s => s.SubjectNumber))
+        {
+            <tr>
+                <th>@item.SubjectNumber</th>
+                <th>@item.LessonTime</th>
+                <th>@item.RoomDenominator</th>
+                <th>@item.SubjectDenominator</th>
+                <th>@item.Group?.GroupName</th>
+            </tr>
+        }
+        <tr>
+            <th rowspan="@ViewData["WednesdayLessons"]" class="day_of_the_week">Среда</th>
+        </tr>
+        @foreach (var item in Model.Where(s => s.DayOfTheWeek == 3).OrderBy(s => s.SubjectNumber))
+        {
+            <tr>
+                <th>@item.SubjectNumber</th>
+                <th>@item.LessonTime</th>
+                <th>@item.RoomDenominator</th>
+                <th>@item.SubjectDenominator</th>
+                <th>@item.Group?.GroupName</th>
+            </tr>
+        }
+        <tr>
+            <th rowspan="@ViewData["ThursdayLessons"]" class="day_of_the_week">Четверг</th>
+        </tr>
+        @foreach (var item in Model.Where(s => s.DayOfTheWeek == 4).OrderBy(s => s.SubjectNumber))
+        {
+            <tr>
+                <th>@item.SubjectNumber</th>
+                <th>@item.LessonTime</th>
+                <th>@item.RoomDenominator</th>
+                <th>@item.SubjectDenominator</th>
+                <th>@item.Group?.GroupName</th>
+            </tr>
+        }
+        <tr>
+            <th rowspan="@ViewData["FridayLessons"]" class="day_of_the_week">Пятница</th>
+        </tr>
+        @foreach (var item in Model.Where(s => s.DayOfTheWeek == 5).OrderBy(s => s.SubjectNumber))
+        {
+            <tr>
+                <th>@item.SubjectNumber</th>
+                <th>@item.LessonTime</th>
+                <th>@item.RoomDenominator</th>
+                <th>@item.SubjectDenominator</th>
+                <th>@item.Group?.GroupName</th>
+            </tr>
+        }
+    </table>
+
+    <div class="back_to_main">
+        <a class="back_btn" asp-action="TeachersList" asp-controller="Home" asp-route-cource="@ViewData["cource"]"><i class="fa-solid fa-chevron-left"></i></a>
+    </div>
+
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+</body>
+</html>

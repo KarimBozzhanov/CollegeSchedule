@@ -10,10 +10,16 @@ namespace CollegeSchedule.Models
         public string LessonTime { get; set; }
         public string SubjectDenominator { get; set; }
         public string SubjectNumerator { get; set; }
-        public Teacher Teacher { get; set; }
-        public string Room { get; set; }
-        [ForeignKey("Group")]
-        public int GroupId { get; set; }
-        public Group Group { get; set; }
+        [ForeignKey("TeacherDenominatorId")]
+        public virtual Teacher TeacherDenominator { get; set; }
+        public int? TeacherDenominatorId { get; set; }
+        [ForeignKey("TeacherNumeratorId")]
+        public virtual Teacher TeacherNumerator { get; set; }
+        public int? TeacherNumeratorId { get; set; }
+        public string RoomDenominator { get; set; }
+        public string RoomNumerator { get; set; }
+        [ForeignKey("GroupId")]
+        public virtual Group Group { get; set; }
+        public int? GroupId { get; set; }
     }
 }

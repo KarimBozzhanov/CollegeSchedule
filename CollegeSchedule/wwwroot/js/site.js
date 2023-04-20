@@ -35,3 +35,44 @@ function practiceScheduleDropdown() {
         teachers_schedule.style.marginTop = "19px";
     }
 }
+
+function displayDelimiter(id) {
+    var singleRoom = document.getElementById("single_room_" + id);
+    var delimiterRoom = document.getElementById("delimiter_room_" + id);
+    var singleSubject = document.getElementById("single_subject_" + id);
+    var delimiterSubject = document.getElementById("delimiter_subject_" + id);
+    var singleTeacher = document.getElementById("single_teacher_" + id);
+    var delimiterTeacher = document.getElementById("delimiter_teacher_" + id);
+    singleRoom.hidden = true;
+    delimiterRoom.hidden = false;
+    singleSubject.hidden = true;
+    delimiterSubject.hidden = false;
+    singleTeacher.hidden = true;
+    delimiterTeacher.hidden = false;
+}
+
+function hiddenDelimiter(id) {
+    var singleRoom = document.getElementById("single_room_" + id);
+    var delimiterRoom = document.getElementById("delimiter_room_" + id);
+    var singleSubject = document.getElementById("single_subject_" + id);
+    var delimiterSubject = document.getElementById("delimiter_subject_" + id);
+    var singleTeacher = document.getElementById("single_teacher_" + id);
+    var delimiterTeacher = document.getElementById("delimiter_teacher_" + id);
+    singleRoom.hidden = false;
+    delimiterRoom.hidden = true;
+    singleSubject.hidden = false;
+    delimiterSubject.hidden = true;
+    singleTeacher.hidden = false;
+    delimiterTeacher.hidden = true;
+}
+
+function displayTeacherDelimiter(id) {
+    var singleRoom = document.getElementById("single_room_" + id);
+    var delimiterRoom = document.getElementById("delimiter_room_" + id);
+    var singleTeacher = document.getElementById("single_teacher_" + id);
+    var delimiterTeacher = document.getElementById("delimiter_teacher_" + id);
+    singleRoom.hidden = true;
+    delimiterRoom.hidden = false;
+    singleTeacher.hidden = true;
+    delimiterTeacher.hidden = false;
+}

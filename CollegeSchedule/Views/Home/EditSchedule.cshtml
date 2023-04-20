@@ -21,483 +21,565 @@
             <th class="teacher">Препод.</th>
         </tr>
         <tr>
-            <th rowspan="4" class="day_of_the_week">Понедельник</th>
-            @foreach (var item in Model.Schedules.Where(s => s.DayOfTheWeek == 1 && s.SubjectNumber == 1))
-            {
+            <th rowspan="5" class="day_of_the_week">Понедельник</th>
+        </tr>
+        @foreach(var item in Model.Schedules.Where(s => s.DayOfTheWeek == 1).OrderBy(s => s.SubjectNumber))
+        {
+            <tr>
                 <th>@item.SubjectNumber</th>
                 <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
-                <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
-                <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
-                <th class="select_teachers">
-                    <select class="select_options" onchange="editTeacher(@item.Id, this.value)">
-                        @foreach (var teacher in Model.Teachers)
-                        {
-                            @if(teacher.Id == item.Teacher?.Id)
-                            {
-                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                            } else
-                            {
-                                <option value="@teacher.Id">@teacher.teacherFullName</option>
-                            }
-                        }
-                    </select>
+                <th class="room_block" id="single_room_@item.Id"><input class="schedule_input" type="text" onchange="editRoomDenominator(@item.Id, this.value)" autocomplete="off" value="@item.RoomDenominator" /></th>
+                <th class="main_delimiter" id="delimiter_room_@item.Id" hidden>
+                    <table width="100%" class="delimiter_room_table">
+                        <tr class="delimiter_main">
+                            <th class="delimiter_room_denominator">
+                                <input class="schedule_input" type="text" onchange="editRoomDenominator(@item.Id, this.value)" autocomplete="off" value="@item.RoomDenominator" />
+                            </th>
+                        </tr>
+                        <tr class="delimiter_main">
+                            <th class="delimiter_room_numenator">
+                                <input class="schedule_input" type="text" onchange="editRoomNumerator(@item.Id, this.value)" autocomplete="off" value="@item.RoomNumerator" />
+                            </th>
+                        </tr>
+                    </table>
                 </th>
-            }
-        </tr>
+                <th class="subject_name" id="single_subject_@item.Id">
+                    <div class="schedule_input_block">
+                        <input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" />
+                    </div>
+                    <div class="add_numerator_block">
+                        <button class="add_numerator" onclick="displayDelimiter(@item.Id)"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                </th>
+                <th class="main_delimiter" id="delimiter_subject_@item.Id" hidden>
+                    <table width="100%" class="delimiter_table">
+                        <tr class="delimiter_main">
+                            <th class="delimiter_denominator">
+                                <div class="schedule_input_block">
+                                    <input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" />
+                                </div>
+                                <div class="minus_delimiter_block">
+                                    <button class="add_numerator" onclick="hiddenDelimiter(@item.Id)"><i class="fa-solid fa-minus"></i></button>
+                                </div>
+                            </th>
+                        </tr>
+                        <tr class="delimiter_main">
+                            <th class="delimiter_numerator">
+                                <div class="schedule_input_block">
+                                    <input class="schedule_input" type="text" onchange="editNumerator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectNumerator" />
+                                </div>
+                            </th>
+                        </tr>
+                    </table>
+                </th>
+                <th class="select_teachers" id="single_teacher_@item.Id">
+                    <div class="select_teachers_block">
+                        <select class="select_options" onchange="editTeacherDenominator(@item.Id, this.value)">
+                            <option value="@null"></option>
+                            @foreach (var teacher in Model.Teachers)
+                            {
+                                @if (teacher.Id == item.TeacherDenominatorId)
+                                {
+                                    <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                                }
+                                else
+                                {
+                                    <option value="@teacher.Id">@teacher.teacherFullName</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </th>
+                <th class="main_teacher_delimiter" id="delimiter_teacher_@item.Id" hidden>
+                    <table width="100%" class="delimiter_teacher_table">
+                        <tr class="delimiter_teacher_main">
+                            <th class="delimiter_teacher_denominator">
+                                <select class="select_options" onchange="editTeacherDenominator(@item.Id, this.value)">
+                                    <option value="@null"></option>
+                                    @foreach (var teacher in Model.Teachers)
+                                    {
+                                        @if (teacher.Id == item.TeacherDenominatorId)
+                                        {
+                                            <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@teacher.Id">@teacher.teacherFullName</option>
+                                        }
+                                    }
+                                </select>
+                            </th>
+                        </tr>
+                        <tr class="delimiter_teacher_main">
+                            <th class="delimiter_teacher_numerator">
+                                <select class="select_options" onchange="editTeacherNumerator(@item.Id, this.value)">
+                                    <option value="@null"></option>
+                                    @foreach (var teacher in Model.Teachers)
+                                    {
+                                        @if (teacher.Id == item.TeacherNumeratorId)
+                                        {
+                                            <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@teacher.Id">@teacher.teacherFullName</option>
+                                        }
+                                    }
+                                </select>
+                            </th>
+                        </tr>
+                    </table>
+                </th>
+            </tr>
+        }
         <tr>
-            @foreach (var item in Model.Schedules.Where(s => s.DayOfTheWeek == 1 && s.SubjectNumber == 2))
-            {
+            <th rowspan="5" class="day_of_the_week">Вторник</th>
+        </tr>
+        @foreach (var item in Model.Schedules.Where(s => s.DayOfTheWeek == 2).OrderBy(s => s.SubjectNumber))
+        {
+            <tr>
                 <th>@item.SubjectNumber</th>
                 <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
-                <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
-                <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
-                <th class="select_teachers">
-                    <select class="select_options" onchange="editTeacher(@item.Id, this.value)">
-                        @foreach (var teacher in Model.Teachers)
-                        {
-                            @if (teacher.Id == item.Teacher?.Id)
-                            {
-                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                            }
-                            else
-                            {
-                                <option value="@teacher.Id">@teacher.teacherFullName</option>
-                            }
-                        }
-                    </select>
+                <th class="room_block" id="single_room_@item.Id"><input class="schedule_input" type="text" onchange="editRoomDenominator(@item.Id, this.value)" autocomplete="off" value="@item.RoomDenominator" /></th>
+                <th class="main_delimiter" id="delimiter_room_@item.Id" hidden>
+                    <table width="100%" class="delimiter_room_table">
+                        <tr class="delimiter_main">
+                            <th class="delimiter_room_denominator">
+                                <input class="schedule_input" type="text" onchange="editRoomDenominator(@item.Id, this.value)" autocomplete="off" value="@item.RoomDenominator" />
+                            </th>
+                        </tr>
+                        <tr class="delimiter_main">
+                            <th class="delimiter_room_numenator">
+                                <input class="schedule_input" type="text" onchange="editRoomNumerator(@item.Id, this.value)" autocomplete="off" value="@item.RoomNumerator" />
+                            </th>
+                        </tr>
+                    </table>
                 </th>
-            }
-        </tr>
+                <th class="subject_name" id="single_subject_@item.Id">
+                    <div class="schedule_input_block">
+                        <input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" />
+                    </div>
+                    <div class="add_numerator_block">
+                        <button class="add_numerator" onclick="displayDelimiter(@item.Id)"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                </th>
+                <th class="main_delimiter" id="delimiter_subject_@item.Id" hidden>
+                    <table width="100%" class="delimiter_table">
+                        <tr class="delimiter_main">
+                            <th class="delimiter_denominator">
+                                <div class="schedule_input_block">
+                                    <input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" />
+                                </div>
+                                <div class="minus_delimiter_block">
+                                    <button class="add_numerator" onclick="hiddenDelimiter(@item.Id)"><i class="fa-solid fa-minus"></i></button>
+                                </div>
+                            </th>
+                        </tr>
+                        <tr class="delimiter_main">
+                            <th class="delimiter_numerator">
+                                <div class="schedule_input_block">
+                                    <input class="schedule_input" type="text" onchange="editNumerator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectNumerator" />
+                                </div>
+                            </th>
+                        </tr>
+                    </table>
+                </th>
+                <th class="select_teachers" id="single_teacher_@item.Id">
+                    <div class="select_teachers_block">
+                        <select class="select_options" onchange="editTeacherDenominator(@item.Id, this.value)">
+                            <option value="@null"></option>
+                            @foreach (var teacher in Model.Teachers)
+                            {
+                                @if (teacher.Id == item.TeacherDenominatorId)
+                                {
+                                    <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                                }
+                                else
+                                {
+                                    <option value="@teacher.Id">@teacher.teacherFullName</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </th>
+                <th class="main_teacher_delimiter" id="delimiter_teacher_@item.Id" hidden>
+                    <table width="100%" class="delimiter_teacher_table">
+                        <tr class="delimiter_teacher_main">
+                            <th class="delimiter_teacher_denominator">
+                                <select class="select_options" onchange="editTeacherDenominator(@item.Id, this.value)">
+                                    <option value="@null"></option>
+                                    @foreach (var teacher in Model.Teachers)
+                                    {
+                                        @if (teacher.Id == item.TeacherDenominatorId)
+                                        {
+                                            <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@teacher.Id">@teacher.teacherFullName</option>
+                                        }
+                                    }
+                                </select>
+                            </th>
+                        </tr>
+                        <tr class="delimiter_teacher_main">
+                            <th class="delimiter_teacher_numerator">
+                                <select class="select_options" onchange="editTeacherNumerator(@item.Id, this.value)">
+                                    <option value="@null"></option>
+                                    @foreach (var teacher in Model.Teachers)
+                                    {
+                                        @if (teacher.Id == item.TeacherNumeratorId)
+                                        {
+                                            <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@teacher.Id">@teacher.teacherFullName</option>
+                                        }
+                                    }
+                                </select>
+                            </th>
+                        </tr>
+                    </table>
+                </th>
+            </tr>
+        }
         <tr>
-            @foreach (var item in Model.Schedules.Where(s => s.DayOfTheWeek == 1 && s.SubjectNumber == 3))
-            {
+            <th rowspan="5" class="day_of_the_week">Среда</th>
+        </tr>
+        @foreach (var item in Model.Schedules.Where(s => s.DayOfTheWeek == 3).OrderBy(s => s.SubjectNumber))
+        {
+            <tr>
                 <th>@item.SubjectNumber</th>
                 <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
-                <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
-                <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
-                <th class="select_teachers">
-                    <select class="select_options" onchange="editTeacher(@item.Id, this.value)">
-                        @foreach (var teacher in Model.Teachers)
-                        {
-                            @if(teacher.Id == item.Teacher?.Id)
-                            {
-                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                            } else
-                            {
-                                <option value="@teacher.Id">@teacher.teacherFullName</option>
-                            }
-                        }
-                    </select>
+                <th class="room_block" id="single_room_@item.Id"><input class="schedule_input" type="text" onchange="editRoomDenominator(@item.Id, this.value)" autocomplete="off" value="@item.RoomDenominator" /></th>
+                <th class="main_delimiter" id="delimiter_room_@item.Id" hidden>
+                    <table width="100%" class="delimiter_room_table">
+                        <tr class="delimiter_main">
+                            <th class="delimiter_room_denominator">
+                                <input class="schedule_input" type="text" onchange="editRoomDenominator(@item.Id, this.value)" autocomplete="off" value="@item.RoomDenominator" />
+                            </th>
+                        </tr>
+                        <tr class="delimiter_main">
+                            <th class="delimiter_room_numenator">
+                                <input class="schedule_input" type="text" onchange="editRoomNumerator(@item.Id, this.value)" autocomplete="off" value="@item.RoomNumerator" />
+                            </th>
+                        </tr>
+                    </table>
                 </th>
-            }
-        </tr>
+                <th class="subject_name" id="single_subject_@item.Id">
+                    <div class="schedule_input_block">
+                        <input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" />
+                    </div>
+                    <div class="add_numerator_block">
+                        <button class="add_numerator" onclick="displayDelimiter(@item.Id)"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                </th>
+                <th class="main_delimiter" id="delimiter_subject_@item.Id" hidden>
+                    <table width="100%" class="delimiter_table">
+                        <tr class="delimiter_main">
+                            <th class="delimiter_denominator">
+                                <div class="schedule_input_block">
+                                    <input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" />
+                                </div>
+                                <div class="minus_delimiter_block">
+                                    <button class="add_numerator" onclick="hiddenDelimiter(@item.Id)"><i class="fa-solid fa-minus"></i></button>
+                                </div>
+                            </th>
+                        </tr>
+                        <tr class="delimiter_main">
+                            <th class="delimiter_numerator">
+                                <div class="schedule_input_block">
+                                    <input class="schedule_input" type="text" onchange="editNumerator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectNumerator" />
+                                </div>
+                            </th>
+                        </tr>
+                    </table>
+                </th>
+                <th class="select_teachers" id="single_teacher_@item.Id">
+                    <div class="select_teachers_block">
+                        <select class="select_options" onchange="editTeacherDenominator(@item.Id, this.value)">
+                            <option value="@null"></option>
+                            @foreach (var teacher in Model.Teachers)
+                            {
+                                @if (teacher.Id == item.TeacherDenominatorId)
+                                {
+                                    <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                                }
+                                else
+                                {
+                                    <option value="@teacher.Id">@teacher.teacherFullName</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </th>
+                <th class="main_teacher_delimiter" id="delimiter_teacher_@item.Id" hidden>
+                    <table width="100%" class="delimiter_teacher_table">
+                        <tr class="delimiter_teacher_main">
+                            <th class="delimiter_teacher_denominator">
+                                <select class="select_options" onchange="editTeacherDenominator(@item.Id, this.value)">
+                                    <option value="@null"></option>
+                                    @foreach (var teacher in Model.Teachers)
+                                    {
+                                        @if (teacher.Id == item.TeacherDenominatorId)
+                                        {
+                                            <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@teacher.Id">@teacher.teacherFullName</option>
+                                        }
+                                    }
+                                </select>
+                            </th>
+                        </tr>
+                        <tr class="delimiter_teacher_main">
+                            <th class="delimiter_teacher_numerator">
+                                <select class="select_options" onchange="editTeacherNumerator(@item.Id, this.value)">
+                                    <option value="@null"></option>
+                                    @foreach (var teacher in Model.Teachers)
+                                    {
+                                        @if (teacher.Id == item.TeacherNumeratorId)
+                                        {
+                                            <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@teacher.Id">@teacher.teacherFullName</option>
+                                        }
+                                    }
+                                </select>
+                            </th>
+                        </tr>
+                    </table>
+                </th>
+            </tr>
+        }
         <tr>
-            @foreach (var item in Model.Schedules.Where(s => s.DayOfTheWeek == 1 && s.SubjectNumber == 4))
-            {
+            <th rowspan="5" class="day_of_the_week">Четверг</th>
+        </tr>
+        @foreach (var item in Model.Schedules.Where(s => s.DayOfTheWeek == 4).OrderBy(s => s.SubjectNumber))
+        {
+            <tr>
                 <th>@item.SubjectNumber</th>
                 <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
-                <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
-                <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
-                <th class="select_teachers">
-                    <select class="select_options" onchange="editTeacher(@item.Id, this.value)">
-                        @foreach (var teacher in Model.Teachers)
-                        {
-                            @if (teacher.Id == item.Teacher?.Id)
-                            {
-                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                            }
-                            else
-                            {
-                                <option value="@teacher.Id">@teacher.teacherFullName</option>
-                            }
-                        }
-                    </select>
+                <th class="room_block" id="single_room_@item.Id"><input class="schedule_input" type="text" onchange="editRoomDenominator(@item.Id, this.value)" autocomplete="off" value="@item.RoomDenominator" /></th>
+                <th class="main_delimiter" id="delimiter_room_@item.Id" hidden>
+                    <table width="100%" class="delimiter_room_table">
+                        <tr class="delimiter_main">
+                            <th class="delimiter_room_denominator">
+                                <input class="schedule_input" type="text" onchange="editRoomDenominator(@item.Id, this.value)" autocomplete="off" value="@item.RoomDenominator" />
+                            </th>
+                        </tr>
+                        <tr class="delimiter_main">
+                            <th class="delimiter_room_numenator">
+                                <input class="schedule_input" type="text" onchange="editRoomNumerator(@item.Id, this.value)" autocomplete="off" value="@item.RoomNumerator" />
+                            </th>
+                        </tr>
+                    </table>
                 </th>
-            }
-        </tr>
+                <th class="subject_name" id="single_subject_@item.Id">
+                    <div class="schedule_input_block">
+                        <input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" />
+                    </div>
+                    <div class="add_numerator_block">
+                        <button class="add_numerator" onclick="displayDelimiter(@item.Id)"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                </th>
+                <th class="main_delimiter" id="delimiter_subject_@item.Id" hidden>
+                    <table width="100%" class="delimiter_table">
+                        <tr class="delimiter_main">
+                            <th class="delimiter_denominator">
+                                <div class="schedule_input_block">
+                                    <input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" />
+                                </div>
+                                <div class="minus_delimiter_block">
+                                    <button class="add_numerator" onclick="hiddenDelimiter(@item.Id)"><i class="fa-solid fa-minus"></i></button>
+                                </div>
+                            </th>
+                        </tr>
+                        <tr class="delimiter_main">
+                            <th class="delimiter_numerator">
+                                <div class="schedule_input_block">
+                                    <input class="schedule_input" type="text" onchange="editNumerator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectNumerator" />
+                                </div>
+                            </th>
+                        </tr>
+                    </table>
+                </th>
+                <th class="select_teachers" id="single_teacher_@item.Id">
+                    <div class="select_teachers_block">
+                        <select class="select_options" onchange="editTeacherDenominator(@item.Id, this.value)">
+                            <option value="@null"></option>
+                            @foreach (var teacher in Model.Teachers)
+                            {
+                                @if (teacher.Id == item.TeacherDenominatorId)
+                                {
+                                    <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                                }
+                                else
+                                {
+                                    <option value="@teacher.Id">@teacher.teacherFullName</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </th>
+                <th class="main_teacher_delimiter" id="delimiter_teacher_@item.Id" hidden>
+                    <table width="100%" class="delimiter_teacher_table">
+                        <tr class="delimiter_teacher_main">
+                            <th class="delimiter_teacher_denominator">
+                                <select class="select_options" onchange="editTeacherDenominator(@item.Id, this.value)">
+                                    <option value="@null"></option>
+                                    @foreach (var teacher in Model.Teachers)
+                                    {
+                                        @if (teacher.Id == item.TeacherDenominatorId)
+                                        {
+                                            <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@teacher.Id">@teacher.teacherFullName</option>
+                                        }
+                                    }
+                                </select>
+                            </th>
+                        </tr>
+                        <tr class="delimiter_teacher_main">
+                            <th class="delimiter_teacher_numerator">
+                                <select class="select_options" onchange="editTeacherNumerator(@item.Id, this.value)">
+                                    <option value="@null"></option>
+                                    @foreach (var teacher in Model.Teachers)
+                                    {
+                                        @if (teacher.Id == item.TeacherNumeratorId)
+                                        {
+                                            <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@teacher.Id">@teacher.teacherFullName</option>
+                                        }
+                                    }
+                                </select>
+                            </th>
+                        </tr>
+                    </table>
+                </th>
+            </tr>
+        }
         <tr>
-            <th rowspan="4" class="day_of_the_week">Вторник</th>
-            @foreach (var item in Model.Schedules.Where(s => s.DayOfTheWeek == 2 && s.SubjectNumber == 1))
-            {
+            <th rowspan="5" class="day_of_the_week">Пятница</th>
+        </tr>
+        @foreach (var item in Model.Schedules.Where(s => s.DayOfTheWeek == 5).OrderBy(s => s.SubjectNumber))
+        {
+            <tr>
                 <th>@item.SubjectNumber</th>
                 <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
-                <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
-                <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
-                <th class="select_teachers">
-                    <select class="select_options" onchange="editTeacher(@item.Id, this.value)">
-                        @foreach (var teacher in Model.Teachers)
-                        {
-                            @if (teacher.Id == item.Teacher?.Id)
-                            {
-                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                            }
-                            else
-                            {
-                                <option value="@teacher.Id">@teacher.teacherFullName</option>
-                            }
-                        }
-                    </select>
+                <th class="room_block" id="single_room_@item.Id"><input class="schedule_input" type="text" onchange="editRoomDenominator(@item.Id, this.value)" autocomplete="off" value="@item.RoomDenominator" /></th>
+                <th class="main_delimiter" id="delimiter_room_@item.Id" hidden>
+                    <table width="100%" class="delimiter_room_table">
+                        <tr class="delimiter_main">
+                            <th class="delimiter_room_denominator">
+                                <input class="schedule_input" type="text" onchange="editRoomDenominator(@item.Id, this.value)" autocomplete="off" value="@item.RoomDenominator" />
+                            </th>
+                        </tr>
+                        <tr class="delimiter_main">
+                            <th class="delimiter_room_numenator">
+                                <input class="schedule_input" type="text" onchange="editRoomNumerator(@item.Id, this.value)" autocomplete="off" value="@item.RoomNumerator" />
+                            </th>
+                        </tr>
+                    </table>
                 </th>
-            }
-        </tr>
-        <tr>
-            @foreach (var item in Model.Schedules.Where(s => s.DayOfTheWeek == 2 && s.SubjectNumber == 2))
-            {
-                <th>@item.SubjectNumber</th>
-                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
-                <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
-                <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
-                <th class="select_teachers">
-                    <select class="select_options" onchange="editTeacher(@item.Id, this.value)">
-                        @foreach (var teacher in Model.Teachers)
-                        {
-                            @if(teacher.Id == item.Teacher?.Id)
-                            {
-                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                            } else
-                            {
-                                <option value="@teacher.Id">@teacher.teacherFullName</option>
-                            }
-                        }
-                    </select>
+                <th class="subject_name" id="single_subject_@item.Id">
+                    <div class="schedule_input_block">
+                        <input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" />
+                    </div>
+                    <div class="add_numerator_block">
+                        <button class="add_numerator" onclick="displayDelimiter(@item.Id)"><i class="fa-solid fa-plus"></i></button>
+                    </div>
                 </th>
-            }
-        </tr>
-        <tr>
-            @foreach (var item in Model.Schedules.Where(s => s.DayOfTheWeek == 2 && s.SubjectNumber == 3))
-            {
-                <th>@item.SubjectNumber</th>
-                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
-                <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
-                <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
-                <th class="select_teachers">
-                    <select class="select_options" onchange="editTeacher(@item.Id, this.value)">
-                        @foreach (var teacher in Model.Teachers)
-                        {
-                            @if (teacher.Id == item.Teacher?.Id)
-                            {
-                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                            }
-                            else
-                            {
-                                <option value="@teacher.Id">@teacher.teacherFullName</option>
-                            }
-                        }
-                    </select>
+                <th class="main_delimiter" id="delimiter_subject_@item.Id" hidden>
+                    <table width="100%" class="delimiter_table">
+                        <tr class="delimiter_main">
+                            <th class="delimiter_denominator">
+                                <div class="schedule_input_block">
+                                    <input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" />
+                                </div>
+                                <div class="minus_delimiter_block">
+                                    <button class="add_numerator" onclick="hiddenDelimiter(@item.Id)"><i class="fa-solid fa-minus"></i></button>
+                                </div>
+                            </th>
+                        </tr>
+                        <tr class="delimiter_main">
+                            <th class="delimiter_numerator">
+                                <div class="schedule_input_block">
+                                    <input class="schedule_input" type="text" onchange="editNumerator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectNumerator" />
+                                </div>
+                            </th>
+                        </tr>
+                    </table>
                 </th>
-            }
-        </tr>
-        <tr>
-            @foreach (var item in Model.Schedules.Where(s => s.DayOfTheWeek == 2 && s.SubjectNumber == 4))
-            {
-                <th>@item.SubjectNumber</th>
-                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
-                <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
-                <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
-                <th class="select_teachers">
-                    <select class="select_options" onchange="editTeacher(@item.Id, this.value)">
-                        @foreach (var teacher in Model.Teachers)
-                        {
-                            @if (teacher.Id == item.Teacher?.Id)
+                <th class="select_teachers" id="single_teacher_@item.Id">
+                    <div class="select_teachers_block">
+                        <select class="select_options" onchange="editTeacherDenominator(@item.Id, this.value)">
+                            <option value="@null"></option>
+                            @foreach (var teacher in Model.Teachers)
                             {
-                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                                @if (teacher.Id == item.TeacherDenominatorId)
+                                {
+                                    <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                                }
+                                else
+                                {
+                                    <option value="@teacher.Id">@teacher.teacherFullName</option>
+                                }
                             }
-                            else
-                            {
-                                <option value="@teacher.Id">@teacher.teacherFullName</option>
-                            }
-                        }
-                    </select>
+                        </select>
+                    </div>
                 </th>
-            }
-        </tr>
-        <tr>
-            <th rowspan="4" class="day_of_the_week">Среда</th>
-            @foreach (var item in Model.Schedules.Where(s => s.DayOfTheWeek == 3 && s.SubjectNumber == 1))
-            {
-                <th>@item.SubjectNumber</th>
-                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
-                <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
-                <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
-                <th class="select_teachers">
-                    <select class="select_options" onchange="editTeacher(@item.Id, this.value)">
-                        @foreach (var teacher in Model.Teachers)
-                        {
-                            @if (teacher.Id == item.Teacher?.Id)
-                            {
-                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                            }
-                            else
-                            {
-                                <option value="@teacher.Id">@teacher.teacherFullName</option>
-                            }
-                        }
-                    </select>
+                <th class="main_teacher_delimiter" id="delimiter_teacher_@item.Id" hidden>
+                    <table width="100%" class="delimiter_teacher_table">
+                        <tr class="delimiter_teacher_main">
+                            <th class="delimiter_teacher_denominator">
+                                <select class="select_options" onchange="editTeacherDenominator(@item.Id, this.value)">
+                                    <option value="@null"></option>
+                                    @foreach (var teacher in Model.Teachers)
+                                    {
+                                        @if (teacher.Id == item.TeacherDenominatorId)
+                                        {
+                                            <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@teacher.Id">@teacher.teacherFullName</option>
+                                        }
+                                    }
+                                </select>
+                            </th>
+                        </tr>
+                        <tr class="delimiter_teacher_main">
+                            <th class="delimiter_teacher_numerator">
+                                <select class="select_options" onchange="editTeacherNumerator(@item.Id, this.value)">
+                                    <option value="@null"></option>
+                                    @foreach (var teacher in Model.Teachers)
+                                    {
+                                        @if (teacher.Id == item.TeacherNumeratorId)
+                                        {
+                                            <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@teacher.Id">@teacher.teacherFullName</option>
+                                        }
+                                    }
+                                </select>
+                            </th>
+                        </tr>
+                    </table>
                 </th>
-            }
-        </tr>
-        <tr>
-            @foreach (var item in Model.Schedules.Where(s => s.DayOfTheWeek == 3 && s.SubjectNumber == 2))
-            {
-                <th>@item.SubjectNumber</th>
-                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
-                <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
-                <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
-                <th class="select_teachers">
-                    <select class="select_options" onchange="editTeacher(@item.Id, this.value)">
-                        @foreach (var teacher in Model.Teachers)
-                        {
-                            @if (teacher.Id == item.Teacher?.Id)
-                            {
-                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                            }
-                            else
-                            {
-                                <option value="@teacher.Id">@teacher.teacherFullName</option>
-                            }
-                        }
-                    </select>
-                </th>
-            }
-        </tr>
-        <tr>
-            @foreach (var item in Model.Schedules.Where(s => s.DayOfTheWeek == 3 && s.SubjectNumber == 3))
-            {
-                <th>@item.SubjectNumber</th>
-                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
-                <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
-                <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
-                <th class="select_teachers">
-                    <select class="select_options" onchange="editTeacher(@item.Id, this.value)">
-                        @foreach (var teacher in Model.Teachers)
-                        {
-                            @if(teacher.Id == item.Teacher?.Id)
-                            {
-                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                            } else
-                            {
-                                <option value="@teacher.Id">@teacher.teacherFullName</option>
-                            }
-                        }
-                    </select>
-                </th>
-            }
-        </tr>
-        <tr>
-            @foreach (var item in Model.Schedules.Where(s => s.DayOfTheWeek == 3 && s.SubjectNumber == 4))
-            {
-                <th>@item.SubjectNumber</th>
-                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
-                <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
-                <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
-                <th class="select_teachers">
-                    <select class="select_options" onchange="editTeacher(@item.Id, this.value)">
-                        @foreach (var teacher in Model.Teachers)
-                        {
-                            @if (teacher.Id == item.Teacher?.Id)
-                            {
-                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                            }
-                            else
-                            {
-                                <option value="@teacher.Id">@teacher.teacherFullName</option>
-                            }
-                        }
-                    </select>
-                </th>
-            }
-        </tr>
-        <tr>
-            <th rowspan="4" class="day_of_the_week">Четверг</th>
-            @foreach (var item in Model.Schedules.Where(s => s.DayOfTheWeek == 4 && s.SubjectNumber == 1))
-            {
-                <th>@item.SubjectNumber</th>
-                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
-                <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
-                <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
-                <th class="select_teachers">
-                    <select class="select_options" onchange="editTeacher(@item.Id, this.value)">
-                        @foreach (var teacher in Model.Teachers)
-                        {
-                            @if (teacher.Id == item.Teacher?.Id)
-                            {
-                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                            }
-                            else
-                            {
-                                <option value="@teacher.Id">@teacher.teacherFullName</option>
-                            }
-                        }
-                    </select>
-                </th>
-            }
-        </tr>
-        <tr>
-            @foreach (var item in Model.Schedules.Where(s => s.DayOfTheWeek == 4 && s.SubjectNumber == 2))
-            {
-                <th>@item.SubjectNumber</th>
-                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
-                <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
-                <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
-                <th class="select_teachers">
-                    <select class="select_options" onchange="editTeacher(@item.Id, this.value)">
-                        @foreach (var teacher in Model.Teachers)
-                        {
-                            @if (teacher.Id == item.Teacher?.Id)
-                            {
-                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                            }
-                            else
-                            {
-                                <option value="@teacher.Id">@teacher.teacherFullName</option>
-                            }
-                        }
-                    </select>
-                </th>
-            }
-        </tr>
-        <tr>
-            @foreach (var item in Model.Schedules.Where(s => s.DayOfTheWeek == 4 && s.SubjectNumber == 3))
-            {
-                <th>@item.SubjectNumber</th>
-                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
-                <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
-                <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
-                <th class="select_teachers">
-                    <select class="select_options" onchange="editTeacher(@item.Id, this.value)">
-                        @foreach (var teacher in Model.Teachers)
-                        {
-                            @if (teacher.Id == item.Teacher?.Id)
-                            {
-                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                            }
-                            else
-                            {
-                                <option value="@teacher.Id">@teacher.teacherFullName</option>
-                            }
-                        }
-                    </select>
-                </th>
-            }
-        </tr>
-        <tr>
-            @foreach (var item in Model.Schedules.Where(s => s.DayOfTheWeek == 4 && s.SubjectNumber == 4))
-            {
-                <th>@item.SubjectNumber</th>
-                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
-                <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
-                <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
-                <th class="select_teachers">
-                    <select class="select_options" onchange="editTeacher(@item.Id, this.value)">
-                        @foreach (var teacher in Model.Teachers)
-                        {
-                            @if(teacher.Id == item.Teacher?.Id)
-                            {
-                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                            } else
-                            {
-                                <option value="@teacher.Id">@teacher.teacherFullName</option>
-                            }
-                        }
-                    </select>
-                </th>
-            }
-        </tr>
-        <tr>
-            <th rowspan="4" class="day_of_the_week">Пятница</th>
-            @foreach (var item in Model.Schedules.Where(s => s.DayOfTheWeek == 5 && s.SubjectNumber == 1))
-            {
-                <th>@item.SubjectNumber</th>
-                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
-                <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
-                <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
-                <th class="select_teachers">
-                    <select class="select_options" onchange="editTeacher(@item.Id, this.value)">
-                        @foreach (var teacher in Model.Teachers)
-                        {
-                            @if (teacher.Id == item.Teacher?.Id)
-                            {
-                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                            }
-                            else
-                            {
-                                <option value="@teacher.Id">@teacher.teacherFullName</option>
-                            }
-                        }
-                    </select>
-                </th>
-            }
-        </tr>
-        <tr>
-            @foreach (var item in Model.Schedules.Where(s => s.DayOfTheWeek == 5 && s.SubjectNumber == 2))
-            {
-                <th>@item.SubjectNumber</th>
-                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
-                <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
-                <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
-                <th class="select_teachers">
-                    <select class="select_options" onchange="editTeacher(@item.Id, this.value)">
-                        @foreach (var teacher in Model.Teachers)
-                        {
-                            @if(teacher.Id == item.Teacher?.Id)
-                            {
-                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                            } else
-                            {
-                                <option value="@teacher.Id">@teacher.teacherFullName</option>
-                            }
-                        }
-                    </select>
-                </th>
-            }
-        </tr>
-        <tr>
-            @foreach (var item in Model.Schedules.Where(s => s.DayOfTheWeek == 5 && s.SubjectNumber == 3))
-            {
-                <th>@item.SubjectNumber</th>
-                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
-                <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
-                <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
-                <th class="select_teachers">
-                    <select class="select_options" onchange="editTeacher(@item.Id, this.value)">
-                        @foreach (var teacher in Model.Teachers)
-                        {
-                            @if (teacher.Id == item.Teacher?.Id)
-                            {
-                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                            }
-                            else
-                            {
-                                <option value="@teacher.Id">@teacher.teacherFullName</option>
-                            }
-                        }
-                    </select>
-                </th>
-            }
-        </tr>
-        <tr>
-            @foreach (var item in Model.Schedules.Where(s => s.DayOfTheWeek == 5 && s.SubjectNumber == 4))
-            {
-                <th>@item.SubjectNumber</th>
-                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
-                <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
-                <th><input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" /></th>
-                <th class="select_teachers">
-                    <select class="select_options" onchange="editTeacher(@item.Id, this.value)">
-                        @foreach (var teacher in Model.Teachers)
-                        {
-                            @if(teacher.Id == item.Teacher?.Id)
-                            {
-                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                            } else
-                            {
-                                <option value="@teacher.Id">@teacher.teacherFullName</option>
-                            }
-                        }
-                    </select>
-                </th>
-            }
-        </tr>
+            </tr>
+        }
     </table>
 
     <div class="back_to_main">
@@ -529,12 +611,27 @@
         });
     }
 
-    function editRoom(scheduleId, roomNumber) {
+    function editRoomDenominator(scheduleId, roomDenominatorNumber) {
         $.ajax({
-            url: "/home/EditRoom",
+            url: "/home/EditRoomDenominator",
             method: "POST",
             dataType: "json",
-            data: { id: scheduleId, room: roomNumber },
+            data: { id: scheduleId, roomDenominator: roomDenominatorNumber },
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+
+    function editRoomNumerator(scheduleId, roomNumeratorNumber) {
+        $.ajax({
+            url: "/home/EditRoomNumerator",
+            method: "POST",
+            dataType: "json",
+            data: { id: scheduleId, roomNumerator: roomNumeratorNumber },
             success: function (data) {
                 console.log(data);
             },
@@ -574,12 +671,27 @@
         });
     }
 
-    function editTeacher(scheduleId, teacherNameId) {
+    function editTeacherDenominator(scheduleId, teacherDenominatorNameId) {
         $.ajax({
-            url: "/home/EditTeacher",
+            url: "/home/EditTeacherDenominator",
             method: "POST",
             dataType: "json",
-            data: { id: scheduleId, teacherId: teacherNameId },
+            data: { id: scheduleId, teacherDenominatorId: teacherDenominatorNameId },
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+
+    function editTeacherNumerator(scheduleId, teacherNumeratorNameId) {
+        $.ajax({
+            url: "/home/EditTeacherNumerator",
+            method: "POST",
+            dataType: "json",
+            data: { id: scheduleId, teacherNumeratorId: teacherNumeratorNameId },
             success: function (data) {
                 console.log(data);
             },

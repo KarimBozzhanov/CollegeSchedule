@@ -222,7 +222,7 @@ th {
 }
 
 .cabinet {
-    width: 1%;
+    width: 1.1%;
 }
 
 .schedule_table {
@@ -234,6 +234,7 @@ th {
     z-index: 99;
     font-size: 8px;
 }
+
 
 .group {
     width: 10%;
@@ -482,18 +483,193 @@ th {
     height: 100%;
 }
 
-.select_teachers select{
+.select_teachers {
+    position: relative;
+}
+
+.select_teachers div {
+    display: inline-block;
+}
+
+.select_teachers_block select {
     width: 100%;
     font-size: 17px;
     text-align: center;
     border: none;
 }
 
-.select_teachers select:focus {
+.select_teachers_block select:focus {
     outline: none;
-}
+}l
 
 .teachers_block{
     margin-top: 30px;
     width: 100%;
+}
+
+.subject_name div {
+    display: inline-block;
+}
+
+.subject_name {
+    position: relative;
+    border: 1px;
+}
+
+.select_teachers_block {
+    width: 100%;
+}
+
+.add_numerator_block {
+    position: absolute;
+    right: 1%;
+    top: 4px;
+}
+
+.add_teacher_block {
+    position: absolute;
+    right: 1%;
+    top: 4px;
+}
+
+.add_numerator {
+    background: linear-gradient(87.77deg, #4794C5 1.87%, #90BAD3 110.82%);
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.delimiter_denominator {
+    width: 100%;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    position: relative;
+}
+
+.delimiter_denominator div {
+    display: inline-block;
+}
+
+.delimiter_numerator {
+    width: 100%;
+    border-bottom: none;
+    border-right: none;
+    border-left: none;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+
+.schedule_input_block {
+    width: 100%;
+}
+
+.delimiter_main {
+    border: 5px;
+}
+
+
+.main_delimiter {
+    height: 100%;
+    padding: 0px;
+}
+
+.delimiter_teacher_table {
+    height: 100%;
+}
+
+.delimiter_table {
+    border: 5px;
+}
+
+.minus_delimiter_block {
+    position: absolute;
+    right: 1%;
+    top: 4px;
+}
+
+.delimiter_room_denominator {
+    width: 100%;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    position: relative;
+}
+
+
+.delimiter_room_numenator {
+    width: 100%;
+    border-bottom: none;
+    border-right: none;
+    border-left: none;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+
+.delimiter_room_table {
+    border: 1px;
+}
+
+
+.delimiter_teacher_denominator {
+    width: 100%;
+    border-top: none;
+    border-right: none;
+    border-left: none;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    position: relative;
+}
+
+
+.delimiter_teacher_numerator {
+    width: 100%;
+    border-bottom: none;
+    border-right: none;
+    border-left: none;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+.delimiter_teacher_main {
+    border: 5px;
+}
+
+
+.main_teacher_delimiter {
+    height: 100%;
+    border: 5px;
+    padding: 0px;
+}
+
+.delimiter_teacher_table {
+    border: 5px;
+}
+
+.delimiter_teacher_denominator select {
+    width: 100%;
+    font-size: 17px;
+    text-align: center;
+    border: none;
+}
+
+.delimiter_teacher_denominator select:focus {
+    outline: none;
+}
+
+.delimiter_teacher_numerator select {
+    width: 100%;
+    font-size: 17px;
+    text-align: center;
+    border: none;
+}
+
+.delimiter_teacher_numerator select:focus {
+    outline: none;
 }

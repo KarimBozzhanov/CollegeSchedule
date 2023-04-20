@@ -49,7 +49,7 @@
             {
                 <div class="group_list" align="center">
                     <div class="group_info" align="left">
-                        <a class="group_btn" asp-action="ScheduleTable" asp-controller="Home" asp-route-groupId="@teacher.Id">@teacher.teacherFullName</a>
+                        <a class="group_btn" asp-action="TeachersSchedule" asp-controller="Home" asp-route-teacherId="@teacher.Id">@teacher.teacherFullName</a>
                     </div>
                     <div class="change_group" align="right">
                         @if (User.Identity.IsAuthenticated)
@@ -57,7 +57,7 @@
                             <a class="edit_group" data-bs-toggle="modal" data-bs-target="#editGroupModal" onclick="getGroupInfo(@teacher.Id)">
                                 <i class="fa-solid fa-pen-to-square"></i>
                             </a>
-                            <form class="delete_form" asp-action="DeleteGroup" asp-controller="Home" asp-route-groupId="@teacher.Id">
+                            <form class="delete_form" asp-action="DeleteTeacher" asp-controller="Home" asp-route-teacherId="@teacher.Id">
                                 <button class="delete_group">
                                     <i class="fa-solid fa-square-minus"></i>
                                 </button>
