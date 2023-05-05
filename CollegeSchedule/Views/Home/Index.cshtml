@@ -13,7 +13,7 @@
     <div class="main_buttons" align="center">
         <div class="main_schedule" align="center">
             <button class="main_schedule_btn" onclick="scheduleDropdown()" id="schedule_btn">
-                Расписание пар
+                Расписание занятий
             </button>
         </div>
 
@@ -31,10 +31,23 @@
         </div>
 
         <div class="hidden_practice_schedule" align="center" style="display: none" id="hidden_practice_schedule">
-            <a class="first_cource">1 курс</a>
-            <a class="second_cource">2 курс</a>
-            <a class="third_cource">3 курс</a>
-            <a class="fourth_cource">4 курс</a>
+            <a class="first_cource" asp-action="PracticeGroupsList" asp-controller="Home" asp-route-cource="1">1 курс</a>
+            <a class="second_cource" asp-action="PracticeGroupsList" asp-controller="Home" asp-route-cource="2">2 курс</a>
+            <a class="third_cource" asp-action="PracticeGroupsList" asp-controller="Home" asp-route-cource="3">3 курс</a>
+            <a class="fourth_cource" asp-action="PracticeGroupsList" asp-controller="Home" asp-route-cource="4">4 курс</a>
+        </div>
+
+        <div class="practice_schedule" align="center" id="exams_btn">
+            <button class="practice_schedule_btn" onclick="examsScheduleDropdown()" id="exams_schedule_btn">
+                Расписание экзаменов
+            </button>
+        </div>
+
+        <div class="hidden_practice_schedule" align="center" style="display: none" id="hidden_exams_schedule">
+            <a class="first_cource" asp-action="ExamsListOfGroups" asp-controller="home" asp-route-cource="1">1 курс</a>
+            <a class="second_cource" asp-action="ExamsListOfGroups" asp-controller="home" asp-route-cource="2">2 курс</a>
+            <a class="third_cource" asp-action="ExamsListOfGroups" asp-controller="home" asp-route-cource="3">3 курс</a>
+            <a class="fourth_cource" asp-action="ExamsListOfGroups" asp-controller="home" asp-route-cource="4">4 курс</a>
         </div>
 
         <div class="hidden_practice_schedule">
@@ -43,7 +56,6 @@
             </a>
         </div>
     </div>
-
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/js/bootstrap.min.js"></script>

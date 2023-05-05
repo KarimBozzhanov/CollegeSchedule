@@ -48,7 +48,7 @@
                         <input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" />
                     </div>
                     <div class="add_numerator_block">
-                        <button class="add_numerator" onclick="displayDelimiter(@item.Id)"><i class="fa-solid fa-plus"></i></button>
+                        <button class="add_numerator" onclick="displayDelimiter(@item.Id)" id="add_numerator_@item.Id"><i class="fa-solid fa-plus"></i></button>
                     </div>
                 </th>
                 <th class="main_delimiter" id="delimiter_subject_@item.Id" hidden>
@@ -89,25 +89,33 @@
                             }
                         </select>
                     </div>
+                    <div class="add_numerator_block">
+                        <button class="add_numerator" onclick="displayTeacherDelimiter(@item.Id)"><i class="fa-solid fa-plus"></i></button>
+                    </div>
                 </th>
                 <th class="main_teacher_delimiter" id="delimiter_teacher_@item.Id" hidden>
                     <table width="100%" class="delimiter_teacher_table">
                         <tr class="delimiter_teacher_main">
                             <th class="delimiter_teacher_denominator">
-                                <select class="select_options" onchange="editTeacherDenominator(@item.Id, this.value)">
-                                    <option value="@null"></option>
-                                    @foreach (var teacher in Model.Teachers)
-                                    {
-                                        @if (teacher.Id == item.TeacherDenominatorId)
+                                <div class="hidden_teacher_delimiter">
+                                    <select class="select_options" onchange="editTeacherDenominator(@item.Id, this.value)">
+                                        <option value="@null"></option>
+                                        @foreach (var teacher in Model.Teachers)
                                         {
-                                            <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                                            @if (teacher.Id == item.TeacherDenominatorId)
+                                            {
+                                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@teacher.Id">@teacher.teacherFullName</option>
+                                            }
                                         }
-                                        else
-                                        {
-                                            <option value="@teacher.Id">@teacher.teacherFullName</option>
-                                        }
-                                    }
-                                </select>
+                                    </select>
+                                </div>
+                                <div class="minus_delimiter_block" id="minus_teacher_delimiter_@item.Id" hidden>
+                                    <button class="add_numerator" onclick="hiddenTeacherDelimiter(@item.Id)"><i class="fa-solid fa-minus"></i></button>
+                                </div>
                             </th>
                         </tr>
                         <tr class="delimiter_teacher_main">
@@ -160,7 +168,7 @@
                         <input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" />
                     </div>
                     <div class="add_numerator_block">
-                        <button class="add_numerator" onclick="displayDelimiter(@item.Id)"><i class="fa-solid fa-plus"></i></button>
+                        <button class="add_numerator" onclick="displayDelimiter(@item.Id)" id="add_numerator_@item.Id"><i class="fa-solid fa-plus"></i></button>
                     </div>
                 </th>
                 <th class="main_delimiter" id="delimiter_subject_@item.Id" hidden>
@@ -201,25 +209,33 @@
                             }
                         </select>
                     </div>
+                    <div class="add_numerator_block">
+                        <button class="add_numerator" onclick="displayTeacherDelimiter(@item.Id)"><i class="fa-solid fa-plus"></i></button>
+                    </div>
                 </th>
                 <th class="main_teacher_delimiter" id="delimiter_teacher_@item.Id" hidden>
                     <table width="100%" class="delimiter_teacher_table">
                         <tr class="delimiter_teacher_main">
                             <th class="delimiter_teacher_denominator">
-                                <select class="select_options" onchange="editTeacherDenominator(@item.Id, this.value)">
-                                    <option value="@null"></option>
-                                    @foreach (var teacher in Model.Teachers)
-                                    {
-                                        @if (teacher.Id == item.TeacherDenominatorId)
+                                <div class="hidden_teacher_delimiter">
+                                    <select class="select_options" onchange="editTeacherDenominator(@item.Id, this.value)">
+                                        <option value="@null"></option>
+                                        @foreach (var teacher in Model.Teachers)
                                         {
-                                            <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                                            @if (teacher.Id == item.TeacherDenominatorId)
+                                            {
+                                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@teacher.Id">@teacher.teacherFullName</option>
+                                            }
                                         }
-                                        else
-                                        {
-                                            <option value="@teacher.Id">@teacher.teacherFullName</option>
-                                        }
-                                    }
-                                </select>
+                                    </select>
+                                </div>
+                                <div class="minus_delimiter_block" id="minus_teacher_delimiter_@item.Id" hidden>
+                                    <button class="add_numerator" onclick="hiddenTeacherDelimiter(@item.Id)"><i class="fa-solid fa-minus"></i></button>
+                                </div>
                             </th>
                         </tr>
                         <tr class="delimiter_teacher_main">
@@ -272,7 +288,7 @@
                         <input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" />
                     </div>
                     <div class="add_numerator_block">
-                        <button class="add_numerator" onclick="displayDelimiter(@item.Id)"><i class="fa-solid fa-plus"></i></button>
+                        <button class="add_numerator" onclick="displayDelimiter(@item.Id)" id="add_numerator_@item.Id"><i class="fa-solid fa-plus"></i></button>
                     </div>
                 </th>
                 <th class="main_delimiter" id="delimiter_subject_@item.Id" hidden>
@@ -313,25 +329,33 @@
                             }
                         </select>
                     </div>
+                    <div class="add_numerator_block">
+                        <button class="add_numerator" onclick="displayTeacherDelimiter(@item.Id)"><i class="fa-solid fa-plus"></i></button>
+                    </div>
                 </th>
                 <th class="main_teacher_delimiter" id="delimiter_teacher_@item.Id" hidden>
                     <table width="100%" class="delimiter_teacher_table">
                         <tr class="delimiter_teacher_main">
                             <th class="delimiter_teacher_denominator">
-                                <select class="select_options" onchange="editTeacherDenominator(@item.Id, this.value)">
-                                    <option value="@null"></option>
-                                    @foreach (var teacher in Model.Teachers)
-                                    {
-                                        @if (teacher.Id == item.TeacherDenominatorId)
+                                <div class="hidden_teacher_delimiter">
+                                    <select class="select_options" onchange="editTeacherDenominator(@item.Id, this.value)">
+                                        <option value="@null"></option>
+                                        @foreach (var teacher in Model.Teachers)
                                         {
-                                            <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                                            @if (teacher.Id == item.TeacherDenominatorId)
+                                            {
+                                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@teacher.Id">@teacher.teacherFullName</option>
+                                            }
                                         }
-                                        else
-                                        {
-                                            <option value="@teacher.Id">@teacher.teacherFullName</option>
-                                        }
-                                    }
-                                </select>
+                                    </select>
+                                </div>
+                                <div class="minus_delimiter_block" id="minus_teacher_delimiter_@item.Id" hidden>
+                                    <button class="add_numerator" onclick="hiddenTeacherDelimiter(@item.Id)"><i class="fa-solid fa-minus"></i></button>
+                                </div>
                             </th>
                         </tr>
                         <tr class="delimiter_teacher_main">
@@ -384,7 +408,7 @@
                         <input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" />
                     </div>
                     <div class="add_numerator_block">
-                        <button class="add_numerator" onclick="displayDelimiter(@item.Id)"><i class="fa-solid fa-plus"></i></button>
+                        <button class="add_numerator" onclick="displayDelimiter(@item.Id)" id="add_numerator_@item.Id"><i class="fa-solid fa-plus"></i></button>
                     </div>
                 </th>
                 <th class="main_delimiter" id="delimiter_subject_@item.Id" hidden>
@@ -425,25 +449,33 @@
                             }
                         </select>
                     </div>
+                    <div class="add_numerator_block">
+                        <button class="add_numerator" onclick="displayTeacherDelimiter(@item.Id)"><i class="fa-solid fa-plus"></i></button>
+                    </div>
                 </th>
                 <th class="main_teacher_delimiter" id="delimiter_teacher_@item.Id" hidden>
                     <table width="100%" class="delimiter_teacher_table">
                         <tr class="delimiter_teacher_main">
                             <th class="delimiter_teacher_denominator">
-                                <select class="select_options" onchange="editTeacherDenominator(@item.Id, this.value)">
-                                    <option value="@null"></option>
-                                    @foreach (var teacher in Model.Teachers)
-                                    {
-                                        @if (teacher.Id == item.TeacherDenominatorId)
+                                <div class="hidden_teacher_delimiter">
+                                    <select class="select_options" onchange="editTeacherDenominator(@item.Id, this.value)">
+                                        <option value="@null"></option>
+                                        @foreach (var teacher in Model.Teachers)
                                         {
-                                            <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                                            @if (teacher.Id == item.TeacherDenominatorId)
+                                            {
+                                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@teacher.Id">@teacher.teacherFullName</option>
+                                            }
                                         }
-                                        else
-                                        {
-                                            <option value="@teacher.Id">@teacher.teacherFullName</option>
-                                        }
-                                    }
-                                </select>
+                                    </select>
+                                </div>
+                                <div class="minus_delimiter_block" id="minus_teacher_delimiter_@item.Id" hidden>
+                                    <button class="add_numerator" onclick="hiddenTeacherDelimiter(@item.Id)"><i class="fa-solid fa-minus"></i></button>
+                                </div>
                             </th>
                         </tr>
                         <tr class="delimiter_teacher_main">
@@ -496,7 +528,7 @@
                         <input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" />
                     </div>
                     <div class="add_numerator_block">
-                        <button class="add_numerator" onclick="displayDelimiter(@item.Id)"><i class="fa-solid fa-plus"></i></button>
+                        <button class="add_numerator" onclick="displayDelimiter(@item.Id)" id="add_numerator_@item.Id"><i class="fa-solid fa-plus"></i></button>
                     </div>
                 </th>
                 <th class="main_delimiter" id="delimiter_subject_@item.Id" hidden>
@@ -537,25 +569,33 @@
                             }
                         </select>
                     </div>
+                    <div class="add_numerator_block">
+                        <button class="add_numerator" onclick="displayTeacherDelimiter(@item.Id)"><i class="fa-solid fa-plus"></i></button>
+                    </div>
                 </th>
                 <th class="main_teacher_delimiter" id="delimiter_teacher_@item.Id" hidden>
                     <table width="100%" class="delimiter_teacher_table">
                         <tr class="delimiter_teacher_main">
                             <th class="delimiter_teacher_denominator">
-                                <select class="select_options" onchange="editTeacherDenominator(@item.Id, this.value)">
-                                    <option value="@null"></option>
-                                    @foreach (var teacher in Model.Teachers)
-                                    {
-                                        @if (teacher.Id == item.TeacherDenominatorId)
+                                <div class="hidden_teacher_delimiter">
+                                    <select class="select_options" onchange="editTeacherDenominator(@item.Id, this.value)">
+                                        <option value="@null"></option>
+                                        @foreach (var teacher in Model.Teachers)
                                         {
-                                            <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                                            @if (teacher.Id == item.TeacherDenominatorId)
+                                            {
+                                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@teacher.Id">@teacher.teacherFullName</option>
+                                            }
                                         }
-                                        else
-                                        {
-                                            <option value="@teacher.Id">@teacher.teacherFullName</option>
-                                        }
-                                    }
-                                </select>
+                                    </select>
+                                </div>
+                                <div class="minus_delimiter_block" id="minus_teacher_delimiter_@item.Id" hidden>
+                                    <button class="add_numerator" onclick="hiddenTeacherDelimiter(@item.Id)"><i class="fa-solid fa-minus"></i></button>
+                                </div>
                             </th>
                         </tr>
                         <tr class="delimiter_teacher_main">

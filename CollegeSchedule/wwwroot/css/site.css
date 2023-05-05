@@ -268,6 +268,10 @@ th {
     width: 1%;
 }
 
+.date {
+    width: 1%;
+}
+
 .menu {
     width: 30%;
 }
@@ -318,29 +322,34 @@ th {
 }
 
 .login_input {
-    position: absolute;
-    top: 39%;
-    left: 40%;
+    margin-bottom: 10px;
+    width: 200px;
+    padding: 3px 10px;
 }
 
 .pass_input {
-    position: absolute;
-    top: 48%;
-    left: 40%;
+    margin-bottom: 20px;
+    width: 200px;
+    padding: 3px 10px;
 }
 
 .login_btn {
-    position: absolute;
-    top: 58%;
-    left: 40%;
-    padding: 5px 110px;
     background: linear-gradient(92.42deg, #367AA5 0%, #4794C6 100%);
-    width: 20.8%;
-    padding: 5px 5px;
     border: 0px;
     border-radius: 3px;
     color: black;
+    padding: 3px 78px;
 }
+
+.login_header {
+    padding-top: 15%;
+}
+
+.authorization_block {
+    position: absolute;
+    width: 15%;
+}
+
 
 .validation {
     color: black;
@@ -644,7 +653,6 @@ th {
 
 .main_teacher_delimiter {
     height: 100%;
-    border: 5px;
     padding: 0px;
 }
 
@@ -672,4 +680,55 @@ th {
 
 .delimiter_teacher_numerator select:focus {
     outline: none;
+}
+
+.hidden_teacher_delimiter select{
+    width: 100%;
+    font-size: 17px;
+    text-align: center;
+    border: none;
+}
+
+.hidden_teacher_delimiter select:focus {
+    outline: none;
+}
+
+
+.delete_exam {
+    border-right: 1px solid white;
+    border-top: 1px solid white;
+    border-bottom: 1px solid white;
+    width: 0.5%;
+}
+
+.delete_exam_btn {
+    border: none;
+    background-color: transparent;
+}
+
+.delete_exam_btn:focus {
+    outline: none;
+}
+
+.add_exam {
+    z-index: 99;
+    position: fixed;
+    bottom: 50px;
+    right: 50px;
+    background: linear-gradient(92.42deg, #367AA5 0%, #4794C6 100%);
+    color: #FAFAFA;
+    width: 48px;
+    height: 48px;
+    border: none;
+    border-radius: 50%;
+    transition: 0.3s ease-in-out;
+}
+
+.add_exam i {
+    position: relative;
+    top: 1px;
+}
+
+.add_exam:hover {
+    color: #FAFAFA;
 }

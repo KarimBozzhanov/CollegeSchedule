@@ -1,39 +1,39 @@
 ﻿@model CollegeSchedule.ViewModels.LoginModel
-
+@{
+    Layout = "_Layout";
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="~/css/bootstrap.min.css  />
+    <title>@ViewData["Title"] - HZProject</title>
+    <link rel="stylesheet" href="~/css/bootstrap.min.css     />
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
-<body class="login_body">
-
-    <div class="container">
-        <div class="login_block">
-            <h3 class="login_text" style="display: inline">Вход</h3>
-            <div class="validation" style="float: right" asp-validation-summary="ModelOnly"></div>
+<body>
+    <div class="content">
+        <div class="container">
+            <div class="login_header">
+                <h4 align="center" class="register_text mt-3" style="padding-bottom: 10px"><b>Вход</b></h4>
+            </div>
+            <form asp-action="Login" asp-controller="Home" enctype="multipart/form-data" asp-antiforgery="true">
+                <div class="login_body" align="center">
+                    <input type="text" asp-for="userName" class="login_input" placeholder="ФИО" autocomplete="off" required />
+                </div>
+                <div class="login_body" align="center">
+                    <input type="password" asp-for="password" class="pass_input" placeholder="Пароль" autocomplete="off" required />
+                </div>
+                <div class="form-group" align="center">
+                    <button type="submit" class="login_btn">Войти</button>
+                </div>
+            </form>
         </div>
-        <form asp-action="Login" asp-controller="Home" enctype="multipart/form-data" asp-antiforgery="true">
-            <div class="login_input">
-                <input class="input_block" type="text" placeholder="Логин" asp-for="userName" autocomplete="off" required />
-            </div>
-            <div class="pass_input">
-                <input class="input_block" type="password" placeholder="Пароль" asp-for="password" autocomplete="off" required />
-            </div>
-            <div class="login_button_block">
-                <button type="submit" class="login_btn">Войти</button>
-            </div>
-        </form>
     </div>
-    
 
-    <script src="~/js/jquery.min.js></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/js/jquery-3.6.3.js"></script>
-    <script src="~/js/jquery-3.6.3.min.js"></script>
 </body>
 </html>

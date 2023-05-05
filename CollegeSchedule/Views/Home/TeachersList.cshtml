@@ -54,7 +54,7 @@
                     <div class="change_group" align="right">
                         @if (User.Identity.IsAuthenticated)
                         {
-                            <a class="edit_group" data-bs-toggle="modal" data-bs-target="#editGroupModal" onclick="getGroupInfo(@teacher.Id)">
+                            <a class="edit_group" data-bs-toggle="modal" data-bs-target="#editTeacherModal" onclick="getTeacherInfo(@teacher.Id)">
                                 <i class="fa-solid fa-pen-to-square"></i>
                             </a>
                             <form class="delete_form" asp-action="DeleteTeacher" asp-controller="Home" asp-route-teacherId="@teacher.Id">
@@ -69,7 +69,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="editGroupModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="editTeacherModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="mainModal modal-header">
@@ -77,17 +77,13 @@
                     <button class="close_modal" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark fa-lg" style="color: #e60a0a;"></i></button>
                 </div>
                 <div class="modal-body">
-                    <form asp-action="EditGroup" asp-controller="Home" asp-route-currentCource="@ViewData["cource"]">
+                    <form asp-action="EditTeacher" asp-controller="Home">
                         <div class="groupName">
-                            <h5>Название группы</h5>
-                            <input class="group_input" id="groupName" type="text" placeholder="Название" name="groupName" autocomplete="off" required />
-                        </div>
-                        <div class="groupCource">
-                            <h5>Курс группы</h5>
-                            <input class="group_input" id="groupCource" type="number" placeholder="Курс" name="groupCource" autocomplete="off" required />
+                            <h5>ФИО преподавателя</h5>
+                            <input class="group_input" id="teacherName" type="text" placeholder="Название" name="teacherName" autocomplete="off" required />
                         </div>
                         <div class="groupId">
-                            <input class="group_input" id="groupId" type="text" placeholder="Id" name="groupId" autocomplete="off" required hidden />
+                            <input class="group_input" id="teacherId" type="text" placeholder="Id" name="teacherId" autocomplete="off" required hidden />
                         </div>
                         <div class="save_group_block" align="right">
                             <button type="submit" class="save_group">Изменить</button>
@@ -112,9 +108,9 @@
 </html>
 
 <script type="text/javascript">
-    function getGroupInfo(id) {
+    function getTeacherInfo(id) {
         $.ajax({
-            url: "/home/getGroupInfo/" + id,
+            url: "/home/GetTeacherInfo/" + id,
             method: "GET",
             type: "json",
             dataType: "json",
@@ -122,9 +118,8 @@
                 console.log(data);
                 data = JSON.parse(data);
                 console.log(data);
-                $("#groupName").val(data.GroupName);
-                $("#groupCource").val(data.GroupCource);
-                $("#groupId").val(data.Id);
+                $("#teacherName").val(data.teacherFullName);
+                $("#teacherId").val(data.Id);
             },
             error: function (err) {
                 console.log(err);
