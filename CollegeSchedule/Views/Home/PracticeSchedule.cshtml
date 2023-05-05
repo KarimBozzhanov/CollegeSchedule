@@ -1,0 +1,43 @@
+﻿@model IEnumerable<CollegeSchedule.Models.PracticeSchedule>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - CollegeSchedule</title>
+    <link rel="stylesheet" href="~/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <table class="schedule_table">
+        <tr>
+            <th class="number">№</th>
+            <th class="date">Дата начала</th>
+            <th class="time">Дата окончания</th>
+            <th class="group">Название практики</th>
+            <th class="teacher">Препод.</th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <th>@item.PracticeNumber</th>
+                <th>@item.StartDate</th>
+                <th>@item.EndDate</th>
+                <th>@item.PracticeName</th>
+                <th>@item.Teacher?.teacherFullName</th>
+            </tr>
+        }
+    </table>
+
+    <div class="back_to_main">
+        <a class="back_btn" asp-action="PracticeGroupsList" asp-controller="Home" asp-route-cource="@ViewData["cource"]"><i class="fa-solid fa-chevron-left"></i></a>
+    </div>
+
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+</body>
+</html>

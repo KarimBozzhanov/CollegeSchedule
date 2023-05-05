@@ -1,0 +1,165 @@
+﻿@model CollegeSchedule.Models.AllModels;
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - CollegeSchedule</title>
+    <link rel="stylesheet" href="~/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <form asp-action="AddExam" asp-controller="home" asp-route-groupId="@ViewData["groupId"]" asp-route-examsCount="@ViewBag.examsCount">
+            <button class="add_exam">
+                <i class="fa-solid fa-plus"></i>
+            </button>
+        </form>
+    }
+
+    <table class="schedule_table">
+        @if(ViewBag.examsCount != 0)
+        {
+            <tr>
+                <th class="number">№</th>
+                <th class="date">Дата</th>
+                <th class="time">Время</th>
+                <th class="cabinet">Кабинет</th>
+                <th class="group">Предмет</th>
+                <th class="teacher">Препод.</th>
+                <th class="delete_exam"></th>
+            </tr>
+        }
+        @foreach(var item in Model.ExamsSchedules)
+        {
+            <tr>
+                <th>@item.ExamNumber</th>
+                <th><input class="schedule_input" type="text" onchange="editDate(@item.Id, this.value)" autocomplete="off" value="@item.Date" /></th>
+                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.Time" /></th>
+                <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
+                <th class="subject_name"><input class="schedule_input" type="text" onchange="editName(@item.Id, this.value)" autocomplete="off" value="@item.ExamName" /></th>
+                <th class="select_teachers" id="single_teacher_@item.Id">
+                    <div class="select_teachers_block">
+                        <select class="select_options" onchange="editTeacher(@item.Id, this.value)">
+                            <option value="@null"></option>
+                            @foreach (var teacher in Model.Teachers)
+                            {
+                                @if (teacher.Id == item.TeacherId)
+                                {
+                                    <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                                }
+                                else
+                                {
+                                    <option value="@teacher.Id">@teacher.teacherFullName</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </th>
+                <th class="delete_exam">
+                    <form asp-action="DeleteExam" asp-controller="home" asp-route-examId="@item.Id" asp-route-groupId="@item.GroupId">
+                        <button class="delete_exam_btn"><i class="fa-solid fa-square-minus" style="color: #1885c9; font-size: 25px;"></i></button>
+                    </form>
+                </th>
+            </tr>
+        }
+
+    </table>
+
+    <div class="back_to_main">
+        <a class="back_btn" asp-action="ExamsListOfGroups" asp-controller="Home" asp-route-cource="@ViewData["cource"]"><i class="fa-solid fa-chevron-left"></i></a>
+    </div>
+
+
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/js/jquery-3.6.3.js"></script>
+    <script src="~/js/jquery-3.6.3.min.js"></script>
+</body>
+</html>
+
+<script type="text/javascript">
+
+
+    function editDate(examId, examDate) {
+        $.ajax({
+            url: "/home/EditExamDate",
+            method: "POST",
+            dataType: "json",
+            data: { id: examId, date: examDate },
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+
+    function editTime(examId, examTime) {
+        $.ajax({
+            url: "/home/EditExamTime",
+            method: "POST",
+            dataType: "json",
+            data: { id: examId, time: examTime },
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+
+    function editRoom(examId, examRoom) {
+        $.ajax({
+            url: "/home/EditExamRoom",
+            method: "POST",
+            dataType: "json",
+            data: { id: examId, room: examRoom },
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+
+    function editName(examId, examName) {
+        $.ajax({
+            url: "/home/EditExamName",
+            method: "POST",
+            dataType: "json",
+            data: { id: examId, name: examName },
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+
+    function editTeacher(examId, examTeacherId) {
+        $.ajax({
+            url: "/home/EditExamTeacher",
+            method: "POST",
+            dataType: "json",
+            data: { id: examId, teacherId: examTeacherId },
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+
+    
+</script>

@@ -1,0 +1,148 @@
+﻿@model CollegeSchedule.Models.AllModels;
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - CollegeSchedule</title>
+    <link rel="stylesheet" href="~/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <form asp-action="AddPractice" asp-controller="home" asp-route-groupId="@ViewData["groupId"]" asp-route-practiceCount="@ViewBag.practiceCount">
+            <button class="add_exam">
+                <i class="fa-solid fa-plus"></i>
+            </button>
+        </form>
+    }
+
+    <table class="schedule_table">
+        @if (ViewBag.practiceCount != 0)
+        {
+            <tr>
+                <th class="number">№</th>
+                <th class="date">Дата начала</th>
+                <th class="time">Дата окончания</th>
+                <th class="group">Название практики</th>
+                <th class="teacher">Препод.</th>
+                <th class="delete_exam"></th>
+            </tr>
+        }
+        @foreach (var item in Model.PracticesSchedule)
+        {
+            <tr>
+                <th>@item.PracticeNumber</th>
+                <th><input class="schedule_input" type="text" onchange="editPracticeStartDate(@item.Id, this.value)" autocomplete="off" value="@item.StartDate" /></th>
+                <th><input class="schedule_input" type="text" onchange="editPracticeEndDate(@item.Id, this.value)" autocomplete="off" value="@item.EndDate" /></th>
+                <th><input class="schedule_input" type="text" onchange="editPracticeName(@item.Id, this.value)" autocomplete="off" value="@item.PracticeName" /></th>
+                <th class="select_teachers">
+                    <div class="select_teachers_block">
+                        <select class="select_options" onchange="editPracticeTeacher(@item.Id, this.value)">
+                            <option value="@null"></option>
+                            @foreach (var teacher in Model.Teachers)
+                            {
+                                @if (teacher.Id == item.TeacherId)
+                                {
+                                    <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                                }
+                                else
+                                {
+                                    <option value="@teacher.Id">@teacher.teacherFullName</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </th>
+                <th class="delete_exam">
+                    <form asp-action="DeletePractice" asp-controller="home" asp-route-practiceId="@item.Id" asp-route-groupId="@item.GroupId">
+                        <button class="delete_exam_btn"><i class="fa-solid fa-square-minus" style="color: #1885c9; font-size: 25px;"></i></button>
+                    </form>
+                </th>
+            </tr>
+        }
+
+    </table>
+
+    <div class="back_to_main">
+        <a class="back_btn" asp-action="PracticeGroupsList" asp-controller="Home" asp-route-cource="@ViewData["cource"]"><i class="fa-solid fa-chevron-left"></i></a>
+    </div>
+
+
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/js/jquery-3.6.3.js"></script>
+    <script src="~/js/jquery-3.6.3.min.js"></script>
+</body>
+</html>
+
+<script type="text/javascript">
+
+
+    function editPracticeStartDate(practiceId, practiceStartDate) {
+        $.ajax({
+            url: "/home/EditPracticeStartDate",
+            method: "POST",
+            dataType: "json",
+            data: { id: practiceId, startDate: practiceStartDate },
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+
+    function editPracticeEndDate(practiceId, practiceEndDate) {
+        $.ajax({
+            url: "/home/EditPracticeEndDate",
+            method: "POST",
+            dataType: "json",
+            data: { id: practiceId, endDate: practiceEndDate },
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+
+    function editPracticeName(practiceId, practiceName) {
+        $.ajax({
+            url: "/home/EditPracticeName",
+            method: "POST",
+            dataType: "json",
+            data: { id: practiceId, name: practiceName },
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+
+    function editPracticeTeacher(practiceId, practiceTeacherId) {
+        $.ajax({
+            url: "/home/EditPracticeTeacher",
+            method: "POST",
+            dataType: "json",
+            data: { id: practiceId, teacherId: practiceTeacherId },
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+
+
+</script>

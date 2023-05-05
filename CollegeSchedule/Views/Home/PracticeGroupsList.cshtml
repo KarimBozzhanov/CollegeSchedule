@@ -1,0 +1,47 @@
+﻿@model IEnumerable<CollegeSchedule.Models.Group>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - CollegeSchedule</title>
+    <link rel="stylesheet" href="~/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <div class="container">
+        <div class="group_buttons">
+            @foreach (var group in Model)
+            {
+                <div class="group_list" align="center">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <div class="group_info" align="left">
+                            <a class="group_btn" asp-action="EditPracticeSchedule" asp-controller="Home" asp-route-groupId="@group.Id">@group.GroupName</a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="group_info" align="left">
+                            <a class="group_btn" asp-action="PracticeSchedule" asp-controller="Home" asp-route-groupId="@group.Id">@group.GroupName</a>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="back_to_main">
+        <a class="back_btn" asp-action="Index" asp-controller="Home"><i class="fa-solid fa-chevron-left"></i></a>
+    </div>
+
+
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/js/jquery-3.6.3.js"></script>
+    <script src="~/js/jquery-3.6.3.min.js"></script>
+</body>
+</html>
