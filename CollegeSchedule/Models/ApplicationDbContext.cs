@@ -11,6 +11,7 @@ namespace CollegeSchedule.Models
         public DbSet<Teacher> Teachers { get; set; }
         public DbSet<Subject> Subjects { get; set; }
         public DbSet<ExamsSchedule> ExamsSchedules { get; set; }
+        public DbSet<ConsultationSchedule> ConsultationsSchedules { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)

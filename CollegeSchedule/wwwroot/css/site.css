@@ -1,4 +1,14 @@
-﻿.main_header {
+﻿.main_page {
+    background: linear-gradient(92.42deg, #367AA5 0%, #4794C6 100%);
+    height: 100%;
+}
+
+.main_buttons {
+    background-color: #FAFAFA;
+    border-top-right-radius: 35px;
+}
+
+.main_header {
     background: linear-gradient(92.42deg, #367AA5 0%, #4794C6 100%);
     padding: 10px 5px;
 }
@@ -25,6 +35,7 @@
     font-weight: 600;
     font-size: 20px;
     text-align: left;
+    border-top-right-radius: 20px;
 }
 
 .practice_schedule_btn {
@@ -73,6 +84,14 @@
 
 .hidden_practice_schedule a {
     display: inline-block;
+}
+
+.teachers_schedule a {
+    display: inline-block;
+}
+
+.teachers_schedule {
+    margin-bottom: 30px;
 }
 
 .first_cource {
@@ -230,7 +249,17 @@ th {
     text-align: center;
     margin-right: 10px;
     margin-left: 10px;
-    margin-bottom: 50px;
+    margin-bottom: 20px;
+    z-index: 99;
+    font-size: 8px;
+}
+
+.exam_table {
+    margin-top: 20px;
+    text-align: center;
+    margin-right: 10px;
+    margin-left: 10px;
+    margin-bottom: 20px;
     z-index: 99;
     font-size: 8px;
 }
@@ -332,6 +361,7 @@ th {
     width: 200px;
     padding: 3px 10px;
 }
+
 
 .login_btn {
     background: linear-gradient(92.42deg, #367AA5 0%, #4794C6 100%);
@@ -505,6 +535,7 @@ th {
     font-size: 17px;
     text-align: center;
     border: none;
+    -webkit-appearance: none;
 }
 
 .select_teachers_block select:focus {
@@ -711,24 +742,79 @@ th {
 }
 
 .add_exam {
-    z-index: 99;
-    position: fixed;
-    bottom: 50px;
-    right: 50px;
-    background: linear-gradient(92.42deg, #367AA5 0%, #4794C6 100%);
+    width: 80%;
+    margin-top: 7px;
+    padding: 8px 13px;
+    border: 0px;
+    border-radius: 5px;
+    background: linear-gradient(87.77deg, #367AA5 1.87%, #4794C6 110.82%);
     color: #FAFAFA;
-    width: 48px;
-    height: 48px;
+    font-weight: 600;
+    font-size: 17px;
+    text-align: center;
+}
+
+.add_consultation {
+    width: 80%;
+    margin-top: 13px;
+    padding: 8px 13px;
+    border: 0px;
+    border-radius: 5px;
+    background: linear-gradient(87.77deg, #367AA5 1.87%, #4794C6 110.82%);
+    color: #FAFAFA;
+    font-weight: 600;
+    font-size: 17px;
+    text-align: center;
+}
+
+
+.search_input {
+    padding-bottom: 3px;
+    background: url(../StaticFiles/search.png) no-repeat;
+    background-position: 4px;
+    font-weight: 600;
+    font-size: 13px;
+    color: #91BAD3;
+    padding-left: 25px;
     border: none;
-    border-radius: 50%;
-    transition: 0.3s ease-in-out;
+    border-bottom: 2px solid #5B9EC8;
+    margin-left: 5%;
 }
 
-.add_exam i {
-    position: relative;
-    top: 1px;
+.search_input:focus {
+    outline: 0 !important;
+    border: none;
+    border-bottom: 2px solid #5B9EC8;
 }
 
-.add_exam:hover {
-    color: #FAFAFA;
+.search_input::placeholder {
+    font-weight: 600;
+    font-size: 13px;
+    color: #91BAD3;
+}
+
+.search_block {
+    margin-top: 20px;
+}
+
+.examOrConsultation {
+    margin-left: 10px;
+    margin-top: 10px;
+}
+
+.examOrConsultation p {
+    font-weight: 700;
+    color: #367AA5;
+}
+
+.line {
+    margin-left: 10px;
+    margin-right: 27px;
+    border-top: 1px solid;
+}
+
+.examLine {
+    margin-left: 10px;
+    margin-right: 10px;
+    border-top: 1px solid;
 }

@@ -34,8 +34,7 @@
                             <input class="group_input" type="text" placeholder="Название" name="groupName" autocomplete="off" required />
                         </div>
                         <div class="groupCource">
-                            <h5>Курс группы</h5>
-                            <input class="group_input" type="number" placeholder="Курс" name="groupCource" autocomplete="off" required />
+                            <input name="groupCource" value="@ViewData["cource"]" hidden />
                         </div>
                         <div class="save_group_block" align="right">
                             <button type="submit" class="save_group">Добавить</button>
@@ -48,6 +47,11 @@
 
 
     <div class="container"> 
+        <div class="search_block">
+            <form class="search_form" asp-action="GroupList" asp-controller="Home" asp-route-cource="@ViewData["cource"]">
+                <input class="search_input" type="text" name="searchText" autocomplete="off" placeholder="Поиск" />
+            </form>
+        </div>
         <div class="group_buttons">
             @foreach (var group in Model)
             {

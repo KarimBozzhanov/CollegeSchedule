@@ -34,11 +34,17 @@ namespace CollegeSchedule.Controllers
             return View();
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GroupList(int cource)
+        public async Task<IActionResult> GroupList(string searchText, int cource)
         {
             ViewData["cource"] = cource;
-            return View(await db.Groups.Where(g => g.GroupCource == cource).OrderBy(g => g.GroupName).ToListAsync());
+            if (!String.IsNullOrEmpty(searchText))
+            {
+                Console.WriteLine(searchText);
+                return View(await db.Groups.Where(g => g.GroupName.Contains(searchText) && g.GroupCource == cource).OrderBy(g => g.GroupName).ToListAsync());
+            } else
+            {
+                return View(await db.Groups.Where(g => g.GroupCource == cource).OrderBy(g => g.GroupName).ToListAsync());
+            }
         }
 
 
@@ -117,7 +123,7 @@ namespace CollegeSchedule.Controllers
             {
                 foreach (var item in db.Schedules.Where(s => s.Group.Id == groupId))
                 {
-                    Schedule schedule = await db.Schedules.FindAsync(groupId);
+                    Schedule schedule = await db.Schedules.FirstOrDefaultAsync(s => s.Id == item.Id);
                     db.Entry(schedule).State = EntityState.Deleted;
                 }
                 Group group = await db.Groups.FirstOrDefaultAsync(g => g.Id == groupId);
@@ -249,7 +255,7 @@ namespace CollegeSchedule.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> EditTeacherDenominator(int? id, int teacherDenominatorId)
+        public async Task<JsonResult> EditTeacherDenominator(int? id, int? teacherDenominatorId)
         {
             if (id != null)
             {
@@ -264,7 +270,7 @@ namespace CollegeSchedule.Controllers
         }
 
 
-        public async Task<JsonResult> EditTeacherNumerator(int? id, int teacherNumeratorId)
+        public async Task<JsonResult> EditTeacherNumerator(int? id, int? teacherNumeratorId)
         {
             if (id != null)
             {
@@ -278,9 +284,15 @@ namespace CollegeSchedule.Controllers
             return Json(NotFound());
         }
 
-        public async Task<IActionResult> TeachersList()
+        public async Task<IActionResult> TeachersList(string searchText)
         {
-            return View(await db.Teachers.OrderBy(t => t.teacherFullName).ToListAsync());
+            if(!String.IsNullOrEmpty(searchText))
+            {
+                return View(await db.Teachers.Where(t => t.teacherFullName.Contains(searchText)).OrderBy(t => t.teacherFullName).ToListAsync());
+            } else
+            {
+                return View(await db.Teachers.OrderBy(t => t.teacherFullName).ToListAsync());
+            }
         }
 
         public async Task<IActionResult> AddTeacher(string teacherName)
@@ -313,18 +325,32 @@ namespace CollegeSchedule.Controllers
             return Json(NotFound());
         }
 
-        [HttpGet]
-        public async Task<IActionResult> ExamsListOfGroups(int cource)
+        public async Task<IActionResult> ExamsListOfGroups(string searchText, int cource)
         {
-            return View(await db.Groups.Where(g => g.GroupCource == cource).OrderBy(g => g.GroupName).ToListAsync());
+            ViewData["cource"] = cource;
+            if (!String.IsNullOrEmpty(searchText))
+            {
+                Console.WriteLine(searchText);
+                return View(await db.Groups.Where(g => g.GroupName.Contains(searchText) && g.GroupCource == cource).OrderBy(g => g.GroupName).ToListAsync());
+            }
+            else
+            {
+                return View(await db.Groups.Where(g => g.GroupCource == cource).OrderBy(g => g.GroupName).ToListAsync());
+            }
         }
 
         [HttpGet]
         public async Task<IActionResult> ExamsSchedule(int groupId)
         {
+            int examsCount = db.ExamsSchedules.Count(e => e.GroupId == groupId);
+            Console.WriteLine(examsCount);
+            ViewBag.examsCount = examsCount;
             Group group = await db.Groups.FirstOrDefaultAsync(g => g.Id == groupId);
             ViewData["cource"] = group.GroupCource;
-            return View(await db.ExamsSchedules.Include(e => e.Teacher).Where(e => e.GroupId == groupId).ToListAsync());
+            var allModels = new AllModels();
+            allModels.ExamsSchedules = await db.ExamsSchedules.Include(e => e.Teacher).Where(e => e.GroupId == groupId).ToListAsync();
+            allModels.ConsultationSchedules = await db.ConsultationsSchedules.Include(e => e.Teacher).Where(e => e.GroupId == groupId).ToListAsync();
+            return View(allModels);
         }
 
 
@@ -332,14 +358,19 @@ namespace CollegeSchedule.Controllers
         public async Task<IActionResult> EditExamsSchedule(int groupId)
         {
             int examsCount = db.ExamsSchedules.Count(e => e.GroupId == groupId);
+            int consultationsCount = db.ConsultationsSchedules.Count(c => c.GroupId == groupId);
             Group group = await db.Groups.FirstOrDefaultAsync(g => g.Id == groupId);
             ViewData["cource"] = group.GroupCource;
+            ViewData["groupName"] = group.GroupName;
             Console.WriteLine(examsCount);
+            Console.WriteLine(consultationsCount);
             ViewBag.examsCount = examsCount;
+            ViewBag.consultationsCount = consultationsCount;
             ViewData["groupId"] = groupId;
             var allModels = new AllModels();
             allModels.Teachers = await db.Teachers.OrderBy(t => t.teacherFullName).ToListAsync();
             allModels.ExamsSchedules = await db.ExamsSchedules.Where(e => e.GroupId == groupId).ToListAsync();
+            allModels.ConsultationSchedules = await db.ConsultationsSchedules.Where(c => c.GroupId == groupId).ToListAsync();
             return View(allModels);
         }
 
@@ -393,11 +424,12 @@ namespace CollegeSchedule.Controllers
             {
                 Teacher teacher = await db.Teachers.FirstOrDefaultAsync(t => t.Id == teacherId);
                 ViewData["teacherName"] = teacher.teacherFullName;
-                ViewData["MondayLessons"] = db.Schedules.Count(s => s.DayOfTheWeek == 1 && s.TeacherDenominator.Id == teacherId) + 1;
-                ViewData["TuesdayLessons"] = db.Schedules.Count(s => s.DayOfTheWeek == 2 && s.TeacherDenominator.Id == teacherId) + 1;
-                ViewData["WednesdayLessons"] = db.Schedules.Count(s => s.DayOfTheWeek == 3 && s.TeacherDenominator.Id == teacherId) + 1;
-                ViewData["ThursdayLessons"] = db.Schedules.Count(s => s.DayOfTheWeek == 4 && s.TeacherDenominator.Id == teacherId) + 1;
-                ViewData["FridayLessons"] = db.Schedules.Count(s => s.DayOfTheWeek == 5 && s.TeacherDenominator.Id == teacherId) + 1;
+                ViewBag.teacherId = teacher.Id;
+                ViewBag.MondayLessons = db.Schedules.Count(s => s.DayOfTheWeek == 1 && (s.TeacherDenominator.Id == teacherId || s.TeacherNumeratorId == teacherId)) + 1;
+                ViewBag.TuesdayLessons = db.Schedules.Count(s => s.DayOfTheWeek == 2 && (s.TeacherDenominator.Id == teacherId || s.TeacherNumeratorId == teacherId)) + 1;
+                ViewBag.WednesdayLessons = db.Schedules.Count(s => s.DayOfTheWeek == 3 && (s.TeacherDenominator.Id == teacherId || s.TeacherNumeratorId == teacherId)) + 1;
+                ViewBag.ThursdayLessons = db.Schedules.Count(s => s.DayOfTheWeek == 4 && (s.TeacherDenominator.Id == teacherId || s.TeacherNumeratorId == teacherId)) + 1;
+                ViewBag.FridayLessons = db.Schedules.Count(s => s.DayOfTheWeek == 5 && (s.TeacherDenominator.Id == teacherId || s.TeacherNumeratorId == teacherId)) + 1;
                 Console.WriteLine(db.Schedules.Count(s => s.DayOfTheWeek == 1 && s.TeacherDenominator.Id == teacherId));
                 return View(await db.Schedules.Include(s => s.TeacherDenominator).Include(s => s.TeacherNumerator).Include(s => s.Group).Where(s => s.TeacherDenominatorId == teacherId || s.TeacherNumeratorId == teacherId ).ToListAsync());
             }
@@ -409,28 +441,6 @@ namespace CollegeSchedule.Controllers
             if (teacherId != null)
             {
                 Teacher teacher = await db.Teachers.FirstOrDefaultAsync(t => t.Id == teacherId);
-                foreach(var item in db.Schedules.Where(s => s.TeacherDenominatorId == teacherId))
-                {
-                    Schedule schedule = await db.Schedules.FirstOrDefaultAsync(s => s.Id == item.Id);
-                    if (schedule != null)
-                    {
-                        var updateSchedule = await db.Schedules.Where(s => s.Id == item.Id).AsQueryable().FirstOrDefaultAsync();
-                        updateSchedule.TeacherDenominatorId = null;
-                        db.Schedules.UpdateRange(updateSchedule);
-                        await db.SaveChangesAsync();
-                    }
-                }
-                foreach(var item in db.Schedules.Where(s => s.TeacherNumeratorId == teacherId))
-                {
-                    Schedule schedule = await db.Schedules.FirstOrDefaultAsync(s => s.Id == item.Id);
-                    if (schedule != null)
-                    {
-                        var updateSchedule = await db.Schedules.Where(s => s.Id == item.Id).AsQueryable().FirstOrDefaultAsync();
-                        updateSchedule.TeacherNumeratorId = null;
-                        db.Schedules.UpdateRange(updateSchedule);
-                        await db.SaveChangesAsync();
-                    }
-                }
                 db.Entry(teacher).State = EntityState.Deleted;
                 await db.SaveChangesAsync();
                 return RedirectToAction("TeachersList");
@@ -499,7 +509,7 @@ namespace CollegeSchedule.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> EditExamTeacher(int? id, int teacherId)
+        public async Task<JsonResult> EditExamTeacher(int? id, int? teacherId)
         {
             if (id != null)
             {
@@ -513,10 +523,18 @@ namespace CollegeSchedule.Controllers
             return Json(NotFound());
         }
 
-        public async Task<IActionResult> PracticeGroupsList(int cource)
+        public async Task<IActionResult> PracticeGroupsList(string searchText, int cource)
         {
             ViewData["cource"] = cource;
-            return View(await db.Groups.Where(g => g.GroupCource == cource).OrderBy(g => g.GroupName).ToListAsync());
+            if (!String.IsNullOrEmpty(searchText))
+            {
+                Console.WriteLine(searchText);
+                return View(await db.Groups.Where(g => g.GroupName.Contains(searchText) && g.GroupCource == cource).OrderBy(g => g.GroupName).ToListAsync());
+            }
+            else
+            {
+                return View(await db.Groups.Where(g => g.GroupCource == cource).OrderBy(g => g.GroupName).ToListAsync());
+            }
         }
 
         public async Task<IActionResult> PracticeSchedule(int groupId)
@@ -586,7 +604,7 @@ namespace CollegeSchedule.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> EditPracticeTeacher(int? id, int teacherId)
+        public async Task<JsonResult> EditPracticeTeacher(int? id, int? teacherId)
         {
             if (id != null)
             {
@@ -618,6 +636,99 @@ namespace CollegeSchedule.Controllers
                 return RedirectToAction("EditPracticeSchedule", new { groupId = groupId });
             }
             return NotFound();
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> AddConsultation(int groupId, int consultationsCount)
+        {
+            await db.ConsultationsSchedules.AddAsync(new ConsultationSchedule { GroupId = groupId,  ConsultationNumber = consultationsCount + 1});
+            await db.SaveChangesAsync();
+            return RedirectToAction("EditExamsSchedule", new { groupId = groupId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteConsultation(int consultationId, int groupId)
+        {
+            ConsultationSchedule consultation = await db.ConsultationsSchedules.FirstOrDefaultAsync(p => p.Id == consultationId);
+            if (consultation != null)
+            {
+                db.Entry(consultation).State = EntityState.Deleted;
+                await db.SaveChangesAsync();
+                return RedirectToAction("EditExamsSchedule", new { groupId = groupId });
+            }
+            return NotFound();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> EditConsultationDate(int? id, string date)
+        {
+            if (id != null)
+            {
+                ConsultationSchedule consultation = await db.ConsultationsSchedules.FirstOrDefaultAsync(e => e.Id == id);
+                var updateConsultation = await db.ConsultationsSchedules.Where(s => s.Id == id).AsQueryable().FirstOrDefaultAsync();
+                updateConsultation.Date = date;
+                db.ConsultationsSchedules.UpdateRange(updateConsultation);
+                await db.SaveChangesAsync();
+                return Json("Дата консультации изменена");
+            }
+            return Json(NotFound());
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> EditConsultationTime(int? id, string time)
+        {
+            if (id != null)
+            {
+                var updateConsultation = await db.ConsultationsSchedules.Where(s => s.Id == id).AsQueryable().FirstOrDefaultAsync();
+                updateConsultation.Time = time;
+                db.ConsultationsSchedules.UpdateRange(updateConsultation);
+                await db.SaveChangesAsync();
+                return Json("Время консультации изменено");
+            }
+            return Json(NotFound());
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> EditConsultationRoom(int? id, string room)
+        {
+            if (id != null)
+            {
+                var updateConsultation = await db.ConsultationsSchedules.Where(s => s.Id == id).AsQueryable().FirstOrDefaultAsync();
+                updateConsultation.Room = room;
+                db.ConsultationsSchedules.UpdateRange(updateConsultation);
+                await db.SaveChangesAsync();
+                return Json("Кабинет консультации изменен");
+            }
+            return Json(NotFound());
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> EditConsultationSubject(int? id, string subject)
+        {
+            if (id != null)
+            {
+                var updateConsultation = await db.ConsultationsSchedules.Where(s => s.Id == id).AsQueryable().FirstOrDefaultAsync();
+                updateConsultation.Subject = subject;
+                db.ConsultationsSchedules.UpdateRange(updateConsultation);
+                await db.SaveChangesAsync();
+                return Json("Предмет консультации изменен");
+            }
+            return Json(NotFound());
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> EditConsultationTeacher(int? id, int? teacherId)
+        {
+            if (id != null)
+            {
+                var updateConsultation = await db.ConsultationsSchedules.Where(s => s.Id == id).AsQueryable().FirstOrDefaultAsync();
+                updateConsultation.TeacherId = teacherId;
+                db.ConsultationsSchedules.UpdateRange(updateConsultation);
+                await db.SaveChangesAsync();
+                return Json("Преподаватель консультации изменен");
+            }
+            return Json(NotFound());
         }
 
 

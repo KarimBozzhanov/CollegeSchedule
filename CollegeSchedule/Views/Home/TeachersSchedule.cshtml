@@ -20,70 +20,267 @@
             <th class="group">@ViewData["teacherName"]</th>
             <th class="teacher">Группа</th>
         </tr>
-        <tr>
-            <th rowspan="@ViewData["MondayLessons"]" class="day_of_the_week">Понедельник</th>
-        </tr>
-        @foreach (var item in Model.Where(s => s.DayOfTheWeek == 1).OrderBy(s => s.SubjectNumber))
+        @if(ViewBag.MondayLessons > 1)
         {
             <tr>
-                <th>@item.SubjectNumber</th>
-                <th>@item.LessonTime</th>
-                <th>@item.RoomDenominator</th>
-                <th>@item.SubjectDenominator</th>
-                <th>@item.Group?.GroupName</th>
+                <th rowspan="@ViewBag.MondayLessons" class="day_of_the_week">Понедельник</th>
             </tr>
+            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 1).OrderBy(s => s.SubjectNumber))
+            {
+                <tr>
+                    <th>@item.SubjectNumber</th>
+                    <th>@item.LessonTime</th>
+                    @if(item.SubjectNumerator == null && item.TeacherDenominatorId != null)
+                    {
+                        <th>@item.RoomDenominator</th>
+                    } else if(item.SubjectNumerator == null && item.TeacherNumeratorId != null)
+                    {
+                        <th>@item.RoomNumerator</th>
+                    }
+                    @if(item.SubjectNumerator != null)
+                    {
+                        if (item.TeacherDenominatorId == ViewBag.teacherId)
+                        {
+                            <th class="main_delimiter">
+                                <table width="100%" class="delimiter_table">
+                                    <tr class="delimiter_main">
+                                        <th class="delimiter_denominator" height="30">
+                                            @item.RoomDenominator
+                                        </th>
+                                    </tr>
+                                    <tr class="delimiter_main">
+                                        <th class="delimiter_numerator" height="30">
+                                            @null
+                                        </th>
+                                    </tr>
+                                </table>
+                            </th>
+                        } else if(item.TeacherNumeratorId == ViewBag.teacherId)
+                        {
+                            <th class="main_delimiter">
+                                <table width="100%" class="delimiter_table">
+                                    <tr class="delimiter_main">
+                                        <th class="delimiter_denominator" height="30">
+                                            @null
+                                        </th>
+                                    </tr>
+                                    <tr class="delimiter_main">
+                                        <th class="delimiter_numerator" height="30">
+                                            @item.RoomNumerator
+                                        </th>
+                                    </tr>
+                                </table>
+                            </th>
+                        }
+                    }
+                    @if(item.TeacherNumeratorId == null) 
+                    {
+                        @if(item.TeacherDenominatorId == ViewBag.teacherId)
+                        {
+                            <th>@item.SubjectDenominator</th>
+                        }
+                    } else
+                    {
+                        @if(item.TeacherDenominatorId == ViewBag.teacherId)
+                        {
+                            @if(item.SubjectNumerator != null)
+                            {
+                                <th class="main_delimiter">
+                                    <table width="100%" class="delimiter_table">
+                                        <tr class="delimiter_main">
+                                            <th class="delimiter_denominator" height="30">
+                                                @item.SubjectDenominator
+                                            </th>
+                                        </tr>
+                                        <tr class="delimiter_main">
+                                            <th class="delimiter_numerator" height="30">
+                                                @null
+                                            </th>
+                                        </tr>
+                                    </table>
+                                </th>
+                            } else
+                            {
+                                <th>@item.SubjectDenominator</th>
+                            }
+                        } else if (item.TeacherNumeratorId == ViewBag.teacherId)
+                        {
+                            @if(item.SubjectNumerator != null)
+                            {
+                                <th class="main_delimiter">
+                                    <table width="100%" class="delimiter_table">
+                                        <tr class="delimiter_main">
+                                            <th class="delimiter_denominator" height="30">
+                                                @null
+                                            </th>
+                                        </tr>
+                                        <tr class="delimiter_main">
+                                            <th class="delimiter_numerator" height="30">
+                                                @item.SubjectNumerator
+                                            </th>
+                                        </tr>
+                                    </table>
+                                </th>
+                            } else
+                            {
+                                <th>@item.SubjectDenominator</th>
+                            }
+                        }
+                    }
+                    <th>@item.Group?.GroupName</th>
+                </tr>
+            }
         }
-        <tr>
-            <th rowspan="@ViewData["TuesdayLessons"]" class="day_of_the_week">Вторник</th>
-        </tr>
-        @foreach (var item in Model.Where(s => s.DayOfTheWeek == 2).OrderBy(s => s.SubjectNumber))
+        @if (ViewBag.TuesdayLessons > 1)
         {
             <tr>
-                <th>@item.SubjectNumber</th>
-                <th>@item.LessonTime</th>
-                <th>@item.RoomDenominator</th>
-                <th>@item.SubjectDenominator</th>
-                <th>@item.Group?.GroupName</th>
+                <th rowspan="@ViewBag.TuesdayLessons" class="day_of_the_week">Вторник</th>
             </tr>
+            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 2).OrderBy(s => s.SubjectNumber))
+            {
+                <tr>
+                    <th>@item.SubjectNumber</th>
+                    <th>@item.LessonTime</th>
+                    @if (item.SubjectNumerator == null && item.TeacherDenominatorId != null)
+                    {
+                        <th>@item.RoomDenominator</th>
+                    }
+                    else if (item.SubjectNumerator == null && item.TeacherNumeratorId != null)
+                    {
+                        <th>@item.RoomNumerator</th>
+                    }
+                    @if (item.SubjectNumerator != null)
+                    {
+                        if (item.TeacherDenominatorId == ViewBag.teacherId)
+                        {
+                            <th class="main_delimiter">
+                                <table width="100%" class="delimiter_table">
+                                    <tr class="delimiter_main">
+                                        <th class="delimiter_denominator" height="30" style="padding-bottom: 17px;">
+                                            @item.RoomDenominator
+                                        </th>
+                                    </tr>
+                                    <tr class="delimiter_main">
+                                        <th class="delimiter_numerator" height="30">
+                                            @null
+                                        </th>
+                                    </tr>
+                                </table>
+                            </th>
+                        }
+                        else if (item.TeacherNumeratorId == ViewBag.teacherId)
+                        {
+                            <th class="main_delimiter">
+                                <table width="100%" class="delimiter_table">
+                                    <tr class="delimiter_main">
+                                        <th class="delimiter_denominator" height="30">
+                                            @null
+                                        </th>
+                                    </tr>
+                                    <tr class="delimiter_main">
+                                        <th class="delimiter_numerator" height="30" style="padding-top: 17px">
+                                            @item.RoomNumerator
+                                        </th>
+                                    </tr>
+                                </table>
+                            </th>
+                        }
+                    }
+                    @if (item.TeacherNumeratorId == null)
+                    {
+                        @if (item.TeacherDenominatorId == ViewBag.teacherId)
+                        {
+                            <th>@item.SubjectDenominator</th>
+                        }
+                    }
+                    else
+                    {
+                        @if (item.TeacherDenominatorId == ViewBag.teacherId)
+                        {
+                            <th class="main_delimiter">
+                                <table width="100%" class="delimiter_table">
+                                    <tr class="delimiter_main">
+                                        <th class="delimiter_denominator" height="30" style="padding-bottom: 17px">
+                                            @item.SubjectDenominator
+                                        </th>
+                                    </tr>
+                                    <tr class="delimiter_main">
+                                        <th class="delimiter_numerator" height="30">
+                                            @null
+                                        </th>
+                                    </tr>
+                                </table>
+                            </th>
+                        }
+                        else if (item.TeacherNumeratorId == ViewBag.teacherId)
+                        {
+                            <th class="main_delimiter">
+                                <table width="100%" class="delimiter_table">
+                                    <tr class="delimiter_main">
+                                        <th class="delimiter_denominator" height="30">
+                                            @null
+                                        </th>
+                                    </tr>
+                                    <tr class="delimiter_main">
+                                        <th class="delimiter_numerator" height="30" style="padding-top: 17px">
+                                            @item.SubjectNumerator
+                                        </th>
+                                    </tr>
+                                </table>
+                            </th>
+                        }
+                    }
+                    <th>@item.Group?.GroupName</th>
+                </tr>
+            }
         }
-        <tr>
-            <th rowspan="@ViewData["WednesdayLessons"]" class="day_of_the_week">Среда</th>
-        </tr>
-        @foreach (var item in Model.Where(s => s.DayOfTheWeek == 3).OrderBy(s => s.SubjectNumber))
+        @if (ViewBag.WednesdayLessons > 1)
         {
             <tr>
-                <th>@item.SubjectNumber</th>
-                <th>@item.LessonTime</th>
-                <th>@item.RoomDenominator</th>
-                <th>@item.SubjectDenominator</th>
-                <th>@item.Group?.GroupName</th>
+                <th rowspan="@ViewBag.WednesdayLessons" class="day_of_the_week">Среда</th>
             </tr>
+            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 3).OrderBy(s => s.SubjectNumber))
+            {
+                <tr>
+                    <th>@item.SubjectNumber</th>
+                    <th>@item.LessonTime</th>
+                    <th>@item.RoomDenominator</th>
+                    <th>@item.SubjectDenominator</th>
+                    <th>@item.Group?.GroupName</th>
+                </tr>
+            }
         }
-        <tr>
-            <th rowspan="@ViewData["ThursdayLessons"]" class="day_of_the_week">Четверг</th>
-        </tr>
-        @foreach (var item in Model.Where(s => s.DayOfTheWeek == 4).OrderBy(s => s.SubjectNumber))
+        @if (ViewBag.ThursdayLessons > 1)
         {
             <tr>
-                <th>@item.SubjectNumber</th>
-                <th>@item.LessonTime</th>
-                <th>@item.RoomDenominator</th>
-                <th>@item.SubjectDenominator</th>
-                <th>@item.Group?.GroupName</th>
+                <th rowspan="@ViewBag.ThursdayLessons" class="day_of_the_week">Четверг</th>
             </tr>
+            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 4).OrderBy(s => s.SubjectNumber))
+            {
+                <tr>
+                    <th>@item.SubjectNumber</th>
+                    <th>@item.LessonTime</th>
+                    <th>@item.RoomDenominator</th>
+                    <th>@item.SubjectDenominator</th>
+                    <th>@item.Group?.GroupName</th>
+                </tr>
+            }
         }
-        <tr>
-            <th rowspan="@ViewData["FridayLessons"]" class="day_of_the_week">Пятница</th>
-        </tr>
-        @foreach (var item in Model.Where(s => s.DayOfTheWeek == 5).OrderBy(s => s.SubjectNumber))
+        @if (ViewBag.FridayLessons > 1)
         {
             <tr>
-                <th>@item.SubjectNumber</th>
-                <th>@item.LessonTime</th>
-                <th>@item.RoomDenominator</th>
-                <th>@item.SubjectDenominator</th>
-                <th>@item.Group?.GroupName</th>
+                <th rowspan="@ViewBag.FridayLessons" class="day_of_the_week">Пятница</th>
             </tr>
+            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 5).OrderBy(s => s.SubjectNumber))
+            {
+                <tr>
+                    <th>@item.SubjectNumber</th>
+                    <th>@item.LessonTime</th>
+                    <th>@item.RoomDenominator</th>
+                    <th>@item.SubjectDenominator</th>
+                    <th>@item.Group?.GroupName</th>
+                </tr>
+            }
         }
     </table>
 

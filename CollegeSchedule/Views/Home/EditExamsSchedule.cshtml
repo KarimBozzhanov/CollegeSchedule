@@ -12,63 +12,141 @@
 </head>
 <body>
 
-    @if (User.Identity.IsAuthenticated)
+    @if(User.Identity.IsAuthenticated)
     {
-        <form asp-action="AddExam" asp-controller="home" asp-route-groupId="@ViewData["groupId"]" asp-route-examsCount="@ViewBag.examsCount">
-            <button class="add_exam">
-                <i class="fa-solid fa-plus"></i>
-            </button>
-        </form>
+        <a class="fixed-button" data-bs-toggle="modal" data-bs-target="#addExamOrConsultation">
+            <i class="fa-solid fa-plus"></i>
+        </a>
     }
 
-    <table class="schedule_table">
-        @if(ViewBag.examsCount != 0)
-        {
-            <tr>
-                <th class="number">№</th>
-                <th class="date">Дата</th>
-                <th class="time">Время</th>
-                <th class="cabinet">Кабинет</th>
-                <th class="group">Предмет</th>
-                <th class="teacher">Препод.</th>
-                <th class="delete_exam"></th>
-            </tr>
-        }
-        @foreach(var item in Model.ExamsSchedules)
-        {
-            <tr>
-                <th>@item.ExamNumber</th>
-                <th><input class="schedule_input" type="text" onchange="editDate(@item.Id, this.value)" autocomplete="off" value="@item.Date" /></th>
-                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.Time" /></th>
-                <th><input class="schedule_input" type="text" onchange="editRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
-                <th class="subject_name"><input class="schedule_input" type="text" onchange="editName(@item.Id, this.value)" autocomplete="off" value="@item.ExamName" /></th>
-                <th class="select_teachers" id="single_teacher_@item.Id">
-                    <div class="select_teachers_block">
-                        <select class="select_options" onchange="editTeacher(@item.Id, this.value)">
-                            <option value="@null"></option>
-                            @foreach (var teacher in Model.Teachers)
-                            {
-                                @if (teacher.Id == item.TeacherId)
-                                {
-                                    <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                                }
-                                else
-                                {
-                                    <option value="@teacher.Id">@teacher.teacherFullName</option>
-                                }
-                            }
-                        </select>
-                    </div>
-                </th>
-                <th class="delete_exam">
-                    <form asp-action="DeleteExam" asp-controller="home" asp-route-examId="@item.Id" asp-route-groupId="@item.GroupId">
-                        <button class="delete_exam_btn"><i class="fa-solid fa-square-minus" style="color: #1885c9; font-size: 25px;"></i></button>
+    <div class="modal fade" id="addExamOrConsultation" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="mainModal modal-header">
+                    <h5 class="modal-title fs-5" id="exampleModalLabel">@ViewData["groupName"]</h5>
+                    <button class="close_modal" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark fa-lg" style="color: #e60a0a;"></i></button>
+                </div>
+                <div class="modal-body" align="center">
+                    <form asp-action="AddConsultation" asp-controller="Home" asp-route-groupId="@ViewData["groupId"]" asp-route-consultationsCount="@ViewBag.consultationsCount">
+                        <button class="add_exam">Добавить консультацию</button>
                     </form>
-                </th>
-            </tr>
-        }
+                    <form asp-action="AddExam" asp-controller="Home" asp-route-groupId="@ViewData["groupId"]" asp-route-examsCount="@ViewBag.examsCount">
+                        <button class="add_consultation">Добавить экзамен</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    </table>
+    <div class="examOrConsultation">
+        <p>Расписание консультаций</p>
+    </div>
+    <div>
+        <table class="exam_table">
+            @if (ViewBag.examsCount != 0)
+            {
+                <tr>
+                    <th class="number">№</th>
+                    <th class="date">Дата</th>
+                    <th class="time">Время</th>
+                    <th class="cabinet">Кабинет</th>
+                    <th class="group">Предмет</th>
+                    <th class="teacher">Препод.</th>
+                    <th class="delete_exam"></th>
+                </tr>
+            }
+            @foreach (var item in Model.ConsultationSchedules)
+            {
+                <tr>
+                    <th>@item.ConsultationNumber</th>
+                    <th><input class="schedule_input" type="text" onchange="editConsultationDate(@item.Id, this.value)" autocomplete="off" value="@item.Date" /></th>
+                    <th><input class="schedule_input" type="text" onchange="editConsultationTime(@item.Id, this.value)" autocomplete="off" value="@item.Time" /></th>
+                    <th><input class="schedule_input" type="text" onchange="editConsultationRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
+                    <th class="subject_name"><input class="schedule_input" type="text" onchange="editConsultationSubject(@item.Id, this.value)" autocomplete="off" value="@item.Subject" /></th>
+                    <th class="select_teachers" id="single_teacher_@item.Id">
+                        <div class="select_teachers_block">
+                            <select class="select_options" onchange="editConsultationTeacher(@item.Id, this.value)">
+                                <option value="@null"></option>
+                                @foreach (var teacher in Model.Teachers)
+                                {
+                                    @if (teacher.Id == item.TeacherId)
+                                    {
+                                        <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@teacher.Id">@teacher.teacherFullName</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </th>
+                    <th class="delete_exam">
+                        <form asp-action="DeleteConsultation" asp-controller="home" asp-route-consultationId="@item.Id" asp-route-groupId="@item.GroupId">
+                            <button class="delete_exam_btn"><i class="fa-solid fa-square-minus" style="color: #1885c9; font-size: 25px;"></i></button>
+                        </form>
+                    </th>
+                </tr>
+            }
+
+        </table>
+    </div>
+
+    <hr class="line"/>
+
+    <div class="examOrConsultation">
+        <p>Расписание экзаменов</p>
+    </div>
+    <div>
+        <table class="exam_table">
+            @if (ViewBag.examsCount != 0)
+            {
+                <tr>
+                    <th class="number">№</th>
+                    <th class="date">Дата</th>
+                    <th class="time">Время</th>
+                    <th class="cabinet">Кабинет</th>
+                    <th class="group">Предмет</th>
+                    <th class="teacher">Препод.</th>
+                    <th class="delete_exam"></th>
+                </tr>
+            }
+            @foreach (var item in Model.ExamsSchedules)
+            {
+                <tr>
+                    <th>@item.ExamNumber</th>
+                    <th><input class="schedule_input" type="text" onchange="editExamDate(@item.Id, this.value)" autocomplete="off" value="@item.Date" /></th>
+                    <th><input class="schedule_input" type="text" onchange="editExamTime(@item.Id, this.value)" autocomplete="off" value="@item.Time" /></th>
+                    <th><input class="schedule_input" type="text" onchange="editExamRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
+                    <th class="subject_name"><input class="schedule_input" type="text" onchange="editExamName(@item.Id, this.value)" autocomplete="off" value="@item.ExamName" /></th>
+                    <th class="select_teachers" id="single_teacher_@item.Id">
+                        <div class="select_teachers_block">
+                            <select class="select_options" onchange="editExamTeacher(@item.Id, this.value)">
+                                <option value="@null"></option>
+                                @foreach (var teacher in Model.Teachers)
+                                {
+                                    @if (teacher.Id == item.TeacherId)
+                                    {
+                                        <option selected value="@teacher.Id">@teacher.teacherFullName</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@teacher.Id">@teacher.teacherFullName</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </th>
+                    <th class="delete_exam">
+                        <form asp-action="DeleteExam" asp-controller="home" asp-route-examId="@item.Id" asp-route-groupId="@item.GroupId">
+                            <button class="delete_exam_btn"><i class="fa-solid fa-square-minus" style="color: #1885c9; font-size: 25px;"></i></button>
+                        </form>
+                    </th>
+                </tr>
+            }
+
+        </table>
+    </div>
 
     <div class="back_to_main">
         <a class="back_btn" asp-action="ExamsListOfGroups" asp-controller="Home" asp-route-cource="@ViewData["cource"]"><i class="fa-solid fa-chevron-left"></i></a>
@@ -84,9 +162,7 @@
 </html>
 
 <script type="text/javascript">
-
-
-    function editDate(examId, examDate) {
+    function editExamDate(examId, examDate) {
         $.ajax({
             url: "/home/EditExamDate",
             method: "POST",
@@ -101,7 +177,7 @@
         });
     }
 
-    function editTime(examId, examTime) {
+    function editExamTime(examId, examTime) {
         $.ajax({
             url: "/home/EditExamTime",
             method: "POST",
@@ -116,7 +192,7 @@
         });
     }
 
-    function editRoom(examId, examRoom) {
+    function editExamRoom(examId, examRoom) {
         $.ajax({
             url: "/home/EditExamRoom",
             method: "POST",
@@ -131,7 +207,7 @@
         });
     }
 
-    function editName(examId, examName) {
+    function editExamName(examId, examName) {
         $.ajax({
             url: "/home/EditExamName",
             method: "POST",
@@ -146,7 +222,7 @@
         });
     }
 
-    function editTeacher(examId, examTeacherId) {
+    function editExamTeacher(examId, examTeacherId) {
         $.ajax({
             url: "/home/EditExamTeacher",
             method: "POST",
@@ -161,5 +237,80 @@
         });
     }
 
+
+    function editConsultationDate(consultationId, consultationDate) {
+        $.ajax({
+            url: "/home/EditConsultationDate",
+            method: "POST",
+            dataType: "json",
+            data: { id: consultationId, date: consultationDate },
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+
+    function editConsultationTime(consultationId, consultationTime) {
+        $.ajax({
+            url: "/home/EditConsultationTime",
+            method: "POST",
+            dataType: "json",
+            data: { id: consultationId, time: consultationTime },
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+
+    function editConsultationRoom(consultationId, consultationRoom) {
+        $.ajax({
+            url: "/home/EditConsultationRoom",
+            method: "POST",
+            dataType: "json",
+            data: { id: consultationId, room: consultationRoom },
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+
+    function editConsultationSubject(consultationId, consultationSubject) {
+        $.ajax({
+            url: "/home/EditConsultationSubject",
+            method: "POST",
+            dataType: "json",
+            data: { id: consultationId, subject: consultationSubject },
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+
+    function editConsultationTeacher(consultationId, consultationTeacherId) {
+        $.ajax({
+            url: "/home/EditConsultationTeacher",
+            method: "POST",
+            dataType: "json",
+            data: { id: consultationId, teacherId: consultationTeacherId },
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
     
 </script>

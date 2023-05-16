@@ -1,4 +1,4 @@
-﻿@model IEnumerable<CollegeSchedule.Models.ExamsSchedule>
+﻿@model CollegeSchedule.Models.AllModels;
 
 <!DOCTYPE html>
 <html lang="en">
@@ -11,27 +11,67 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-    <table class="schedule_table">
-        <tr>
-                <th class="number">№</th>
-                <th class="date">Дата</th>
-                <th class="time">Время</th>
-                <th class="cabinet">Кабинет</th>
-                <th class="group">Предмет</th>
-                <th class="teacher">Препод.</th>
-            </tr>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <th>@item.ExamNumber</th>
-                <th>@item.Date</th>
-                <th>@item.Time</th>
-                <th>@item.Room</th>
-                <th>@item.ExamName</th>
-                <th>@item.Teacher?.teacherFullName</th>
-            </tr>
-        }
-    </table>
+    <div class="examOrConsultation">
+        <p>Расписание консультаций</p>
+    </div>
+    <div>
+        <table class="schedule_table">
+            @if (ViewBag.examsCount != 0)
+            {
+                <tr>
+                    <th class="number">№</th>
+                    <th class="date">Дата</th>
+                    <th class="time">Время</th>
+                    <th class="cabinet">Кабинет</th>
+                    <th class="group">Предмет</th>
+                    <th class="teacher">Препод.</th>
+                </tr>
+            }
+            @foreach (var item in Model.ConsultationSchedules)
+            {
+                <tr>
+                    <th>@item.ConsultationNumber</th>
+                    <th>@item.Date</th>
+                    <th>@item.Time</th>
+                    <th>@item.Room</th>
+                    <th>@item.Subject</th>
+                    <th>@item.Teacher?.teacherFullName</th>
+                </tr>
+            }
+        </table>
+    </div>
+
+    <hr class="examLine" />
+
+    <div class="examOrConsultation">
+        <p>Расписание экзаменов</p>
+    </div>
+    <div>
+        <table class="schedule_table">
+            @if(ViewBag.examsCount != 0)
+            {
+                <tr>
+                    <th class="number">№</th>
+                    <th class="date">Дата</th>
+                    <th class="time">Время</th>
+                    <th class="cabinet">Кабинет</th>
+                    <th class="group">Предмет</th>
+                    <th class="teacher">Препод.</th>
+                </tr>
+            }
+            @foreach (var item in Model.ExamsSchedules)
+            {
+                <tr>
+                    <th>@item.ExamNumber</th>
+                    <th>@item.Date</th>
+                    <th>@item.Time</th>
+                    <th>@item.Room</th>
+                    <th>@item.ExamName</th>
+                    <th>@item.Teacher?.teacherFullName</th>
+                </tr>
+            }
+        </table>
+    </div>
 
     <div class="back_to_main">
         <a class="back_btn" asp-action="ExamsListOfGroups" asp-controller="Home" asp-route-cource="@ViewData["cource"]"><i class="fa-solid fa-chevron-left"></i></a>

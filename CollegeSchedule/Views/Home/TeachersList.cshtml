@@ -44,6 +44,11 @@
 
 
     <div class="container">
+        <div class="search_block">
+            <form class="search_form" asp-action="TeachersList" asp-controller="Home">
+                <input class="search_input" type="text" name="searchText" autocomplete="off" placeholder="Поиск" />
+            </form>
+        </div>
         <div class="group_buttons">
             @foreach (var teacher in Model)
             {
