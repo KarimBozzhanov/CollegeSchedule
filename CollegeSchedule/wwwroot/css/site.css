@@ -818,3 +818,21 @@ th {
     margin-right: 10px;
     border-top: 1px solid;
 }
+
+.add_practice {
+    z-index: 99;
+    position: fixed;
+    bottom: 50px;
+    right: 50px;
+    background: linear-gradient(92.42deg, #367AA5 0%, #4794C6 100%);
+    color: #FAFAFA;
+    width: 48px;
+    height: 48px;
+    border: none;
+    border-radius: 50%;
+    transition: 0.3s ease-in-out;
+}
+
+.add_practice i {
+    position: relative;
+}

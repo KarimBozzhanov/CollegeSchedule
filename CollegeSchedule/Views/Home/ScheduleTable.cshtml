@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
-<body>
+<body onload="getSchedule(@ViewData["groupId"])">
     <table class="schedule_table">
         <tr>
             <th class="days">Дни</th>
@@ -298,7 +298,7 @@
         @foreach (var item in Model.Where(s => s.DayOfTheWeek == 5).OrderBy(s => s.SubjectNumber))
             {
                 <tr>
-                    <th>@item.SubjectNumber</th>
+                    <th id="test">@item.SubjectNumber</th>
                     <th>@item.LessonTime</th>
                     @if(item.RoomNumerator != null)
                     {
@@ -367,8 +367,37 @@
     </div>
 
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/js/bootstrap.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/js/jquery-3.6.3.js"></script>
+    <script src="~/js/jquery-3.6.3.min.js"></script>
 </body>
 </html>
+
+<script type="text/javascript">
+    function getSchedule(id) {
+            $.ajax({
+            url: "/home/GetSchedules/" + id,
+            method: "GET",
+            type: "json",
+            dataType: "json",
+            success: function (data) {
+                var currentTime = new Date();
+                var hours = currentTime.getHours();
+                var minutes = currentTime.getMinutes();
+                var formattedTime = `${hours}:${minutes}`;
+                console.log(formattedTime);
+                for(var i = 0; i < data.length; i++) {
+                    console.log(data[i].lessonTime);
+                    if(formattedTime > data[i].lessonTime && formattedTime < data[i].lessonTime) {
+                        $("#test").css("background", "#f00");
+                    }
+                }
+            },
+            error: function (err) {
+                console.log(err);
+            }
+            });
+        }
+</script>
