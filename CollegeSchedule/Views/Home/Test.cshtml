@@ -13,20 +13,32 @@
 <body>
     <div class="content">
         <div class="container">
-            <label>Выберите преподавателя: </label>
-            <input list="browsers" name="browser" id="browser"/>
-
-            <datalist id="browsers">
-                @foreach(var item in Model.Teachers)
-                {
-                    <option value="@item.teacherFullName"></option>
-                }
-            </datalist>
+            @foreach(var item in Model.Schedules)
+            {
+                <input list="browsers_@item.Id" name="browser" id="browser" onchange="Test(@item.Id)" />
+                <datalist id="browsers_@item.Id">
+                    @foreach (var teacher in Model.Teachers)
+                    {
+                        <option data-value="@teacher.Id" value="@teacher.teacherFullName"></option>
+                    }
+                </datalist>
+            }
         </div>
     </div>
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/js/jquery-3.6.3.js"></script>
+    <script src="~/js/jquery-3.6.3.min.js"></script>
 </body>
 </html>
+
+<script>
+    function Test(Id) {
+        console.log(Id);
+        var value = $('#browser').val();
+        alert($('#browsers_' + Id + ' [value="' + value + '"]').data('value'));
+        console.log($('#browsers_' + Id + ' [value="' + value + '"]').data('value'));
+    }
+</script>

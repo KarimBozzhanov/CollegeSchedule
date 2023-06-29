@@ -50,6 +50,7 @@ namespace CollegeSchedule.Controllers
         {
             var allModels = new AllModels();
             allModels.Teachers = await db.Teachers.ToListAsync();
+            allModels.Schedules = await db.Schedules.ToListAsync();
             return View(allModels);
         }
         public async Task<IActionResult> GroupList(string searchText, int cource)
@@ -274,13 +275,14 @@ namespace CollegeSchedule.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> EditTeacherDenominator(int? id, int? teacherDenominatorId)
+        public async Task<JsonResult> EditTeacherDenominator(int? id, string teacherName)
         {
             if (id != null)
             {
                 Schedule schedule = await db.Schedules.FirstOrDefaultAsync(s => s.Id == id);
+                Teacher teacher = await db.Teachers.FirstOrDefaultAsync(t => t.teacherFullName.Equals(teacherName));
                 var updateSchedule = await db.Schedules.Where(s => s.Id == id).AsQueryable().FirstOrDefaultAsync();
-                updateSchedule.TeacherDenominatorId = teacherDenominatorId;
+                updateSchedule.TeacherDenominatorId = teacher.Id;
                 db.Schedules.UpdateRange(updateSchedule);
                 await db.SaveChangesAsync();
                 return Json("Числитель преподавателя изменен");

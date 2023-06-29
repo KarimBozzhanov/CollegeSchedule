@@ -129,20 +129,13 @@
                 {
                     <th class="select_teachers" id="single_teacher_@item.Id">
                         <div class="select_teachers_block">
-                            <select class="select_options" onchange="editTeacherDenominator(@item.Id, this.value)">
-                                <option value="@null"></option>
+                            <input class="schedule_input" list="teachers" id="teacher" name="teacher" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                            <datalist id="teachers">
                                 @foreach (var teacher in Model.Teachers)
                                 {
-                                    @if (teacher.Id == item.TeacherDenominatorId)
-                                    {
-                                        <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@teacher.Id">@teacher.teacherFullName</option>
-                                    }
+                                    <option>@teacher.teacherFullName</option>
                                 }
-                            </select>
+                            </datalist>
                         </div>
                         <div class="add_numerator_block">
                             <button class="add_numerator" onclick="displayTeacherDelimiter(@item.Id)"><i class="fa-solid fa-plus"></i></button>
@@ -1339,12 +1332,12 @@
         });
     }
 
-    function editTeacherDenominator(scheduleId, teacherDenominatorNameId) {
+    function editTeacherDenominator(scheduleId, teacherDenominatorName) {
         $.ajax({
             url: "/home/EditTeacherDenominator",
             method: "POST",
             dataType: "json",
-            data: { id: scheduleId, teacherDenominatorId: teacherDenominatorNameId },
+            data: { id: scheduleId, teacherName: teacherDenominatorName },
             success: function (data) {
                 console.log(data);
             },
