@@ -189,18 +189,6 @@ namespace CollegeSchedule.Controllers
         {
             Group group = await db.Groups.FirstOrDefaultAsync(g => g.Id == groupId);
             var allModels = new AllModels();
-            allModels.Schedules = await db.Schedules.Where(g => g.GroupId == groupId).ToListAsync();
-            allModels.Teachers = await db.Teachers.OrderBy(t => t.teacherFullName).ToListAsync();
-            ViewData["group"] = group.GroupName;
-            ViewData["cource"] = group.GroupCource;
-            return View(allModels);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Test(int groupId)
-        {
-            Group group = await db.Groups.FirstOrDefaultAsync(g => g.Id == groupId);
-            var allModels = new AllModels();
             allModels.Schedules = await db.Schedules.Where(g => g.GroupId == groupId).OrderBy(s => s.SubjectNumber).ToListAsync();
             allModels.Teachers = await db.Teachers.OrderBy(t => t.teacherFullName).ToListAsync();
             ViewData["group"] = group.GroupName;
