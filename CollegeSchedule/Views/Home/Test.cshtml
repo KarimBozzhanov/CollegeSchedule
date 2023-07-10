@@ -1,0 +1,418 @@
+﻿@model CollegeSchedule.Models.AllModels;
+
+@{
+    var schedules = Model.Schedules.GroupBy(s => s.DayOfTheWeek).Select(g => new
+    {
+        g.Key
+    }).OrderBy(s => s.Key);
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - CollegeSchedule</title>
+    <link rel="stylesheet" href="~/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <table class="schedule_table">
+        <tr>
+            <th class="days">Дни</th>
+            <th class="number">№</th>
+            <th class="time">Время</th>
+            <th class="cabinet">Кабинет</th>
+            <th class="group">@ViewData["group"]</th>
+            <th class="teacher">Препод.</th>
+        </tr>
+        @foreach (var item in schedules)
+        {
+            Console.WriteLine(item.Key);
+            <tr>
+                <th rowspan="5" class="day_of_the_week">@item.Key</th>
+            </tr>
+            @foreach(var schedule in Model.Schedules.Where(s => s.DayOfTheWeek == item.Key))
+            {
+                <tr>
+                    <th>@schedule.SubjectNumber</th>
+                    <th><input class="schedule_input" type="text" onchange="editTime(@schedule.Id, this.value)" autocomplete="off" value="@schedule.StartOfLesson" /></th>
+                    @if (schedule.RoomNumerator == null)
+                    {
+                        <th class="room_block" id="single_room_@schedule.Id"><input class="schedule_input" type="text" onchange="editRoomDenominator(@schedule.Id, this.value)" autocomplete="off" value="@schedule.RoomDenominator" /></th>
+                        <th class="main_delimiter" id="delimiter_room_@schedule.Id" hidden>
+                            <table width="100%" class="delimiter_room_table">
+                                <tr class="delimiter_main">
+                                    <th class="delimiter_room_denominator">
+                                        <input class="schedule_input" type="text" onchange="editRoomDenominator(@schedule.Id, this.value)" autocomplete="off" value="@schedule.RoomDenominator" />
+                                    </th>
+                                </tr>
+                                <tr class="delimiter_main">
+                                    <th class="delimiter_room_numenator">
+                                        <input class="schedule_input" type="text" onchange="editRoomNumerator(@schedule.Id, this.value)" autocomplete="off" value="@schedule.RoomNumerator" />
+                                    </th>
+                                </tr>
+                            </table>
+                        </th>
+                    }
+                    else
+                    {
+                        <th class="room_block" id="single_room_@schedule.Id" hidden><input class="schedule_input" type="text" onchange="editRoomDenominator(@schedule.Id, this.value)" autocomplete="off" value="@schedule.RoomDenominator" /></th>
+                        <th class="main_delimiter" id="delimiter_room_@schedule.Id">
+                            <table width="100%" class="delimiter_room_table">
+                                <tr class="delimiter_main">
+                                    <th class="delimiter_room_denominator">
+                                        <input class="schedule_input" type="text" onchange="editRoomDenominator(@schedule.Id, this.value)" autocomplete="off" value="@schedule.RoomDenominator" />
+                                    </th>
+                                </tr>
+                                <tr class="delimiter_main">
+                                    <th class="delimiter_room_numenator">
+                                        <input class="schedule_input" type="text" onchange="editRoomNumerator(@schedule.Id, this.value)" autocomplete="off" value="@schedule.RoomNumerator" />
+                                    </th>
+                                </tr>
+                            </table>
+                        </th>
+                    }
+                    @if (schedule.SubjectNumerator == null)
+                    {
+                        <th class="subject_name" id="single_subject_@schedule.Id">
+                            <div class="schedule_input_block">
+                                <input class="schedule_input" type="text" onchange="editDenominator(@schedule.Id, this.value)" autocomplete="off" value="@schedule.SubjectDenominator" />
+                            </div>
+                            <div class="add_numerator_block">
+                                <button class="add_numerator" onclick="displayDelimiter(@schedule.Id)" id="add_numerator_@schedule.Id"><i class="fa-solid fa-plus"></i></button>
+                            </div>
+                        </th>
+                        <th class="main_delimiter" id="delimiter_subject_@schedule.Id" hidden>
+                            <table width="100%" class="delimiter_table">
+                                <tr class="delimiter_main">
+                                    <th class="delimiter_denominator">
+                                        <div class="schedule_input_block">
+                                            <input class="schedule_input" type="text" onchange="editDenominator(@schedule.Id, this.value)" autocomplete="off" value="@schedule.SubjectDenominator" />
+                                        </div>
+                                        <div class="minus_delimiter_block">
+                                            <button class="add_numerator" onclick="hiddenDelimiter(@schedule.Id)"><i class="fa-solid fa-minus"></i></button>
+                                        </div>
+                                    </th>
+                                </tr>
+                                <tr class="delimiter_main">
+                                    <th class="delimiter_numerator">
+                                        <div class="schedule_input_block">
+                                            <input class="schedule_input" type="text" onchange="editNumerator(@schedule.Id, this.value)" autocomplete="off" value="@schedule.SubjectNumerator" />
+                                        </div>
+                                    </th>
+                                </tr>
+                            </table>
+                        </th>
+                    }
+                    else
+                    {
+                        <th class="subject_name" id="single_subject_@schedule.Id" hidden>
+                            <div class="schedule_input_block">
+                                <input class="schedule_input" type="text" onchange="editDenominator(@schedule.Id, this.value)" autocomplete="off" value="@schedule.SubjectDenominator" />
+                            </div>
+                            <div class="add_numerator_block">
+                                <button class="add_numerator" onclick="displayDelimiter(@schedule.Id)" id="add_numerator_@schedule.Id"><i class="fa-solid fa-plus"></i></button>
+                            </div>
+                        </th>
+                        <th class="main_delimiter" id="delimiter_subject_@schedule.Id">
+                            <table width="100%" class="delimiter_table">
+                                <tr class="delimiter_main">
+                                    <th class="delimiter_denominator">
+                                        <div class="schedule_input_block">
+                                            <input class="schedule_input" type="text" onchange="editDenominator(@schedule.Id, this.value)" autocomplete="off" value="@schedule.SubjectDenominator" />
+                                        </div>
+                                        <div class="minus_delimiter_block">
+                                            <button class="add_numerator" onclick="hiddenDelimiter(@schedule.Id)"><i class="fa-solid fa-minus"></i></button>
+                                        </div>
+                                    </th>
+                                </tr>
+                                <tr class="delimiter_main">
+                                    <th class="delimiter_numerator">
+                                        <div class="schedule_input_block">
+                                            <input class="schedule_input" type="text" onchange="editNumerator(@schedule.Id, this.value)" autocomplete="off" value="@schedule.SubjectNumerator" />
+                                        </div>
+                                    </th>
+                                </tr>
+                            </table>
+                        </th>
+                    }
+                    @if (schedule.TeacherNumeratorId == null)
+                    {
+                        <th class="select_teachers" id="single_teacher_@schedule.Id">
+                            <div class="select_teachers_block">
+                                @if (schedule.TeacherDenominatorId != null)
+                                {
+                                    <input class="schedule_input" value="@schedule.TeacherDenominator?.teacherFullName" list="teachers_list" onchange="editTeacherDenominator(@schedule.Id, this.value)" />
+                                }
+                                else
+                                {
+                                    <input class="schedule_input" list="teachers_list" onchange="editTeacherDenominator(@schedule.Id, this.value)" />
+                                }
+                                <datalist class="teachers_list" id="teachers_list">
+                                    @foreach (var teacher in Model.Teachers)
+                                    {
+                                        <option class="list_options">@teacher.teacherFullName</option>
+                                    }
+                                </datalist>
+                            </div>
+                            <div class="add_numerator_block">
+                                <button class="add_numerator" onclick="displayTeacherDelimiter(@schedule.Id)"><i class="fa-solid fa-plus"></i></button>
+                            </div>
+                        </th>
+                        <th class="main_teacher_delimiter" id="delimiter_teacher_@schedule.Id" hidden>
+                            <table width="100%" class="delimiter_teacher_table">
+                                <tr class="delimiter_teacher_main">
+                                    <th class="delimiter_teacher_denominator">
+                                        <div class="hidden_teacher_delimiter">
+                                            @if (schedule.TeacherDenominatorId != null)
+                                            {
+                                                <input class="schedule_input" value="@schedule.TeacherDenominator?.teacherFullName" list="teachers_list" onchange="editTeacherDenominator(@schedule.Id, this.value)" />
+                                            }
+                                            else
+                                            {
+                                                <input class="schedule_input" list="teachers_list" onchange="editTeacherDenominator(@schedule.Id, this.value)" />
+                                            }
+                                            <datalist class="teachers_list" id="teachers_list">
+                                                @foreach (var teacher in Model.Teachers)
+                                                {
+                                                    <option class="list_options">@teacher.teacherFullName</option>
+                                                }
+                                            </datalist>
+                                        </div>
+                                        <div class="minus_delimiter_block" id="minus_teacher_delimiter_@schedule.Id" hidden>
+                                            <button class="add_numerator" onclick="hiddenTeacherDelimiter(@schedule.Id)"><i class="fa-solid fa-minus"></i></button>
+                                        </div>
+                                    </th>
+                                </tr>
+                                <tr class="delimiter_teacher_main">
+                                    <th class="delimiter_teacher_numerator">
+                                        @if (schedule.TeacherDenominatorId != null)
+                                        {
+                                            <input class="schedule_input" value="@schedule.TeacherDenominator?.teacherFullName" list="teachers_list" onchange="editTeacherDenominator(@schedule.Id, this.value)" />
+                                        }
+                                        else
+                                        {
+                                            <input class="schedule_input" list="teachers_list" onchange="editTeacherDenominator(@schedule.Id, this.value)" />
+                                        }
+                                        <datalist class="teachers_list" id="teachers_list">
+                                            @foreach (var teacher in Model.Teachers)
+                                            {
+                                                <option class="list_options">@teacher.teacherFullName</option>
+                                            }
+                                        </datalist>
+                                    </th>
+                                </tr>
+                            </table>
+                        </th>
+                    }
+                    else
+                    {
+                        <th class="select_teachers" id="single_teacher_@schedule.Id" hidden>
+                            <div class="select_teachers_block">
+                                @if (schedule.TeacherDenominatorId != null)
+                                {
+                                    <input class="schedule_input" value="@schedule.TeacherDenominator?.teacherFullName" list="teachers_list" onchange="editTeacherDenominator(@schedule.Id, this.value)" />
+                                }
+                                else
+                                {
+                                    <input class="schedule_input" list="teachers_list" onchange="editTeacherDenominator(@schedule.Id, this.value)" />
+                                }
+                                <datalist class="teachers_list" id="teachers_list">
+                                    @foreach (var teacher in Model.Teachers)
+                                    {
+                                        <option class="list_options">@teacher.teacherFullName</option>
+                                    }
+                                </datalist>
+                            </div>
+                            <div class="add_numerator_block">
+                                <button class="add_numerator" onclick="displayTeacherDelimiter(@schedule.Id)"><i class="fa-solid fa-plus"></i></button>
+                            </div>
+                        </th>
+                        <th class="main_teacher_delimiter" id="delimiter_teacher_@schedule.Id">
+                            <table width="100%" class="delimiter_teacher_table">
+                                <tr class="delimiter_teacher_main">
+                                    <th class="delimiter_teacher_denominator">
+                                        <div class="hidden_teacher_delimiter">
+                                            @if (schedule.TeacherDenominatorId != null)
+                                            {
+                                                <input class="schedule_input" value="@schedule.TeacherDenominator?.teacherFullName" list="teachers_list" onchange="editTeacherDenominator(@schedule.Id, this.value)" />
+                                            }
+                                            else
+                                            {
+                                                <input class="schedule_input" list="teachers_list" onchange="editTeacherDenominator(@schedule.Id, this.value)" />
+                                            }
+                                            <datalist class="teachers_list" id="teachers_list">
+                                                @foreach (var teacher in Model.Teachers)
+                                                {
+                                                    <option class="list_options">@teacher.teacherFullName</option>
+                                                }
+                                            </datalist>
+                                        </div>
+                                        <div class="minus_delimiter_block" id="minus_teacher_delimiter_@schedule.Id" hidden>
+                                            <button class="add_numerator" onclick="hiddenTeacherDelimiter(@schedule.Id)"><i class="fa-solid fa-minus"></i></button>
+                                        </div>
+                                    </th>
+                                </tr>
+                                <tr class="delimiter_teacher_main">
+                                    <th class="delimiter_teacher_numerator">
+                                        @if (schedule.TeacherDenominatorId != null)
+                                        {
+                                            <input class="schedule_input" value="@schedule.TeacherDenominator?.teacherFullName" list="teachers_list" onchange="editTeacherDenominator(@schedule.Id, this.value)" />
+                                        }
+                                        else
+                                        {
+                                            <input class="schedule_input" list="teachers_list" onchange="editTeacherDenominator(@schedule.Id, this.value)" />
+                                        }
+                                        <datalist class="teachers_list" id="teachers_list">
+                                            @foreach (var teacher in Model.Teachers)
+                                            {
+                                                <option class="list_options">@teacher.teacherFullName</option>
+                                            }
+                                        </datalist>
+                                    </th>
+                                </tr>
+                            </table>
+                        </th>
+                    }
+                </tr>
+            }
+        }
+        
+    </table>
+
+    <div class="back_to_main">
+        <a class="back_btn" asp-action="GroupList" asp-controller="Home" asp-route-cource="@ViewData["cource"]"><i class="fa-solid fa-chevron-left"></i></a>
+    </div>
+
+
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/js/jquery-3.6.3.js"></script>
+    <script src="~/js/jquery-3.6.3.min.js"></script>
+</body>
+</html>
+
+<script type="text/javascript">
+    function editTime(scheduleId, lessonTime) {
+        $.ajax({
+            url: "/home/EditLessonTime",
+            method: "POST",
+            dataType: "json",
+            data: { id: scheduleId, time: lessonTime },
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+
+    function editRoomDenominator(scheduleId, roomDenominatorNumber) {
+        $.ajax({
+            url: "/home/EditRoomDenominator",
+            method: "POST",
+            dataType: "json",
+            data: { id: scheduleId, roomDenominator: roomDenominatorNumber },
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+
+    function editRoomNumerator(scheduleId, roomNumeratorNumber) {
+        $.ajax({
+            url: "/home/EditRoomNumerator",
+            method: "POST",
+            dataType: "json",
+            data: { id: scheduleId, roomNumerator: roomNumeratorNumber },
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+
+    function editDenominator(scheduleId, denominatorName) {
+        $.ajax({
+            url: "/home/EditDenominator",
+            method: "POST",
+            dataType: "json",
+            data: { id: scheduleId, denominator: denominatorName },
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+
+    function editNumerator(scheduleId, numeratorName) {
+        $.ajax({
+            url: "/home/EditNumerator",
+            method: "POST",
+            dataType: "json",
+            data: { id: scheduleId, numerator: numeratorName },
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+
+    function editTeacherDenominator(scheduleId, teacherDenominatorName) {
+        $.ajax({
+            url: "/home/EditTeacherDenominator",
+            method: "POST",
+            dataType: "json",
+            data: { id: scheduleId, teacherName: teacherDenominatorName },
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+
+    function editTeacherNumerator(scheduleId, teacherNumeratorName) {
+        $.ajax({
+            url: "/home/EditTeacherNumerator",
+            method: "POST",
+            dataType: "json",
+            data: { id: scheduleId, teacherName: teacherNumeratorName },
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        $('#OptionInput').on('input', function () {
+            var searchTerm = $(this).val().toLowerCase();
+            $('#OptionsList option').each(function () {
+                var optionText = $(this).text().toLowerCase();
+                if (optionText.indexOf(searchTerm) !== -1) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+    });
+</script>
