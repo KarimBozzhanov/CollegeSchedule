@@ -129,20 +129,16 @@
                 {
                     <th class="select_teachers" id="single_teacher_@item.Id">
                         <div class="select_teachers_block">
-                            <select class="select_options" onchange="editTeacherDenominator(@item.Id, this.value)">
-                                <option value="@null"></option>
-                                @foreach (var teacher in Model.Teachers)
-                                {
-                                    @if (teacher.Id == item.TeacherDenominatorId)
-                                    {
-                                        <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@teacher.Id">@teacher.teacherFullName</option>
-                                    }
+                            @if(item.TeacherDenominatorId != null) {
+                                <input class="schedule_input" value="@item.TeacherDenominator?.teacherFullName" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)"/>
+                            } else {
+                                <input class="schedule_input" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)"/>
+                            }
+                            <datalist class="teachers_list" id="teachers_list">
+                                @foreach(var teacher in Model.Teachers) {
+                                    <option class="list_options">@teacher.teacherFullName</option>
                                 }
-                            </select>
+                            </datalist>
                         </div>
                         <div class="add_numerator_block">
                             <button class="add_numerator" onclick="displayTeacherDelimiter(@item.Id)"><i class="fa-solid fa-plus"></i></button>
@@ -153,20 +149,20 @@
                             <tr class="delimiter_teacher_main">
                                 <th class="delimiter_teacher_denominator">
                                     <div class="hidden_teacher_delimiter">
-                                        <select class="select_options" onchange="editTeacherDenominator(@item.Id, this.value)">
-                                            <option value="@null"></option>
+                                        @if (item.TeacherDenominatorId != null)
+                                        {
+                                            <input class="schedule_input" value="@item.TeacherDenominator?.teacherFullName" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                                        }
+                                        else
+                                        {
+                                            <input class="schedule_input" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                                        }
+                                        <datalist class="teachers_list" id="teachers_list">
                                             @foreach (var teacher in Model.Teachers)
                                             {
-                                                @if (teacher.Id == item.TeacherDenominatorId)
-                                                {
-                                                    <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                                                }
-                                                else
-                                                {
-                                                    <option value="@teacher.Id">@teacher.teacherFullName</option>
-                                                }
+                                                <option class="list_options">@teacher.teacherFullName</option>
                                             }
-                                        </select>
+                                        </datalist>
                                     </div>
                                     <div class="minus_delimiter_block" id="minus_teacher_delimiter_@item.Id" hidden>
                                         <button class="add_numerator" onclick="hiddenTeacherDelimiter(@item.Id)"><i class="fa-solid fa-minus"></i></button>
@@ -175,20 +171,20 @@
                             </tr>
                             <tr class="delimiter_teacher_main">
                                 <th class="delimiter_teacher_numerator">
-                                    <select class="select_options" onchange="editTeacherNumerator(@item.Id, this.value)">
-                                        <option value="@null"></option>
+                                    @if (item.TeacherDenominatorId != null)
+                                    {
+                                        <input class="schedule_input" value="@item.TeacherDenominator?.teacherFullName" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                                    }
+                                    else
+                                    {
+                                        <input class="schedule_input" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                                    }
+                                    <datalist class="teachers_list" id="teachers_list">
                                         @foreach (var teacher in Model.Teachers)
                                         {
-                                            @if (teacher.Id == item.TeacherNumeratorId)
-                                            {
-                                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                                            }
-                                            else
-                                            {
-                                                <option value="@teacher.Id">@teacher.teacherFullName</option>
-                                            }
+                                            <option class="list_options">@teacher.teacherFullName</option>
                                         }
-                                    </select>
+                                    </datalist>
                                 </th>
                             </tr>
                         </table>
@@ -197,20 +193,20 @@
                 {
                     <th class="select_teachers" id="single_teacher_@item.Id" hidden>
                         <div class="select_teachers_block">
-                            <select class="select_options" onchange="editTeacherDenominator(@item.Id, this.value)">
-                                <option value="@null"></option>
+                            @if (item.TeacherDenominatorId != null)
+                            {
+                                <input class="schedule_input" value="@item.TeacherDenominator?.teacherFullName" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                            }
+                            else
+                            {
+                                <input class="schedule_input" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                            }
+                            <datalist class="teachers_list" id="teachers_list">
                                 @foreach (var teacher in Model.Teachers)
                                 {
-                                    @if (teacher.Id == item.TeacherDenominatorId)
-                                    {
-                                        <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@teacher.Id">@teacher.teacherFullName</option>
-                                    }
+                                    <option class="list_options">@teacher.teacherFullName</option>
                                 }
-                            </select>
+                            </datalist>
                         </div>
                         <div class="add_numerator_block">
                             <button class="add_numerator" onclick="displayTeacherDelimiter(@item.Id)"><i class="fa-solid fa-plus"></i></button>
@@ -221,20 +217,20 @@
                             <tr class="delimiter_teacher_main">
                                 <th class="delimiter_teacher_denominator">
                                     <div class="hidden_teacher_delimiter">
-                                        <select class="select_options" onchange="editTeacherDenominator(@item.Id, this.value)">
-                                            <option value=""></option>
+                                        @if (item.TeacherDenominatorId != null)
+                                        {
+                                            <input class="schedule_input" value="@item.TeacherDenominator?.teacherFullName" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                                        }
+                                        else
+                                        {
+                                            <input class="schedule_input" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                                        }
+                                        <datalist class="teachers_list" id="teachers_list">
                                             @foreach (var teacher in Model.Teachers)
                                             {
-                                                @if (teacher.Id == item.TeacherDenominatorId)
-                                                {
-                                                    <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                                                }
-                                                else
-                                                {
-                                                    <option value="@teacher.Id">@teacher.teacherFullName</option>
-                                                }
+                                                <option class="list_options">@teacher.teacherFullName</option>
                                             }
-                                        </select>
+                                        </datalist>
                                     </div>
                                     <div class="minus_delimiter_block" id="minus_teacher_delimiter_@item.Id" hidden>
                                         <button class="add_numerator" onclick="hiddenTeacherDelimiter(@item.Id)"><i class="fa-solid fa-minus"></i></button>
@@ -243,20 +239,20 @@
                             </tr>
                             <tr class="delimiter_teacher_main">
                                 <th class="delimiter_teacher_numerator">
-                                    <select class="select_options" onchange="editTeacherNumerator(@item.Id, this.value)">
-                                        <option value="@null"></option>
+                                    @if (item.TeacherDenominatorId != null)
+                                    {
+                                        <input class="schedule_input" value="@item.TeacherDenominator?.teacherFullName" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                                    }
+                                    else
+                                    {
+                                        <input class="schedule_input" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                                    }
+                                    <datalist class="teachers_list" id="teachers_list">
                                         @foreach (var teacher in Model.Teachers)
                                         {
-                                            @if (teacher.Id == item.TeacherNumeratorId)
-                                            {
-                                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                                            }
-                                            else
-                                            {
-                                                <option value="@teacher.Id">@teacher.teacherFullName</option>
-                                            }
+                                            <option class="list_options">@teacher.teacherFullName</option>
                                         }
-                                    </select>
+                                    </datalist>
                                 </th>
                             </tr>
                         </table>
@@ -267,12 +263,12 @@
         <tr>
             <th rowspan="5" class="day_of_the_week">Вторник</th>
         </tr>
-        @foreach(var item in Model.Schedules.Where(s => s.DayOfTheWeek == 2).OrderBy(s => s.SubjectNumber))
+        @foreach (var item in Model.Schedules.Where(s => s.DayOfTheWeek == 2).OrderBy(s => s.SubjectNumber))
         {
             <tr>
                 <th>@item.SubjectNumber</th>
                 <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
-                @if(item.RoomNumerator == null)
+                @if (item.RoomNumerator == null)
                 {
                     <th class="room_block" id="single_room_@item.Id"><input class="schedule_input" type="text" onchange="editRoomDenominator(@item.Id, this.value)" autocomplete="off" value="@item.RoomDenominator" /></th>
                     <th class="main_delimiter" id="delimiter_room_@item.Id" hidden>
@@ -289,7 +285,8 @@
                             </tr>
                         </table>
                     </th>
-                } else
+                }
+                else
                 {
                     <th class="room_block" id="single_room_@item.Id" hidden><input class="schedule_input" type="text" onchange="editRoomDenominator(@item.Id, this.value)" autocomplete="off" value="@item.RoomDenominator" /></th>
                     <th class="main_delimiter" id="delimiter_room_@item.Id">
@@ -307,38 +304,40 @@
                         </table>
                     </th>
                 }
-                @if(item.SubjectNumerator == null)
+                @if (item.SubjectNumerator == null)
                 {
                     <th class="subject_name" id="single_subject_@item.Id">
-                            <div class="schedule_input_block">
-                                <input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" />
-                            </div>
-                            <div class="add_numerator_block">
-                                <button class="add_numerator" onclick="displayDelimiter(@item.Id)" id="add_numerator_@item.Id"><i class="fa-solid fa-plus"></i></button>
-                            </div>
-                        </th>
-                        <th class="main_delimiter" id="delimiter_subject_@item.Id" hidden>
-                            <table width="100%" class="delimiter_table">
-                                <tr class="delimiter_main">
-                                    <th class="delimiter_denominator">
-                                        <div class="schedule_input_block">
-                                            <input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" />
-                                        </div>
-                                        <div class="minus_delimiter_block">
-                                            <button class="add_numerator" onclick="hiddenDelimiter(@item.Id)"><i class="fa-solid fa-minus"></i></button>
-                                        </div>
-                                    </th>
-                                </tr>
-                                <tr class="delimiter_main">
-                                    <th class="delimiter_numerator">
-                                        <div class="schedule_input_block">
-                                            <input class="schedule_input" type="text" onchange="editNumerator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectNumerator" />
-                                        </div>
-                                    </th>
-                                </tr>
-                            </table>
-                        </th>
-                } else {
+                        <div class="schedule_input_block">
+                            <input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" />
+                        </div>
+                        <div class="add_numerator_block">
+                            <button class="add_numerator" onclick="displayDelimiter(@item.Id)" id="add_numerator_@item.Id"><i class="fa-solid fa-plus"></i></button>
+                        </div>
+                    </th>
+                    <th class="main_delimiter" id="delimiter_subject_@item.Id" hidden>
+                        <table width="100%" class="delimiter_table">
+                            <tr class="delimiter_main">
+                                <th class="delimiter_denominator">
+                                    <div class="schedule_input_block">
+                                        <input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" />
+                                    </div>
+                                    <div class="minus_delimiter_block">
+                                        <button class="add_numerator" onclick="hiddenDelimiter(@item.Id)"><i class="fa-solid fa-minus"></i></button>
+                                    </div>
+                                </th>
+                            </tr>
+                            <tr class="delimiter_main">
+                                <th class="delimiter_numerator">
+                                    <div class="schedule_input_block">
+                                        <input class="schedule_input" type="text" onchange="editNumerator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectNumerator" />
+                                    </div>
+                                </th>
+                            </tr>
+                        </table>
+                    </th>
+                }
+                else
+                {
                     <th class="subject_name" id="single_subject_@item.Id" hidden>
                         <div class="schedule_input_block">
                             <input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" />
@@ -369,24 +368,24 @@
                         </table>
                     </th>
                 }
-                @if(item.TeacherNumeratorId == null)
+                @if (item.TeacherNumeratorId == null)
                 {
                     <th class="select_teachers" id="single_teacher_@item.Id">
                         <div class="select_teachers_block">
-                            <select class="select_options" onchange="editTeacherDenominator(@item.Id, this.value)">
-                                <option value="@null"></option>
+                            @if (item.TeacherDenominatorId != null)
+                            {
+                                <input class="schedule_input" value="@item.TeacherDenominator?.teacherFullName" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                            }
+                            else
+                            {
+                                <input class="schedule_input" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                            }
+                            <datalist class="teachers_list" id="teachers_list">
                                 @foreach (var teacher in Model.Teachers)
                                 {
-                                    @if (teacher.Id == item.TeacherDenominatorId)
-                                    {
-                                        <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@teacher.Id">@teacher.teacherFullName</option>
-                                    }
+                                    <option class="list_options">@teacher.teacherFullName</option>
                                 }
-                            </select>
+                            </datalist>
                         </div>
                         <div class="add_numerator_block">
                             <button class="add_numerator" onclick="displayTeacherDelimiter(@item.Id)"><i class="fa-solid fa-plus"></i></button>
@@ -397,20 +396,20 @@
                             <tr class="delimiter_teacher_main">
                                 <th class="delimiter_teacher_denominator">
                                     <div class="hidden_teacher_delimiter">
-                                        <select class="select_options" onchange="editTeacherDenominator(@item.Id, this.value)">
-                                            <option value="@null"></option>
+                                        @if (item.TeacherDenominatorId != null)
+                                        {
+                                            <input class="schedule_input" value="@item.TeacherDenominator?.teacherFullName" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                                        }
+                                        else
+                                        {
+                                            <input class="schedule_input" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                                        }
+                                        <datalist class="teachers_list" id="teachers_list">
                                             @foreach (var teacher in Model.Teachers)
                                             {
-                                                @if (teacher.Id == item.TeacherDenominatorId)
-                                                {
-                                                    <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                                                }
-                                                else
-                                                {
-                                                    <option value="@teacher.Id">@teacher.teacherFullName</option>
-                                                }
+                                                <option class="list_options">@teacher.teacherFullName</option>
                                             }
-                                        </select>
+                                        </datalist>
                                     </div>
                                     <div class="minus_delimiter_block" id="minus_teacher_delimiter_@item.Id" hidden>
                                         <button class="add_numerator" onclick="hiddenTeacherDelimiter(@item.Id)"><i class="fa-solid fa-minus"></i></button>
@@ -419,42 +418,43 @@
                             </tr>
                             <tr class="delimiter_teacher_main">
                                 <th class="delimiter_teacher_numerator">
-                                    <select class="select_options" onchange="editTeacherNumerator(@item.Id, this.value)">
-                                        <option value="@null"></option>
+                                    @if (item.TeacherDenominatorId != null)
+                                    {
+                                        <input class="schedule_input" value="@item.TeacherDenominator?.teacherFullName" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                                    }
+                                    else
+                                    {
+                                        <input class="schedule_input" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                                    }
+                                    <datalist class="teachers_list" id="teachers_list">
                                         @foreach (var teacher in Model.Teachers)
                                         {
-                                            @if (teacher.Id == item.TeacherNumeratorId)
-                                            {
-                                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                                            }
-                                            else
-                                            {
-                                                <option value="@teacher.Id">@teacher.teacherFullName</option>
-                                            }
+                                            <option class="list_options">@teacher.teacherFullName</option>
                                         }
-                                    </select>
+                                    </datalist>
                                 </th>
                             </tr>
                         </table>
                     </th>
-                } else
+                }
+                else
                 {
                     <th class="select_teachers" id="single_teacher_@item.Id" hidden>
                         <div class="select_teachers_block">
-                            <select class="select_options" onchange="editTeacherDenominator(@item.Id, this.value)">
-                                <option value="@null"></option>
+                            @if (item.TeacherDenominatorId != null)
+                            {
+                                <input class="schedule_input" value="@item.TeacherDenominator?.teacherFullName" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                            }
+                            else
+                            {
+                                <input class="schedule_input" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                            }
+                            <datalist class="teachers_list" id="teachers_list">
                                 @foreach (var teacher in Model.Teachers)
                                 {
-                                    @if (teacher.Id == item.TeacherDenominatorId)
-                                    {
-                                        <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@teacher.Id">@teacher.teacherFullName</option>
-                                    }
+                                    <option class="list_options">@teacher.teacherFullName</option>
                                 }
-                            </select>
+                            </datalist>
                         </div>
                         <div class="add_numerator_block">
                             <button class="add_numerator" onclick="displayTeacherDelimiter(@item.Id)"><i class="fa-solid fa-plus"></i></button>
@@ -465,20 +465,20 @@
                             <tr class="delimiter_teacher_main">
                                 <th class="delimiter_teacher_denominator">
                                     <div class="hidden_teacher_delimiter">
-                                        <select class="select_options" onchange="editTeacherDenominator(@item.Id, this.value)">
-                                            <option value="@null"></option>
+                                        @if (item.TeacherDenominatorId != null)
+                                        {
+                                            <input class="schedule_input" value="@item.TeacherDenominator?.teacherFullName" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                                        }
+                                        else
+                                        {
+                                            <input class="schedule_input" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                                        }
+                                        <datalist class="teachers_list" id="teachers_list">
                                             @foreach (var teacher in Model.Teachers)
                                             {
-                                                @if (teacher.Id == item.TeacherDenominatorId)
-                                                {
-                                                    <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                                                }
-                                                else
-                                                {
-                                                    <option value="@teacher.Id">@teacher.teacherFullName</option>
-                                                }
+                                                <option class="list_options">@teacher.teacherFullName</option>
                                             }
-                                        </select>
+                                        </datalist>
                                     </div>
                                     <div class="minus_delimiter_block" id="minus_teacher_delimiter_@item.Id" hidden>
                                         <button class="add_numerator" onclick="hiddenTeacherDelimiter(@item.Id)"><i class="fa-solid fa-minus"></i></button>
@@ -487,20 +487,20 @@
                             </tr>
                             <tr class="delimiter_teacher_main">
                                 <th class="delimiter_teacher_numerator">
-                                    <select class="select_options" onchange="editTeacherNumerator(@item.Id, this.value)">
-                                        <option value="@null"></option>
+                                    @if (item.TeacherDenominatorId != null)
+                                    {
+                                        <input class="schedule_input" value="@item.TeacherDenominator?.teacherFullName" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                                    }
+                                    else
+                                    {
+                                        <input class="schedule_input" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                                    }
+                                    <datalist class="teachers_list" id="teachers_list">
                                         @foreach (var teacher in Model.Teachers)
                                         {
-                                            @if (teacher.Id == item.TeacherNumeratorId)
-                                            {
-                                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                                            }
-                                            else
-                                            {
-                                                <option value="@teacher.Id">@teacher.teacherFullName</option>
-                                            }
+                                            <option class="list_options">@teacher.teacherFullName</option>
                                         }
-                                    </select>
+                                    </datalist>
                                 </th>
                             </tr>
                         </table>
@@ -620,20 +620,20 @@
                 {
                     <th class="select_teachers" id="single_teacher_@item.Id">
                         <div class="select_teachers_block">
-                            <select class="select_options" onchange="editTeacherDenominator(@item.Id, this.value)">
-                                <option value="@null"></option>
+                            @if (item.TeacherDenominatorId != null)
+                            {
+                                <input class="schedule_input" value="@item.TeacherDenominator?.teacherFullName" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                            }
+                            else
+                            {
+                                <input class="schedule_input" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                            }
+                            <datalist class="teachers_list" id="teachers_list">
                                 @foreach (var teacher in Model.Teachers)
                                 {
-                                    @if (teacher.Id == item.TeacherDenominatorId)
-                                    {
-                                        <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@teacher.Id">@teacher.teacherFullName</option>
-                                    }
+                                    <option class="list_options">@teacher.teacherFullName</option>
                                 }
-                            </select>
+                            </datalist>
                         </div>
                         <div class="add_numerator_block">
                             <button class="add_numerator" onclick="displayTeacherDelimiter(@item.Id)"><i class="fa-solid fa-plus"></i></button>
@@ -644,20 +644,20 @@
                             <tr class="delimiter_teacher_main">
                                 <th class="delimiter_teacher_denominator">
                                     <div class="hidden_teacher_delimiter">
-                                        <select class="select_options" onchange="editTeacherDenominator(@item.Id, this.value)">
-                                            <option value="@null"></option>
+                                        @if (item.TeacherDenominatorId != null)
+                                        {
+                                            <input class="schedule_input" value="@item.TeacherDenominator?.teacherFullName" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                                        }
+                                        else
+                                        {
+                                            <input class="schedule_input" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                                        }
+                                        <datalist class="teachers_list" id="teachers_list">
                                             @foreach (var teacher in Model.Teachers)
                                             {
-                                                @if (teacher.Id == item.TeacherDenominatorId)
-                                                {
-                                                    <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                                                }
-                                                else
-                                                {
-                                                    <option value="@teacher.Id">@teacher.teacherFullName</option>
-                                                }
+                                                <option class="list_options">@teacher.teacherFullName</option>
                                             }
-                                        </select>
+                                        </datalist>
                                     </div>
                                     <div class="minus_delimiter_block" id="minus_teacher_delimiter_@item.Id" hidden>
                                         <button class="add_numerator" onclick="hiddenTeacherDelimiter(@item.Id)"><i class="fa-solid fa-minus"></i></button>
@@ -666,20 +666,20 @@
                             </tr>
                             <tr class="delimiter_teacher_main">
                                 <th class="delimiter_teacher_numerator">
-                                    <select class="select_options" onchange="editTeacherNumerator(@item.Id, this.value)">
-                                        <option value="@null"></option>
+                                    @if (item.TeacherDenominatorId != null)
+                                    {
+                                        <input class="schedule_input" value="@item.TeacherDenominator?.teacherFullName" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                                    }
+                                    else
+                                    {
+                                        <input class="schedule_input" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                                    }
+                                    <datalist class="teachers_list" id="teachers_list">
                                         @foreach (var teacher in Model.Teachers)
                                         {
-                                            @if (teacher.Id == item.TeacherNumeratorId)
-                                            {
-                                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                                            }
-                                            else
-                                            {
-                                                <option value="@teacher.Id">@teacher.teacherFullName</option>
-                                            }
+                                            <option class="list_options">@teacher.teacherFullName</option>
                                         }
-                                    </select>
+                                    </datalist>
                                 </th>
                             </tr>
                         </table>
@@ -689,20 +689,20 @@
                 {
                     <th class="select_teachers" id="single_teacher_@item.Id" hidden>
                         <div class="select_teachers_block">
-                            <select class="select_options" onchange="editTeacherDenominator(@item.Id, this.value)">
-                                <option value="@null"></option>
+                            @if (item.TeacherDenominatorId != null)
+                            {
+                                <input class="schedule_input" value="@item.TeacherDenominator?.teacherFullName" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                            }
+                            else
+                            {
+                                <input class="schedule_input" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                            }
+                            <datalist class="teachers_list" id="teachers_list">
                                 @foreach (var teacher in Model.Teachers)
                                 {
-                                    @if (teacher.Id == item.TeacherDenominatorId)
-                                    {
-                                        <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@teacher.Id">@teacher.teacherFullName</option>
-                                    }
+                                    <option class="list_options">@teacher.teacherFullName</option>
                                 }
-                            </select>
+                            </datalist>
                         </div>
                         <div class="add_numerator_block">
                             <button class="add_numerator" onclick="displayTeacherDelimiter(@item.Id)"><i class="fa-solid fa-plus"></i></button>
@@ -713,20 +713,20 @@
                             <tr class="delimiter_teacher_main">
                                 <th class="delimiter_teacher_denominator">
                                     <div class="hidden_teacher_delimiter">
-                                        <select class="select_options" onchange="editTeacherDenominator(@item.Id, this.value)">
-                                            <option value="@null"></option>
+                                        @if (item.TeacherDenominatorId != null)
+                                        {
+                                            <input class="schedule_input" value="@item.TeacherDenominator?.teacherFullName" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                                        }
+                                        else
+                                        {
+                                            <input class="schedule_input" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                                        }
+                                        <datalist class="teachers_list" id="teachers_list">
                                             @foreach (var teacher in Model.Teachers)
                                             {
-                                                @if (teacher.Id == item.TeacherDenominatorId)
-                                                {
-                                                    <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                                                }
-                                                else
-                                                {
-                                                    <option value="@teacher.Id">@teacher.teacherFullName</option>
-                                                }
+                                                <option class="list_options">@teacher.teacherFullName</option>
                                             }
-                                        </select>
+                                        </datalist>
                                     </div>
                                     <div class="minus_delimiter_block" id="minus_teacher_delimiter_@item.Id" hidden>
                                         <button class="add_numerator" onclick="hiddenTeacherDelimiter(@item.Id)"><i class="fa-solid fa-minus"></i></button>
@@ -735,20 +735,20 @@
                             </tr>
                             <tr class="delimiter_teacher_main">
                                 <th class="delimiter_teacher_numerator">
-                                    <select class="select_options" onchange="editTeacherNumerator(@item.Id, this.value)">
-                                        <option value="@null"></option>
+                                    @if (item.TeacherDenominatorId != null)
+                                    {
+                                        <input class="schedule_input" value="@item.TeacherDenominator?.teacherFullName" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                                    }
+                                    else
+                                    {
+                                        <input class="schedule_input" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                                    }
+                                    <datalist class="teachers_list" id="teachers_list">
                                         @foreach (var teacher in Model.Teachers)
                                         {
-                                            @if (teacher.Id == item.TeacherNumeratorId)
-                                            {
-                                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                                            }
-                                            else
-                                            {
-                                                <option value="@teacher.Id">@teacher.teacherFullName</option>
-                                            }
+                                            <option class="list_options">@teacher.teacherFullName</option>
                                         }
-                                    </select>
+                                    </datalist>
                                 </th>
                             </tr>
                         </table>
@@ -764,7 +764,7 @@
             <tr>
                 <th>@item.SubjectNumber</th>
                 <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
-                @if(item.RoomNumerator == null)
+                @if (item.RoomNumerator == null)
                 {
                     <th class="room_block" id="single_room_@item.Id"><input class="schedule_input" type="text" onchange="editRoomDenominator(@item.Id, this.value)" autocomplete="off" value="@item.RoomDenominator" /></th>
                     <th class="main_delimiter" id="delimiter_room_@item.Id" hidden>
@@ -781,7 +781,8 @@
                             </tr>
                         </table>
                     </th>
-                } else
+                }
+                else
                 {
                     <th class="room_block" id="single_room_@item.Id" hidden><input class="schedule_input" type="text" onchange="editRoomDenominator(@item.Id, this.value)" autocomplete="off" value="@item.RoomDenominator" /></th>
                     <th class="main_delimiter" id="delimiter_room_@item.Id">
@@ -799,38 +800,40 @@
                         </table>
                     </th>
                 }
-                @if(item.SubjectNumerator == null)
+                @if (item.SubjectNumerator == null)
                 {
                     <th class="subject_name" id="single_subject_@item.Id">
-                            <div class="schedule_input_block">
-                                <input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" />
-                            </div>
-                            <div class="add_numerator_block">
-                                <button class="add_numerator" onclick="displayDelimiter(@item.Id)" id="add_numerator_@item.Id"><i class="fa-solid fa-plus"></i></button>
-                            </div>
-                        </th>
-                        <th class="main_delimiter" id="delimiter_subject_@item.Id" hidden>
-                            <table width="100%" class="delimiter_table">
-                                <tr class="delimiter_main">
-                                    <th class="delimiter_denominator">
-                                        <div class="schedule_input_block">
-                                            <input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" />
-                                        </div>
-                                        <div class="minus_delimiter_block">
-                                            <button class="add_numerator" onclick="hiddenDelimiter(@item.Id)"><i class="fa-solid fa-minus"></i></button>
-                                        </div>
-                                    </th>
-                                </tr>
-                                <tr class="delimiter_main">
-                                    <th class="delimiter_numerator">
-                                        <div class="schedule_input_block">
-                                            <input class="schedule_input" type="text" onchange="editNumerator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectNumerator" />
-                                        </div>
-                                    </th>
-                                </tr>
-                            </table>
-                        </th>
-                } else {
+                        <div class="schedule_input_block">
+                            <input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" />
+                        </div>
+                        <div class="add_numerator_block">
+                            <button class="add_numerator" onclick="displayDelimiter(@item.Id)" id="add_numerator_@item.Id"><i class="fa-solid fa-plus"></i></button>
+                        </div>
+                    </th>
+                    <th class="main_delimiter" id="delimiter_subject_@item.Id" hidden>
+                        <table width="100%" class="delimiter_table">
+                            <tr class="delimiter_main">
+                                <th class="delimiter_denominator">
+                                    <div class="schedule_input_block">
+                                        <input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" />
+                                    </div>
+                                    <div class="minus_delimiter_block">
+                                        <button class="add_numerator" onclick="hiddenDelimiter(@item.Id)"><i class="fa-solid fa-minus"></i></button>
+                                    </div>
+                                </th>
+                            </tr>
+                            <tr class="delimiter_main">
+                                <th class="delimiter_numerator">
+                                    <div class="schedule_input_block">
+                                        <input class="schedule_input" type="text" onchange="editNumerator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectNumerator" />
+                                    </div>
+                                </th>
+                            </tr>
+                        </table>
+                    </th>
+                }
+                else
+                {
                     <th class="subject_name" id="single_subject_@item.Id" hidden>
                         <div class="schedule_input_block">
                             <input class="schedule_input" type="text" onchange="editDenominator(@item.Id, this.value)" autocomplete="off" value="@item.SubjectDenominator" />
@@ -861,24 +864,24 @@
                         </table>
                     </th>
                 }
-                @if(item.TeacherNumeratorId == null)
+                @if (item.TeacherNumeratorId == null)
                 {
                     <th class="select_teachers" id="single_teacher_@item.Id">
                         <div class="select_teachers_block">
-                            <select class="select_options" onchange="editTeacherDenominator(@item.Id, this.value)">
-                                <option value="@null"></option>
+                            @if (item.TeacherDenominatorId != null)
+                            {
+                                <input class="schedule_input" value="@item.TeacherDenominator?.teacherFullName" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                            }
+                            else
+                            {
+                                <input class="schedule_input" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                            }
+                            <datalist class="teachers_list" id="teachers_list">
                                 @foreach (var teacher in Model.Teachers)
                                 {
-                                    @if (teacher.Id == item.TeacherDenominatorId)
-                                    {
-                                        <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@teacher.Id">@teacher.teacherFullName</option>
-                                    }
+                                    <option class="list_options">@teacher.teacherFullName</option>
                                 }
-                            </select>
+                            </datalist>
                         </div>
                         <div class="add_numerator_block">
                             <button class="add_numerator" onclick="displayTeacherDelimiter(@item.Id)"><i class="fa-solid fa-plus"></i></button>
@@ -889,20 +892,20 @@
                             <tr class="delimiter_teacher_main">
                                 <th class="delimiter_teacher_denominator">
                                     <div class="hidden_teacher_delimiter">
-                                        <select class="select_options" onchange="editTeacherDenominator(@item.Id, this.value)">
-                                            <option value="@null"></option>
+                                        @if (item.TeacherDenominatorId != null)
+                                        {
+                                            <input class="schedule_input" value="@item.TeacherDenominator?.teacherFullName" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                                        }
+                                        else
+                                        {
+                                            <input class="schedule_input" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                                        }
+                                        <datalist class="teachers_list" id="teachers_list">
                                             @foreach (var teacher in Model.Teachers)
                                             {
-                                                @if (teacher.Id == item.TeacherDenominatorId)
-                                                {
-                                                    <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                                                }
-                                                else
-                                                {
-                                                    <option value="@teacher.Id">@teacher.teacherFullName</option>
-                                                }
+                                                <option class="list_options">@teacher.teacherFullName</option>
                                             }
-                                        </select>
+                                        </datalist>
                                     </div>
                                     <div class="minus_delimiter_block" id="minus_teacher_delimiter_@item.Id" hidden>
                                         <button class="add_numerator" onclick="hiddenTeacherDelimiter(@item.Id)"><i class="fa-solid fa-minus"></i></button>
@@ -911,42 +914,43 @@
                             </tr>
                             <tr class="delimiter_teacher_main">
                                 <th class="delimiter_teacher_numerator">
-                                    <select class="select_options" onchange="editTeacherNumerator(@item.Id, this.value)">
-                                        <option value="@null"></option>
+                                    @if (item.TeacherDenominatorId != null)
+                                    {
+                                        <input class="schedule_input" value="@item.TeacherDenominator?.teacherFullName" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                                    }
+                                    else
+                                    {
+                                        <input class="schedule_input" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                                    }
+                                    <datalist class="teachers_list" id="teachers_list">
                                         @foreach (var teacher in Model.Teachers)
                                         {
-                                            @if (teacher.Id == item.TeacherNumeratorId)
-                                            {
-                                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                                            }
-                                            else
-                                            {
-                                                <option value="@teacher.Id">@teacher.teacherFullName</option>
-                                            }
+                                            <option class="list_options">@teacher.teacherFullName</option>
                                         }
-                                    </select>
+                                    </datalist>
                                 </th>
                             </tr>
                         </table>
                     </th>
-                } else
+                }
+                else
                 {
                     <th class="select_teachers" id="single_teacher_@item.Id" hidden>
                         <div class="select_teachers_block">
-                            <select class="select_options" onchange="editTeacherDenominator(@item.Id, this.value)">
-                                <option value="@null"></option>
+                            @if (item.TeacherDenominatorId != null)
+                            {
+                                <input class="schedule_input" value="@item.TeacherDenominator?.teacherFullName" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                            }
+                            else
+                            {
+                                <input class="schedule_input" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                            }
+                            <datalist class="teachers_list" id="teachers_list">
                                 @foreach (var teacher in Model.Teachers)
                                 {
-                                    @if (teacher.Id == item.TeacherDenominatorId)
-                                    {
-                                        <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@teacher.Id">@teacher.teacherFullName</option>
-                                    }
+                                    <option class="list_options">@teacher.teacherFullName</option>
                                 }
-                            </select>
+                            </datalist>
                         </div>
                         <div class="add_numerator_block">
                             <button class="add_numerator" onclick="displayTeacherDelimiter(@item.Id)"><i class="fa-solid fa-plus"></i></button>
@@ -957,20 +961,20 @@
                             <tr class="delimiter_teacher_main">
                                 <th class="delimiter_teacher_denominator">
                                     <div class="hidden_teacher_delimiter">
-                                        <select class="select_options" onchange="editTeacherDenominator(@item.Id, this.value)">
-                                            <option value="@null"></option>
+                                        @if (item.TeacherDenominatorId != null)
+                                        {
+                                            <input class="schedule_input" value="@item.TeacherDenominator?.teacherFullName" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                                        }
+                                        else
+                                        {
+                                            <input class="schedule_input" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                                        }
+                                        <datalist class="teachers_list" id="teachers_list">
                                             @foreach (var teacher in Model.Teachers)
                                             {
-                                                @if (teacher.Id == item.TeacherDenominatorId)
-                                                {
-                                                    <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                                                }
-                                                else
-                                                {
-                                                    <option value="@teacher.Id">@teacher.teacherFullName</option>
-                                                }
+                                                <option class="list_options">@teacher.teacherFullName</option>
                                             }
-                                        </select>
+                                        </datalist>
                                     </div>
                                     <div class="minus_delimiter_block" id="minus_teacher_delimiter_@item.Id" hidden>
                                         <button class="add_numerator" onclick="hiddenTeacherDelimiter(@item.Id)"><i class="fa-solid fa-minus"></i></button>
@@ -979,20 +983,20 @@
                             </tr>
                             <tr class="delimiter_teacher_main">
                                 <th class="delimiter_teacher_numerator">
-                                    <select class="select_options" onchange="editTeacherNumerator(@item.Id, this.value)">
-                                        <option value="@null"></option>
+                                    @if (item.TeacherDenominatorId != null)
+                                    {
+                                        <input class="schedule_input" value="@item.TeacherDenominator?.teacherFullName" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                                    }
+                                    else
+                                    {
+                                        <input class="schedule_input" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                                    }
+                                    <datalist class="teachers_list" id="teachers_list">
                                         @foreach (var teacher in Model.Teachers)
                                         {
-                                            @if (teacher.Id == item.TeacherNumeratorId)
-                                            {
-                                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                                            }
-                                            else
-                                            {
-                                                <option value="@teacher.Id">@teacher.teacherFullName</option>
-                                            }
+                                            <option class="list_options">@teacher.teacherFullName</option>
                                         }
-                                    </select>
+                                    </datalist>
                                 </th>
                             </tr>
                         </table>
@@ -1112,20 +1116,20 @@
                 {
                     <th class="select_teachers" id="single_teacher_@item.Id">
                         <div class="select_teachers_block">
-                            <select class="select_options" onchange="editTeacherDenominator(@item.Id, this.value)">
-                                <option value="@null"></option>
+                            @if (item.TeacherDenominatorId != null)
+                            {
+                                <input class="schedule_input" value="@item.TeacherDenominator?.teacherFullName" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                            }
+                            else
+                            {
+                                <input class="schedule_input" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                            }
+                            <datalist class="teachers_list" id="teachers_list">
                                 @foreach (var teacher in Model.Teachers)
                                 {
-                                    @if (teacher.Id == item.TeacherDenominatorId)
-                                    {
-                                        <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@teacher.Id">@teacher.teacherFullName</option>
-                                    }
+                                    <option class="list_options">@teacher.teacherFullName</option>
                                 }
-                            </select>
+                            </datalist>
                         </div>
                         <div class="add_numerator_block">
                             <button class="add_numerator" onclick="displayTeacherDelimiter(@item.Id)"><i class="fa-solid fa-plus"></i></button>
@@ -1136,20 +1140,20 @@
                             <tr class="delimiter_teacher_main">
                                 <th class="delimiter_teacher_denominator">
                                     <div class="hidden_teacher_delimiter">
-                                        <select class="select_options" onchange="editTeacherDenominator(@item.Id, this.value)">
-                                            <option value="@null"></option>
+                                        @if (item.TeacherDenominatorId != null)
+                                        {
+                                            <input class="schedule_input" value="@item.TeacherDenominator?.teacherFullName" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                                        }
+                                        else
+                                        {
+                                            <input class="schedule_input" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                                        }
+                                        <datalist class="teachers_list" id="teachers_list">
                                             @foreach (var teacher in Model.Teachers)
                                             {
-                                                @if (teacher.Id == item.TeacherDenominatorId)
-                                                {
-                                                    <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                                                }
-                                                else
-                                                {
-                                                    <option value="@teacher.Id">@teacher.teacherFullName</option>
-                                                }
+                                                <option class="list_options">@teacher.teacherFullName</option>
                                             }
-                                        </select>
+                                        </datalist>
                                     </div>
                                     <div class="minus_delimiter_block" id="minus_teacher_delimiter_@item.Id" hidden>
                                         <button class="add_numerator" onclick="hiddenTeacherDelimiter(@item.Id)"><i class="fa-solid fa-minus"></i></button>
@@ -1158,43 +1162,43 @@
                             </tr>
                             <tr class="delimiter_teacher_main">
                                 <th class="delimiter_teacher_numerator">
-                                    <select class="select_options" onchange="editTeacherNumerator(@item.Id, this.value)">
-                                        <option value="@null"></option>
+                                    @if (item.TeacherDenominatorId != null)
+                                    {
+                                        <input class="schedule_input" value="@item.TeacherDenominator?.teacherFullName" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                                    }
+                                    else
+                                    {
+                                        <input class="schedule_input" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                                    }
+                                    <datalist class="teachers_list" id="teachers_list">
                                         @foreach (var teacher in Model.Teachers)
                                         {
-                                            @if (teacher.Id == item.TeacherNumeratorId)
-                                            {
-                                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                                            }
-                                            else
-                                            {
-                                                <option value="@teacher.Id">@teacher.teacherFullName</option>
-                                            }
+                                            <option class="list_options">@teacher.teacherFullName</option>
                                         }
-                                    </select>
+                                    </datalist>
                                 </th>
                             </tr>
                         </table>
                     </th>
                 }
-                else if(item.TeacherNumeratorId != null || item.SubjectNumerator != null)
+                else
                 {
                     <th class="select_teachers" id="single_teacher_@item.Id" hidden>
                         <div class="select_teachers_block">
-                            <select class="select_options" onchange="editTeacherDenominator(@item.Id, this.value)">
-                                <option value="@null"></option>
+                            @if (item.TeacherDenominatorId != null)
+                            {
+                                <input class="schedule_input" value="@item.TeacherDenominator?.teacherFullName" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                            }
+                            else
+                            {
+                                <input class="schedule_input" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                            }
+                            <datalist class="teachers_list" id="teachers_list">
                                 @foreach (var teacher in Model.Teachers)
                                 {
-                                    @if (teacher.Id == item.TeacherDenominatorId)
-                                    {
-                                        <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@teacher.Id">@teacher.teacherFullName</option>
-                                    }
+                                    <option class="list_options">@teacher.teacherFullName</option>
                                 }
-                            </select>
+                            </datalist>
                         </div>
                         <div class="add_numerator_block">
                             <button class="add_numerator" onclick="displayTeacherDelimiter(@item.Id)"><i class="fa-solid fa-plus"></i></button>
@@ -1205,20 +1209,20 @@
                             <tr class="delimiter_teacher_main">
                                 <th class="delimiter_teacher_denominator">
                                     <div class="hidden_teacher_delimiter">
-                                        <select class="select_options" onchange="editTeacherDenominator(@item.Id, this.value)">
-                                            <option value="@null"></option>
+                                        @if (item.TeacherDenominatorId != null)
+                                        {
+                                            <input class="schedule_input" value="@item.TeacherDenominator?.teacherFullName" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                                        }
+                                        else
+                                        {
+                                            <input class="schedule_input" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                                        }
+                                        <datalist class="teachers_list" id="teachers_list">
                                             @foreach (var teacher in Model.Teachers)
                                             {
-                                                @if (teacher.Id == item.TeacherDenominatorId)
-                                                {
-                                                    <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                                                }
-                                                else
-                                                {
-                                                    <option value="@teacher.Id">@teacher.teacherFullName</option>
-                                                }
+                                                <option class="list_options">@teacher.teacherFullName</option>
                                             }
-                                        </select>
+                                        </datalist>
                                     </div>
                                     <div class="minus_delimiter_block" id="minus_teacher_delimiter_@item.Id" hidden>
                                         <button class="add_numerator" onclick="hiddenTeacherDelimiter(@item.Id)"><i class="fa-solid fa-minus"></i></button>
@@ -1227,20 +1231,20 @@
                             </tr>
                             <tr class="delimiter_teacher_main">
                                 <th class="delimiter_teacher_numerator">
-                                    <select class="select_options" onchange="editTeacherNumerator(@item.Id, this.value)">
-                                        <option value="@null"></option>
+                                    @if (item.TeacherDenominatorId != null)
+                                    {
+                                        <input class="schedule_input" value="@item.TeacherDenominator?.teacherFullName" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                                    }
+                                    else
+                                    {
+                                        <input class="schedule_input" list="teachers_list" onchange="editTeacherDenominator(@item.Id, this.value)" />
+                                    }
+                                    <datalist class="teachers_list" id="teachers_list">
                                         @foreach (var teacher in Model.Teachers)
                                         {
-                                            @if (teacher.Id == item.TeacherNumeratorId)
-                                            {
-                                                <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                                            }
-                                            else
-                                            {
-                                                <option value="@teacher.Id">@teacher.teacherFullName</option>
-                                            }
+                                            <option class="list_options">@teacher.teacherFullName</option>
                                         }
-                                    </select>
+                                    </datalist>
                                 </th>
                             </tr>
                         </table>
@@ -1339,12 +1343,12 @@
         });
     }
 
-    function editTeacherDenominator(scheduleId, teacherDenominatorNameId) {
+    function editTeacherDenominator(scheduleId, teacherDenominatorName) {
         $.ajax({
             url: "/home/EditTeacherDenominator",
             method: "POST",
             dataType: "json",
-            data: { id: scheduleId, teacherDenominatorId: teacherDenominatorNameId },
+            data: { id: scheduleId, teacherName: teacherDenominatorName },
             success: function (data) {
                 console.log(data);
             },
@@ -1368,4 +1372,18 @@
             }
         });
     }
+
+    $(document).ready(function () {
+        $('#OptionInput').on('input', function () {
+            var searchTerm = $(this).val().toLowerCase();
+            $('#OptionsList option').each(function () {
+                var optionText = $(this).text().toLowerCase();
+                if (optionText.indexOf(searchTerm) !== -1) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+    });
 </script>
