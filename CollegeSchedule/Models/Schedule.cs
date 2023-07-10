@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CollegeSchedule.Models
 {
@@ -7,7 +8,8 @@ namespace CollegeSchedule.Models
         public int Id { get; set; }
         public int DayOfTheWeek { get; set; }
         public int SubjectNumber { get; set; }
-        public string LessonTime { get; set; }
+        public string StartOfLesson { get; set; }
+        public string EndOfLesson { get; set; }
         public string SubjectDenominator { get; set; }
         public string SubjectNumerator { get; set; }
         [ForeignKey("TeacherDenominatorId")]

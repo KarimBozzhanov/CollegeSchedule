@@ -27,7 +27,7 @@
         {
             <tr>
                 <th>@item.SubjectNumber</th>
-                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
+                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.StartOfLesson" /></th>
                 @if(item.RoomNumerator == null)
                 {
                     <th class="room_block" id="single_room_@item.Id"><input class="schedule_input" type="text" onchange="editRoomDenominator(@item.Id, this.value)" autocomplete="off" value="@item.RoomDenominator" /></th>
@@ -267,7 +267,7 @@
         {
             <tr>
                 <th>@item.SubjectNumber</th>
-                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
+                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.StartOfLesson" /></th>
                 @if (item.RoomNumerator == null)
                 {
                     <th class="room_block" id="single_room_@item.Id"><input class="schedule_input" type="text" onchange="editRoomDenominator(@item.Id, this.value)" autocomplete="off" value="@item.RoomDenominator" /></th>
@@ -515,7 +515,7 @@
         {
             <tr>
                 <th>@item.SubjectNumber</th>
-                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
+                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.StartOfLesson" /></th>
                 @if (item.RoomNumerator == null)
                 {
                     <th class="room_block" id="single_room_@item.Id"><input class="schedule_input" type="text" onchange="editRoomDenominator(@item.Id, this.value)" autocomplete="off" value="@item.RoomDenominator" /></th>
@@ -763,7 +763,7 @@
         {
             <tr>
                 <th>@item.SubjectNumber</th>
-                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
+                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.StartOfLesson" /></th>
                 @if (item.RoomNumerator == null)
                 {
                     <th class="room_block" id="single_room_@item.Id"><input class="schedule_input" type="text" onchange="editRoomDenominator(@item.Id, this.value)" autocomplete="off" value="@item.RoomDenominator" /></th>
@@ -1011,7 +1011,7 @@
         {
             <tr>
                 <th>@item.SubjectNumber</th>
-                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.LessonTime" /></th>
+                <th><input class="schedule_input" type="text" onchange="editTime(@item.Id, this.value)" autocomplete="off" value="@item.StartOfLesson" /></th>
                 @if (item.RoomNumerator == null)
                 {
                     <th class="room_block" id="single_room_@item.Id"><input class="schedule_input" type="text" onchange="editRoomDenominator(@item.Id, this.value)" autocomplete="off" value="@item.RoomDenominator" /></th>
@@ -1358,12 +1358,12 @@
         });
     }
 
-    function editTeacherNumerator(scheduleId, teacherNumeratorNameId) {
+    function editTeacherNumerator(scheduleId, teacherNumeratorName) {
         $.ajax({
             url: "/home/EditTeacherNumerator",
             method: "POST",
             dataType: "json",
-            data: { id: scheduleId, teacherNumeratorId: teacherNumeratorNameId },
+            data: { id: scheduleId, teacherName: teacherNumeratorName },
             success: function (data) {
                 console.log(data);
             },

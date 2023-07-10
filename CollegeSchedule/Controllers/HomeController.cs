@@ -14,6 +14,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
@@ -26,31 +27,17 @@ namespace CollegeSchedule.Controllers
     {
 
         private ApplicationDbContext db;
-        readonly SqlConnection con;
+ 
         readonly IConfigurationRoot configuration;
-        SqlCommand com = new SqlCommand();
-        SqlDataReader dr;
-        List<Schedule> schedulesList = new List<Schedule>();
         public HomeController(ApplicationDbContext context, IHostingEnvironment env)
         {
             db = context;
-            con = new SqlConnection();
-            configuration = new ConfigurationBuilder().SetBasePath(env.ContentRootPath).AddJsonFile("appsettings.json").Build();
-            con.ConnectionString = configuration["ConnectionString"];
+           
         }
         
         public IActionResult Index()
         {
             return View();
-        }
-
-
-        [HttpGet]
-        public async Task<IActionResult> Test()
-        {
-            var allModels = new AllModels();
-            allModels.Teachers = await db.Teachers.ToListAsync();
-            return View(allModels);
         }
         public async Task<IActionResult> GroupList(string searchText, int cource)
         {
@@ -122,13 +109,26 @@ namespace CollegeSchedule.Controllers
         public async Task<IActionResult> CreateGroup(string groupName, int groupCource)
         {
             await db.Groups.AddAsync(new Group { GroupName = groupName, GroupCource = groupCource });
-            await db.SaveChangesAsync();
             for (int i = 1; i < 6; i++)
             {
                 for (int j = 1; j < 5; j++)
                 {
                     Group group = await db.Groups.FirstOrDefaultAsync(g => g.GroupName == groupName);
-                    await db.Schedules.AddAsync(new Schedule { DayOfTheWeek = i, SubjectNumber = j, GroupId = group.Id });
+                    switch(j)
+                    {
+                        case 1:
+                            await db.Schedules.AddAsync(new Schedule { DayOfTheWeek = i, SubjectNumber = j, GroupId = group.Id, StartOfLesson = "13:00", EndOfLesson = "14:20"});
+                            break;
+                        case 2:
+                            await db.Schedules.AddAsync(new Schedule { DayOfTheWeek = i, SubjectNumber = j, GroupId = group.Id, StartOfLesson = "14:30", EndOfLesson = "15:50" });
+                            break;
+                        case 3:
+                            await db.Schedules.AddAsync(new Schedule { DayOfTheWeek = i, SubjectNumber = j, GroupId = group.Id, StartOfLesson = "16:00", EndOfLesson = "17:20" });
+                            break;
+                        case 4:
+                            await db.Schedules.AddAsync(new Schedule { DayOfTheWeek = i, SubjectNumber = j, GroupId = group.Id, StartOfLesson = "17:30", EndOfLesson = "18:50" });
+                            break;
+                    }
                 }
             }
             await db.SaveChangesAsync();
@@ -188,8 +188,6 @@ namespace CollegeSchedule.Controllers
         public async Task<IActionResult> EditSchedule(int groupId)
         {
             Group group = await db.Groups.FirstOrDefaultAsync(g => g.Id == groupId);
-            SelectList teachers = new SelectList(db.Teachers, "Id", "fullTeacherName");
-            ViewBag.teachers = teachers;
             var allModels = new AllModels();
             allModels.Schedules = await db.Schedules.Where(g => g.GroupId == groupId).ToListAsync();
             allModels.Teachers = await db.Teachers.OrderBy(t => t.teacherFullName).ToListAsync();
@@ -205,13 +203,15 @@ namespace CollegeSchedule.Controllers
             {
                 Schedule schedule = await db.Schedules.FirstOrDefaultAsync(s => s.Id == id);
                 var updateSchedule = await db.Schedules.Where(s => s.Id == id).AsQueryable().FirstOrDefaultAsync();
-                updateSchedule.LessonTime = time;
+                updateSchedule.StartOfLesson = time;
                 db.Schedules.UpdateRange(updateSchedule);
                 await db.SaveChangesAsync();
                 return Json("Время изменено");
             }
             return Json(NotFound());
         }
+
+
 
         [HttpPost]
         public async Task<JsonResult> EditRoomDenominator(int? id, string roomDenominator)
@@ -274,31 +274,78 @@ namespace CollegeSchedule.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> EditTeacherDenominator(int? id, int? teacherDenominatorId)
+        public async Task<JsonResult> EditTeacherDenominator(int? id, string teacherName)
         {
             if (id != null)
             {
                 Schedule schedule = await db.Schedules.FirstOrDefaultAsync(s => s.Id == id);
-                var updateSchedule = await db.Schedules.Where(s => s.Id == id).AsQueryable().FirstOrDefaultAsync();
-                updateSchedule.TeacherDenominatorId = teacherDenominatorId;
-                db.Schedules.UpdateRange(updateSchedule);
-                await db.SaveChangesAsync();
-                return Json("Числитель преподавателя изменен");
+                if (schedule != null)
+                {
+                    if (teacherName != null)
+                    {
+                        Teacher teacher = await db.Teachers.FirstOrDefaultAsync(t => t.teacherFullName.Equals(teacherName));
+                        if (teacher != null)
+                        {
+                            var updateSchedule = await db.Schedules.Where(s => s.Id == id).AsQueryable().FirstOrDefaultAsync();
+                            updateSchedule.TeacherDenominatorId = teacher.Id;
+                            db.Schedules.UpdateRange(updateSchedule);
+                        }
+                        else
+                        {
+                            return Json("Такого преподавателя нет");
+                        }
+                    }
+                    else
+                    {
+                        var updateSchedule = await db.Schedules.Where(s => s.Id == id).AsQueryable().FirstOrDefaultAsync();
+                        updateSchedule.TeacherDenominatorId = null;
+                        db.Schedules.UpdateRange(updateSchedule);
+                    }
+                    await db.SaveChangesAsync();
+                    return Json("Числитель преподавателя изменен");
+                } else
+                {
+                    return Json("Такой пары нет");
+                }
             }
             return Json(NotFound());
         }
 
 
-        public async Task<JsonResult> EditTeacherNumerator(int? id, int? teacherNumeratorId)
+        public async Task<JsonResult> EditTeacherNumerator(int? id, string teacherName)
         {
             if (id != null)
             {
                 Schedule schedule = await db.Schedules.FirstOrDefaultAsync(s => s.Id == id);
-                var updateSchedule = await db.Schedules.Where(s => s.Id == id).AsQueryable().FirstOrDefaultAsync();
-                updateSchedule.TeacherNumeratorId = teacherNumeratorId;
-                db.Schedules.UpdateRange(updateSchedule);
-                await db.SaveChangesAsync();
-                return Json("Знаменатель преподавателя изменен");
+                if (schedule != null)
+                {
+                    if (teacherName != null)
+                    {
+                        Teacher teacher = await db.Teachers.FirstOrDefaultAsync(t => t.teacherFullName.Equals(teacherName));
+                        if (teacher != null)
+                        {
+                            var updateSchedule = await db.Schedules.Where(s => s.Id == id).AsQueryable().FirstOrDefaultAsync();
+                            updateSchedule.TeacherNumeratorId = teacher.Id;
+                            db.Schedules.UpdateRange(updateSchedule);
+                        }
+                        else
+                        {
+                            return Json("Такого преподавателя нет");
+                        }
+                    }
+                    else
+                    {
+                        var updateSchedule = await db.Schedules.Where(s => s.Id == id).AsQueryable().FirstOrDefaultAsync();
+                        updateSchedule.TeacherNumeratorId = null;
+                        db.Schedules.UpdateRange(updateSchedule);
+                    }
+                    await db.SaveChangesAsync();
+                    return Json("Знаменатель преподавателя изменен");
+                }
+                else
+                {
+                    return Json("Такой пары нет");
+                }
             }
             return Json(NotFound());
         }
@@ -776,11 +823,13 @@ namespace CollegeSchedule.Controllers
             return Json(NotFound());
         }
         
-        public async Task<JsonResult> GetSchedules(int groupId)
+        public async Task<JsonResult> GetSchedules(int? id)
         {
-            Console.WriteLine("Id - " + groupId);
-            List<Schedule> allSchedule = await db.Schedules.Where(s => s.GroupId == groupId).ToListAsync();
-            return Json(allSchedule);
+            Console.WriteLine("Id - " + id);
+            List<Schedule> allSchedule = await db.Schedules.Where(s => s.GroupId == id).OrderBy(a => a.DayOfTheWeek).ToListAsync();
+            allSchedule = allSchedule.OrderBy(a => a.SubjectNumber).ToList();
+            var scheduleJson = JsonConvert.SerializeObject(allSchedule);
+            return Json(scheduleJson);
         }
 
 

@@ -25,9 +25,9 @@
         </tr>
         @foreach (var item in Model.Where(s => s.DayOfTheWeek == 1).OrderBy(s => s.SubjectNumber))
             {
-                <tr>
+                <tr id="schedule_row_@item.Id">
                     <th>@item.SubjectNumber</th>
-                    <th>@item.LessonTime</th>
+                    <th>@item.StartOfLesson</th>
                     @if(item.RoomNumerator != null)
                     {
                         <th class="main_delimiter">
@@ -93,9 +93,9 @@
         </tr>
         @foreach (var item in Model.Where(s => s.DayOfTheWeek == 2).OrderBy(s => s.SubjectNumber))
             {
-                <tr>
+                <tr id="schedule_row_@item.Id">
                     <th>@item.SubjectNumber</th>
-                    <th>@item.LessonTime</th>
+                    <th>@item.StartOfLesson</th>
                     @if(item.RoomNumerator != null)
                     {
                         <th class="main_delimiter">
@@ -161,9 +161,9 @@
         </tr>
         @foreach (var item in Model.Where(s => s.DayOfTheWeek == 3).OrderBy(s => s.SubjectNumber))
             {
-                <tr>
+                <tr id="schedule_row_@item.Id">
                     <th>@item.SubjectNumber</th>
-                    <th>@item.LessonTime</th>
+                    <th>@item.StartOfLesson</th>
                     @if(item.RoomNumerator != null)
                     {
                         <th class="main_delimiter">
@@ -229,9 +229,9 @@
         </tr>
         @foreach (var item in Model.Where(s => s.DayOfTheWeek == 4).OrderBy(s => s.SubjectNumber))
             {
-                <tr>
+                <tr id="schedule_row_@item.Id">
                     <th>@item.SubjectNumber</th>
-                    <th>@item.LessonTime</th>
+                    <th>@item.StartOfLesson</th>
                     @if(item.RoomNumerator != null)
                     {
                         <th class="main_delimiter">
@@ -297,9 +297,9 @@
         </tr>
         @foreach (var item in Model.Where(s => s.DayOfTheWeek == 5).OrderBy(s => s.SubjectNumber))
             {
-                <tr>
+                <tr id="schedule_row_@item.Id">
                     <th id="test">@item.SubjectNumber</th>
-                    <th>@item.LessonTime</th>
+                    <th>@item.StartOfLesson</th>
                     @if(item.RoomNumerator != null)
                     {
                         <th class="main_delimiter">
@@ -377,27 +377,33 @@
 
 <script type="text/javascript">
     function getSchedule(id) {
-            $.ajax({
+        console.log(id);
+        $.ajax({
             url: "/home/GetSchedules/" + id,
             method: "GET",
             type: "json",
             dataType: "json",
             success: function (data) {
+                console.log(data);
+                data = JSON.parse(data);
                 var currentTime = new Date();
+                var currentDay = currentTime.getDay();
+                console.log(currentDay);
                 var hours = currentTime.getHours();
                 var minutes = currentTime.getMinutes();
                 var formattedTime = `${hours}:${minutes}`;
                 console.log(formattedTime);
                 for(var i = 0; i < data.length; i++) {
-                    console.log(data[i].lessonTime);
-                    if(formattedTime > data[i].lessonTime && formattedTime < data[i].lessonTime) {
-                        $("#test").css("background", "#f00");
+                    console.log(data[i].StartOfLesson + " + " + data[i].EndOfLesson + " + " + data[i].DayOfTheWeek)
+                    if ((formattedTime >= data[i].StartOfLesson && formattedTime <= data[i].EndOfLesson) && currentDay == data[i].DayOfTheWeek) {
+                        console.log(true);
+                        $("#schedule_row_" + data[i].Id).css("background", "linear-gradient(92.42deg, #367AA5 0%, #4794C6 100%)");
                     }
                 }
             },
             error: function (err) {
                 console.log(err);
             }
-            });
-        }
+        });
+    }
 </script>
