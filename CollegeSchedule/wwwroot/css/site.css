@@ -836,3 +836,10 @@ th {
 .add_practice i {
     position: relative;
 }
+
+.password_error {
+    color: red;
+    font-size: 15px;
+    padding: 0px;
+    margin: 0px;
+}

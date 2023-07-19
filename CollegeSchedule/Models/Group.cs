@@ -13,6 +13,7 @@ namespace CollegeSchedule.Models
         public int Id { get; set; }
         public string GroupName { get; set; }
         public int GroupCource { get; set; }
+        public int GroupShift { get; set; }
         public List<Schedule> Schedules { get; set; }
         public List<ExamsSchedule> ExamsSchedules { get; set; }
         public List<ConsultationSchedule> ConsultationsSchedule { get; set; }

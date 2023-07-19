@@ -398,6 +398,7 @@
                     if ((formattedTime >= data[i].StartOfLesson && formattedTime <= data[i].EndOfLesson) && currentDay == data[i].DayOfTheWeek) {
                         console.log(true);
                         $("#schedule_row_" + data[i].Id).css("background", "linear-gradient(92.42deg, #367AA5 0%, #4794C6 100%)");
+                        $("#schedule_row_" + data[i].Id).css("color", "#FAFAFA");
                     }
                 }
             },

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -18,8 +19,11 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Permissions;
+using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Schema;
+using XSystem.Security.Cryptography;
 
 namespace CollegeSchedule.Controllers
 {
@@ -106,28 +110,49 @@ namespace CollegeSchedule.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> CreateGroup(string groupName, int groupCource)
+        public async Task<IActionResult> CreateGroup(string groupName, int groupCource, int groupShift)
         {
-            await db.Groups.AddAsync(new Group { GroupName = groupName, GroupCource = groupCource });
+            await db.Groups.AddAsync(new Group { GroupName = groupName, GroupCource = groupCource, GroupShift = groupShift });
+            await db.SaveChangesAsync();
             for (int i = 1; i < 6; i++)
             {
                 for (int j = 1; j < 5; j++)
                 {
                     Group group = await db.Groups.FirstOrDefaultAsync(g => g.GroupName == groupName);
-                    switch(j)
+                    if(groupShift == 1)
                     {
-                        case 1:
-                            await db.Schedules.AddAsync(new Schedule { DayOfTheWeek = i, SubjectNumber = j, GroupId = group.Id, StartOfLesson = "13:00", EndOfLesson = "14:20"});
-                            break;
-                        case 2:
-                            await db.Schedules.AddAsync(new Schedule { DayOfTheWeek = i, SubjectNumber = j, GroupId = group.Id, StartOfLesson = "14:30", EndOfLesson = "15:50" });
-                            break;
-                        case 3:
-                            await db.Schedules.AddAsync(new Schedule { DayOfTheWeek = i, SubjectNumber = j, GroupId = group.Id, StartOfLesson = "16:00", EndOfLesson = "17:20" });
-                            break;
-                        case 4:
-                            await db.Schedules.AddAsync(new Schedule { DayOfTheWeek = i, SubjectNumber = j, GroupId = group.Id, StartOfLesson = "17:30", EndOfLesson = "18:50" });
-                            break;
+                        switch (j)
+                        {
+                            case 1:
+                                await db.Schedules.AddAsync(new Schedule { DayOfTheWeek = i, SubjectNumber = j, GroupId = group.Id, StartOfLesson = "08:00", EndOfLesson = "09:20" });
+                                break;
+                            case 2:
+                                await db.Schedules.AddAsync(new Schedule { DayOfTheWeek = i, SubjectNumber = j, GroupId = group.Id, StartOfLesson = "09:30", EndOfLesson = "10:50" });
+                                break;
+                            case 3:
+                                await db.Schedules.AddAsync(new Schedule { DayOfTheWeek = i, SubjectNumber = j, GroupId = group.Id, StartOfLesson = "11:00", EndOfLesson = "12:20" });
+                                break;
+                            case 4:
+                                await db.Schedules.AddAsync(new Schedule { DayOfTheWeek = i, SubjectNumber = j, GroupId = group.Id, StartOfLesson = "12:30", EndOfLesson = "13:50" });
+                                break;
+                        }
+                    } else if(groupShift == 2)
+                    {
+                        switch (j)
+                        {
+                            case 1:
+                                await db.Schedules.AddAsync(new Schedule { DayOfTheWeek = i, SubjectNumber = j, GroupId = group.Id, StartOfLesson = "13:00", EndOfLesson = "14:20" });
+                                break;
+                            case 2:
+                                await db.Schedules.AddAsync(new Schedule { DayOfTheWeek = i, SubjectNumber = j, GroupId = group.Id, StartOfLesson = "14:30", EndOfLesson = "15:50" });
+                                break;
+                            case 3:
+                                await db.Schedules.AddAsync(new Schedule { DayOfTheWeek = i, SubjectNumber = j, GroupId = group.Id, StartOfLesson = "16:00", EndOfLesson = "17:20" });
+                                break;
+                            case 4:
+                                await db.Schedules.AddAsync(new Schedule { DayOfTheWeek = i, SubjectNumber = j, GroupId = group.Id, StartOfLesson = "17:30", EndOfLesson = "18:50" });
+                                break;
+                        }
                     }
                 }
             }
@@ -368,15 +393,32 @@ namespace CollegeSchedule.Controllers
                 Teacher teacher = await db.Teachers.FirstOrDefaultAsync(t => t.teacherFullName == teacherName);
                 if (teacher == null)
                 {
-                    await db.Teachers.AddAsync(new Teacher { teacherFullName = teacherName});
+                    string password = GetHash(teacherName);
+                    await db.Teachers.AddAsync(new Teacher { teacherFullName = teacherName, TeacherPassword = password});
                     await db.SaveChangesAsync();
+                    
                     return RedirectToAction("TeachersList");
+                    
                 } else
                 {
                     ModelState.AddModelError("", "Преподаватель с таким ФИО уже добавлен");
                 }
             }
             return View(teacherName);
+        }
+
+
+        public string GetHash(string text)
+        {
+            byte[] bytes = Encoding.Unicode.GetBytes(text);
+            MD5CryptoServiceProvider CSP = new MD5CryptoServiceProvider();
+            byte[] byteHash = CSP.ComputeHash(bytes);
+            string hash = string.Empty;
+            foreach (byte b in byteHash)
+            {
+                hash += string.Format("{0:x2}", b);
+            }
+            return hash;
         }
 
 
@@ -389,6 +431,32 @@ namespace CollegeSchedule.Controllers
                 return Json(teacherJson);
             }
             return Json(NotFound());
+        }
+
+        public async Task<JsonResult> CheckTeacherPass(int? teacherId, string teacherPass)
+        {
+            if(teacherId != null)
+            {
+                Teacher teacher = await db.Teachers.FirstOrDefaultAsync(t => t.Id == teacherId);
+                if(teacher != null)
+                {
+                    if(teacherPass == teacher.TeacherPassword)
+                    {
+                        TempData["teacherId"] = teacherId;
+                        TempData["teacherPassword"] = teacherPass;
+                        return Json(new { success = true, teacherId = teacherId, teacherPass = teacherPass });
+                    } else
+                    {
+                        return Json(new {success = false, Message = "Неверный пароль"});
+                    }
+                } else
+                {
+                    return Json("Преподаватель не найден");
+                }
+            } else
+            {
+                return Json("Преподаватель не найден");
+            }
         }
 
         public async Task<IActionResult> ExamsListOfGroups(string searchText, int cource)
@@ -484,20 +552,29 @@ namespace CollegeSchedule.Controllers
             return NotFound();
         }
 
-        public async Task<IActionResult> TeachersSchedule(int? teacherId)
+        public async Task<IActionResult> TeachersSchedule()
         {
+            int? teacherId = (int)TempData["teacherId"];
+            string teacherPass = TempData["teacherPassword"] as string;
             if (teacherId != null)
             {
+                Console.WriteLine(teacherId + " " + teacherPass);
                 Teacher teacher = await db.Teachers.FirstOrDefaultAsync(t => t.Id == teacherId);
-                ViewData["teacherName"] = teacher.teacherFullName;
-                ViewBag.teacherId = teacher.Id;
-                ViewBag.MondayLessons = db.Schedules.Count(s => s.DayOfTheWeek == 1 && (s.TeacherDenominator.Id == teacherId || s.TeacherNumeratorId == teacherId)) + 1;
-                ViewBag.TuesdayLessons = db.Schedules.Count(s => s.DayOfTheWeek == 2 && (s.TeacherDenominator.Id == teacherId || s.TeacherNumeratorId == teacherId)) + 1;
-                ViewBag.WednesdayLessons = db.Schedules.Count(s => s.DayOfTheWeek == 3 && (s.TeacherDenominator.Id == teacherId || s.TeacherNumeratorId == teacherId)) + 1;
-                ViewBag.ThursdayLessons = db.Schedules.Count(s => s.DayOfTheWeek == 4 && (s.TeacherDenominator.Id == teacherId || s.TeacherNumeratorId == teacherId)) + 1;
-                ViewBag.FridayLessons = db.Schedules.Count(s => s.DayOfTheWeek == 5 && (s.TeacherDenominator.Id == teacherId || s.TeacherNumeratorId == teacherId)) + 1;
-                Console.WriteLine(db.Schedules.Count(s => s.DayOfTheWeek == 1 && s.TeacherDenominator.Id == teacherId));
-                return View(await db.Schedules.Include(s => s.TeacherDenominator).Include(s => s.TeacherNumerator).Include(s => s.Group).Where(s => s.TeacherDenominatorId == teacherId || s.TeacherNumeratorId == teacherId ).ToListAsync());
+                if (teacher != null && teacher.TeacherPassword.Equals(teacherPass))
+                {
+                    ViewData["teacherName"] = teacher.teacherFullName;
+                    ViewBag.teacherId = teacher.Id;
+                    ViewBag.MondayLessons = db.Schedules.Count(s => s.DayOfTheWeek == 1 && (s.TeacherDenominator.Id == teacherId || s.TeacherNumeratorId == teacherId)) + 1;
+                    ViewBag.TuesdayLessons = db.Schedules.Count(s => s.DayOfTheWeek == 2 && (s.TeacherDenominator.Id == teacherId || s.TeacherNumeratorId == teacherId)) + 1;
+                    ViewBag.WednesdayLessons = db.Schedules.Count(s => s.DayOfTheWeek == 3 && (s.TeacherDenominator.Id == teacherId || s.TeacherNumeratorId == teacherId)) + 1;
+                    ViewBag.ThursdayLessons = db.Schedules.Count(s => s.DayOfTheWeek == 4 && (s.TeacherDenominator.Id == teacherId || s.TeacherNumeratorId == teacherId)) + 1;
+                    ViewBag.FridayLessons = db.Schedules.Count(s => s.DayOfTheWeek == 5 && (s.TeacherDenominator.Id == teacherId || s.TeacherNumeratorId == teacherId)) + 1;
+                    Console.WriteLine(db.Schedules.Count(s => s.DayOfTheWeek == 1 && s.TeacherDenominator.Id == teacherId));
+                    return View(await db.Schedules.Include(s => s.TeacherDenominator).Include(s => s.TeacherNumerator).Include(s => s.Group).Where(s => s.TeacherDenominatorId == teacherId || s.TeacherNumeratorId == teacherId).ToListAsync());
+                } else
+                {
+                    return RedirectToAction("TeachersList", "Home");
+                }
             }
             return NotFound();
         }

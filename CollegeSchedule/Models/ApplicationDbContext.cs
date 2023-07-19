@@ -16,7 +16,12 @@ namespace CollegeSchedule.Models
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
-            Database.EnsureCreated();
+            //Database.EnsureCreated();
+        }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<User>().HasData(
+                new User { Id = 1, userName = "Admin", password = "Adm1n$Pa$$2018+-" });
         }
     }
 }

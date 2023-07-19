@@ -28,7 +28,7 @@
             <th class="time">Время</th>
             <th class="cabinet">Кабинет</th>
             <th class="group">@ViewData["group"]</th>
-            <th class="teacher">Препод.</th>
+            <th class="teacher">Преподаватель</th>
         </tr>
         @foreach (var item in schedules)
         {
@@ -403,18 +403,4 @@
             }
         });
     }
-
-    $(document).ready(function () {
-        $('#OptionInput').on('input', function () {
-            var searchTerm = $(this).val().toLowerCase();
-            $('#OptionsList option').each(function () {
-                var optionText = $(this).text().toLowerCase();
-                if (optionText.indexOf(searchTerm) !== -1) {
-                    $(this).show();
-                } else {
-                    $(this).hide();
-                }
-            });
-        });
-    });
 </script>

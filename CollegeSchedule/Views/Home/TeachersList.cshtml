@@ -54,7 +54,7 @@
             {
                 <div class="group_list" align="center">
                     <div class="group_info" align="left">
-                        <a class="group_btn" asp-action="TeachersSchedule" asp-controller="Home" asp-route-teacherId="@teacher.Id">@teacher.teacherFullName</a>
+                        <a class="group_btn" data-bs-toggle="modal" data-bs-target="#getTeacherSchedule" onclick="getTeacherInfo(@teacher.Id)">@teacher.teacherFullName</a>
                     </div>
                     <div class="change_group" align="right">
                         @if (User.Identity.IsAuthenticated)
@@ -74,21 +74,43 @@
         </div>
     </div>
 
+
+    <div class="modal fade" id="getTeacherSchedule" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="mainModal modal-header">
+                    <h5 class="modal-title fs-5" id="exampleModalLabel">Введите пароль</h5>
+                    <p id="passwordError" class="password_error"></p>
+                    <button class="close_modal" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark fa-lg" style="color: #e60a0a;"></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="groupName">
+                        <input class="group_input" id="teacherPass" type="text" placeholder="Пароль" autocomplete="off" required />
+                        <input class="group_input" id="passId" readonly hidden />
+                    </div>
+                    <div class="save_group_block" align="right">
+                        <button type="submit" class="save_group" onclick="checkTeacherPass()">Далее</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="editTeacherModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="mainModal modal-header">
-                    <h5 class="modal-title fs-5" id="exampleModalLabel">Редактировать группу</h5>
+                    <h5 class="modal-title fs-5" id="exampleModalLabel">Редактировать преподавателя</h5>
                     <button class="close_modal" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark fa-lg" style="color: #e60a0a;"></i></button>
                 </div>
                 <div class="modal-body">
                     <form asp-action="EditTeacher" asp-controller="Home">
                         <div class="groupName">
                             <h5>ФИО преподавателя</h5>
-                            <input class="group_input" id="teacherName" type="text" placeholder="Название" name="teacherName" autocomplete="off" required />
+                            <input class="group_input" id="teacherName" type="text" placeholder="ФИО" name="teacherName" autocomplete="off" required />
                         </div>
                         <div class="groupId">
-                            <input class="group_input" id="teacherId" type="text" placeholder="Id" name="teacherId" autocomplete="off" required hidden />
+                            <input class="group_input" readonly id="teacherId" type="text" placeholder="Id" name="teacherId" autocomplete="off" required hidden />
                         </div>
                         <div class="save_group_block" align="right">
                             <button type="submit" class="save_group">Изменить</button>
@@ -125,6 +147,31 @@
                 console.log(data);
                 $("#teacherName").val(data.teacherFullName);
                 $("#teacherId").val(data.Id);
+                $("#passId").val(data.Id);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+
+
+    function checkTeacherPass() {
+        var id = $("#passId").val();
+        var password = $("#teacherPass").val();
+        $.ajax({
+            url: "/home/CheckTeacherPass",
+            method: "GET",
+            type: "json",
+            data: { teacherId: id, teacherPass: password },
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                if (data.success){
+                    window.location.href = "@Url.Action("TeachersSchedule", "Home")";
+                } else {
+                    $('#passwordError').text("Неверный пароль");
+                }
             },
             error: function (err) {
                 console.log(err);

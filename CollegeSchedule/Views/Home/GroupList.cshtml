@@ -33,8 +33,12 @@
                             <h5>Название группы</h5>
                             <input class="group_input" type="text" placeholder="Название" name="groupName" autocomplete="off" required />
                         </div>
+                        <div class="groupName">
+                            <h5>Смена</h5>
+                            <input class="group_input" type="text" placeholder="Смена" name="groupShift" autocomplete="off" required />
+                        </div>
                         <div class="groupCource">
-                            <input name="groupCource" value="@ViewData["cource"]" hidden />
+                            <input name="groupCource" value="@ViewData["cource"]" hidden readonly />
                         </div>
                         <div class="save_group_block" align="right">
                             <button type="submit" class="save_group">Добавить</button>
@@ -103,7 +107,7 @@
                             <input class="group_input" id="groupCource" type="number" placeholder="Курс" name="groupCource" autocomplete="off" required />
                         </div>
                         <div class="groupId">
-                            <input class="group_input" id="groupId" type="text" placeholder="Id" name="groupId" autocomplete="off" required hidden/>
+                            <input class="group_input" id="groupId" type="text" placeholder="Id" name="groupId" autocomplete="off" required hidden readonly/>
                         </div>
                         <div class="save_group_block" align="right">
                             <button type="submit" class="save_group">Изменить</button>
