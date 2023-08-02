@@ -25,7 +25,8 @@
         <tr>
             <th class="days">Дни</th>
             <th class="number">№</th>
-            <th class="time">Время</th>
+            <th class="time">Начало</th>
+            <th class="time">Конец</th>
             <th class="cabinet">Кабинет</th>
             <th class="group">@ViewData["group"]</th>
             <th class="teacher">Преподаватель</th>
@@ -40,7 +41,8 @@
             {
                 <tr>
                     <th>@schedule.SubjectNumber</th>
-                    <th><input class="schedule_input" type="text" onchange="editTime(@schedule.Id, this.value)" autocomplete="off" value="@schedule.StartOfLesson" /></th>
+                    <th><input class="schedule_input" type="text" onchange="editStartOfLesson(@schedule.Id, this.value)" autocomplete="off" value="@schedule.StartOfLesson" /></th>
+                    <th><input class="schedule_input" type="text" onchange="editEndOfLesson(@schedule.Id, this.value)" autocomplete="off" value="@schedule.EndOfLesson" /></th>
                     @if (schedule.RoomNumerator == null)
                     {
                         <th class="room_block" id="single_room_@schedule.Id"><input class="schedule_input" type="text" onchange="editRoomDenominator(@schedule.Id, this.value)" autocomplete="off" value="@schedule.RoomDenominator" /></th>
@@ -286,7 +288,7 @@
     </table>
 
     <div class="back_to_main">
-        <a class="back_btn" asp-action="GroupList" asp-controller="Home" asp-route-cource="@ViewData["cource"]"><i class="fa-solid fa-chevron-left"></i></a>
+        <a class="back_btn" asp-action="GroupList" asp-controller="Home" asp-route-course="@ViewData["course"]"><i class="fa-solid fa-chevron-left"></i></a>
     </div>
 
 
@@ -299,9 +301,24 @@
 </html>
 
 <script type="text/javascript">
-    function editTime(scheduleId, lessonTime) {
+    function editStartOfLesson(scheduleId, lessonTime) {
         $.ajax({
-            url: "/home/EditLessonTime",
+            url: "/home/EditStartOfLesson",
+            method: "POST",
+            dataType: "json",
+            data: { id: scheduleId, time: lessonTime },
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+
+    function editEndOfLesson(scheduleId, lessonTime) {
+        $.ajax({
+            url: "/home/EditEndOfLesson",
             method: "POST",
             dataType: "json",
             data: { id: scheduleId, time: lessonTime },

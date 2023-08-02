@@ -13,10 +13,15 @@ namespace CollegeSchedule.Models
         public DbSet<ExamsSchedule> ExamsSchedules { get; set; }
         public DbSet<ConsultationSchedule> ConsultationsSchedules { get; set; }
 
+        public ApplicationDbContext()
+        {
+
+        }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
-            //Database.EnsureCreated();
+            Database.EnsureCreated();
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

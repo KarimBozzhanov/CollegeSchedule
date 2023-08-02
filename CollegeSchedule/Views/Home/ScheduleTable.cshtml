@@ -1,5 +1,14 @@
 ﻿@model IEnumerable<CollegeSchedule.Models.Schedule>
 
+@{
+    var schedules = Model.GroupBy(s => s.DayOfTheWeek).Select(g => new
+    {
+        g.Key
+    }).OrderBy(s => s.Key);
+
+    string[] DayOfTheWeek = new string[5] { "Понедельник", "Вторник", "Среда", "Четверг", "Пятница" };
+}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,355 +24,93 @@
         <tr>
             <th class="days">Дни</th>
             <th class="number">№</th>
-            <th class="time">Время</th>
+            <th class="time">Начало</th>
+            <th class="time">Конец</th>
             <th class="cabinet">Кабинет</th>
             <th class="group">@ViewData["group"]</th>
-            <th class="teacher">Препод.</th>
+            <th class="teacher">Преподаватель</th>
         </tr>
-        <tr>
-            <th rowspan="5" class="day_of_the_week">Понедельник</th>
-        </tr>
-        @foreach (var item in Model.Where(s => s.DayOfTheWeek == 1).OrderBy(s => s.SubjectNumber))
+        @foreach(var schedule in schedules)
+        {
+            <tr>
+                <th rowspan="5" class="day_of_the_week">@DayOfTheWeek[schedule.Key - 1]</th>
+            </tr>
+            @foreach (var item in Model.Where(s => s.DayOfTheWeek == schedule.Key))
             {
                 <tr id="schedule_row_@item.Id">
-                    <th>@item.SubjectNumber</th>
-                    <th>@item.StartOfLesson</th>
-                    @if(item.RoomNumerator != null)
+                    <th><p class="schedule_th" id="number_item_@item.Id">@item.SubjectNumber</p></th>
+                    <th><p class="schedule_th" id="start_time_@item.Id">@item.StartOfLesson</p></th>
+                    <th><p class="schedule_th" id="end_time_@item.Id">@item.EndOfLesson</p></th>
+                    @if (item.RoomNumerator != null)
                     {
                         <th class="main_delimiter">
                             <table width="100%" class="delimiter_table">
                                 <tr class="delimiter_main">
                                     <th class="delimiter_denominator" height="30">
-                                        @item.RoomDenominator
+                                        <p class="schedule_th" id="room_denominator_@item.Id">@item.RoomDenominator</p>
                                     </th>
                                 </tr>
                                 <tr class="delimiter_main">
                                     <th class="delimiter_numerator" height="30">
-                                        @item.RoomNumerator
+                                        <p class="schedule_th" id="room_numerator_@item.Id">@item.RoomNumerator</p>
                                     </th>
                                 </tr>
                             </table>
                         </th>
-                    } else
-                    {
-                        <th>@item.RoomDenominator</th>
                     }
-                    @if(item.SubjectNumerator != null) {
+                    else
+                    {
+                        <th><p class="schedule_th" id="room_denominator_@item.Id">@item.RoomDenominator</p></th>
+                    }
+                    @if (item.SubjectNumerator != null)
+                    {
                         <th class="main_delimiter">
                             <table width="100%" class="delimiter_table">
                                 <tr class="delimiter_main">
                                     <th class="delimiter_denominator" height="30">
-                                        @item.SubjectDenominator
+                                        <p class="schedule_th" id="denominator_@item.Id">@item.SubjectDenominator</p>
                                     </th>
                                 </tr>
                                 <tr class="delimiter_main">
                                     <th class="delimiter_numerator" height="30">
-                                        @item.SubjectNumerator
+                                        <p class="schedule_th" id="numerator_@item.Id"> @item.SubjectNumerator</p>
                                     </th>
                                 </tr>
                             </table>
-                    </th>
-                    } else
-                    {
-                        <th>@item.SubjectDenominator</th>
+                        </th>
                     }
-                    @if(item.TeacherNumeratorId != null) {
+                    else
+                    {
+                        <th><p class="schedule_th" id="denominator_@item.Id">@item.SubjectDenominator</p></th>
+                    }
+                    @if (item.TeacherNumeratorId != null)
+                    {
                         <th class="main_delimiter">
                             <table width="100%" class="delimiter_teacher_table">
                                 <tr class="delimiter_main">
                                     <th class="delimiter_denominator" height="30">
-                                        @item.TeacherDenominator?.teacherFullName
+                                        <p class="schedule_th" id="teacher_denominator_@item.Id">@item.TeacherDenominator?.teacherFullName</p>
                                     </th>
                                 </tr>
                                 <tr class="delimiter_main">
                                     <th class="delimiter_numerator" height="30">
-                                        @item.TeacherNumerator?.teacherFullName
-                                    </th>
-                                </tr>
-                            </table>
-                    </th>
-                    } else
-                    {
-                        <th>@item.TeacherDenominator?.teacherFullName</th>
-                    }
-            </tr>
-            }
-        <tr>
-            <th rowspan="5" class="day_of_the_week">Вторник</th>
-        </tr>
-        @foreach (var item in Model.Where(s => s.DayOfTheWeek == 2).OrderBy(s => s.SubjectNumber))
-            {
-                <tr id="schedule_row_@item.Id">
-                    <th>@item.SubjectNumber</th>
-                    <th>@item.StartOfLesson</th>
-                    @if(item.RoomNumerator != null)
-                    {
-                        <th class="main_delimiter">
-                            <table width="100%" class="delimiter_table">
-                                <tr class="delimiter_main">
-                                    <th class="delimiter_denominator" height="30">
-                                        @item.RoomDenominator
-                                    </th>
-                                </tr>
-                                <tr class="delimiter_main">
-                                    <th class="delimiter_numerator" height="30">
-                                        @item.RoomNumerator
+                                        <p class="schedule_th" id="teacher_numerator_@item.Id">@item.TeacherNumerator?.teacherFullName</p>
                                     </th>
                                 </tr>
                             </table>
                         </th>
-                    } else
-                    {
-                        <th>@item.RoomDenominator</th>
                     }
-                    @if(item.SubjectNumerator != null) {
-                        <th class="main_delimiter">
-                            <table width="100%" class="delimiter_table">
-                                <tr class="delimiter_main">
-                                    <th class="delimiter_denominator" height="30">
-                                        @item.SubjectDenominator
-                                    </th>
-                                </tr>
-                                <tr class="delimiter_main">
-                                    <th class="delimiter_numerator" height="30">
-                                        @item.SubjectNumerator
-                                    </th>
-                                </tr>
-                            </table>
-                    </th>
-                    } else
+                    else
                     {
-                        <th>@item.SubjectDenominator</th>
+                        <th><p class="schedule_th" id="teacher_denominator_@item.Id">@item.TeacherDenominator?.teacherFullName</p></th>
                     }
-                    @if(item.TeacherNumeratorId != null) {
-                        <th class="main_delimiter">
-                            <table width="100%" class="delimiter_teacher_table">
-                                <tr class="delimiter_main">
-                                    <th class="delimiter_denominator" height="30">
-                                        @item.TeacherDenominator?.teacherFullName
-                                    </th>
-                                </tr>
-                                <tr class="delimiter_main">
-                                    <th class="delimiter_numerator" height="30">
-                                        @item.TeacherNumerator?.teacherFullName
-                                    </th>
-                                </tr>
-                            </table>
-                    </th>
-                    } else
-                    {
-                        <th>@item.TeacherDenominator?.teacherFullName</th>
-                    }
-            </tr>
+                </tr>
             }
-        <tr>
-            <th rowspan="5" class="day_of_the_week">Среда</th>
-        </tr>
-        @foreach (var item in Model.Where(s => s.DayOfTheWeek == 3).OrderBy(s => s.SubjectNumber))
-            {
-                <tr id="schedule_row_@item.Id">
-                    <th>@item.SubjectNumber</th>
-                    <th>@item.StartOfLesson</th>
-                    @if(item.RoomNumerator != null)
-                    {
-                        <th class="main_delimiter">
-                            <table width="100%" class="delimiter_table">
-                                <tr class="delimiter_main">
-                                    <th class="delimiter_denominator" height="30">
-                                        @item.RoomDenominator
-                                    </th>
-                                </tr>
-                                <tr class="delimiter_main">
-                                    <th class="delimiter_numerator" height="30">
-                                        @item.RoomNumerator
-                                    </th>
-                                </tr>
-                            </table>
-                        </th>
-                    } else
-                    {
-                        <th>@item.RoomDenominator</th>
-                    }
-                    @if(item.SubjectNumerator != null) {
-                        <th class="main_delimiter">
-                            <table width="100%" class="delimiter_table">
-                                <tr class="delimiter_main">
-                                    <th class="delimiter_denominator" height="30">
-                                        @item.SubjectDenominator
-                                    </th>
-                                </tr>
-                                <tr class="delimiter_main">
-                                    <th class="delimiter_numerator" height="30">
-                                        @item.SubjectNumerator
-                                    </th>
-                                </tr>
-                            </table>
-                        </th>
-                    } else
-                    {
-                        <th>@item.SubjectDenominator</th>
-                    }
-                    @if(item.TeacherNumeratorId != null) {
-                        <th class="main_delimiter">
-                            <table width="100%" class="delimiter_teacher_table">
-                                <tr class="delimiter_main">
-                                    <th class="delimiter_denominator" height="30">
-                                        @item.TeacherDenominator?.teacherFullName
-                                    </th>
-                                </tr>
-                                <tr class="delimiter_main">
-                                    <th class="delimiter_numerator" height="30">
-                                        @item.TeacherNumerator?.teacherFullName
-                                    </th>
-                                </tr>
-                            </table>
-                    </th>
-                    } else
-                    {
-                        <th>@item.TeacherDenominator?.teacherFullName</th>
-                    }
-            </tr>
-            }
-        <tr>
-            <th rowspan="5" class="day_of_the_week">Четверг</th>
-        </tr>
-        @foreach (var item in Model.Where(s => s.DayOfTheWeek == 4).OrderBy(s => s.SubjectNumber))
-            {
-                <tr id="schedule_row_@item.Id">
-                    <th>@item.SubjectNumber</th>
-                    <th>@item.StartOfLesson</th>
-                    @if(item.RoomNumerator != null)
-                    {
-                        <th class="main_delimiter">
-                            <table width="100%" class="delimiter_table">
-                                <tr class="delimiter_main">
-                                    <th class="delimiter_denominator" height="30">
-                                        @item.RoomDenominator
-                                    </th>
-                                </tr>
-                                <tr class="delimiter_main">
-                                    <th class="delimiter_numerator" height="30">
-                                        @item.RoomNumerator
-                                    </th>
-                                </tr>
-                            </table>
-                        </th>
-                    } else
-                    {
-                        <th>@item.RoomDenominator</th>
-                    }
-                    @if(item.SubjectNumerator != null) {
-                        <th class="main_delimiter">
-                            <table width="100%" class="delimiter_table">
-                                <tr class="delimiter_main">
-                                    <th class="delimiter_denominator" height="30">
-                                        @item.SubjectDenominator
-                                    </th>
-                                </tr>
-                                <tr class="delimiter_main">
-                                    <th class="delimiter_numerator" height="30">
-                                        @item.SubjectNumerator
-                                    </th>
-                                </tr>
-                            </table>
-                    </th>
-                    } else
-                    {
-                        <th>@item.SubjectDenominator</th>
-                    }
-                    @if(item.TeacherNumeratorId != null) {
-                        <th class="main_delimiter">
-                            <table width="100%" class="delimiter_teacher_table">
-                                <tr class="delimiter_main">
-                                    <th class="delimiter_denominator" height="30">
-                                        @item.TeacherDenominator?.teacherFullName
-                                    </th>
-                                </tr>
-                                <tr class="delimiter_main">
-                                    <th class="delimiter_numerator" height="30">
-                                        @item.TeacherNumerator?.teacherFullName
-                                    </th>
-                                </tr>
-                            </table>
-                    </th>
-                    } else
-                    {
-                        <th>@item.TeacherDenominator?.teacherFullName</th>
-                    }
-            </tr>
-            }
-        <tr>
-            <th rowspan="5" class="day_of_the_week">Пятница</th>
-        </tr>
-        @foreach (var item in Model.Where(s => s.DayOfTheWeek == 5).OrderBy(s => s.SubjectNumber))
-            {
-                <tr id="schedule_row_@item.Id">
-                    <th id="test">@item.SubjectNumber</th>
-                    <th>@item.StartOfLesson</th>
-                    @if(item.RoomNumerator != null)
-                    {
-                        <th class="main_delimiter">
-                            <table width="100%" class="delimiter_table">
-                                <tr class="delimiter_main">
-                                    <th class="delimiter_denominator" height="30">
-                                        @item.RoomDenominator
-                                    </th>
-                                </tr>
-                                <tr class="delimiter_main">
-                                    <th class="delimiter_numerator" height="30">
-                                        @item.RoomNumerator
-                                    </th>
-                                </tr>
-                            </table>
-                        </th>
-                    } else
-                    {
-                        <th>@item.RoomDenominator</th>
-                    }
-                    @if(item.SubjectNumerator != null) {
-                        <th class="main_delimiter">
-                            <table width="100%" class="delimiter_table">
-                                <tr class="delimiter_main">
-                                    <th class="delimiter_denominator" height="30">
-                                        @item.SubjectDenominator
-                                    </th>
-                                </tr>
-                                <tr class="delimiter_main">
-                                    <th class="delimiter_numerator" height="30">
-                                        @item.SubjectNumerator
-                                    </th>
-                                </tr>
-                            </table>
-                    </th>
-                    } else
-                    {
-                        <th>@item.SubjectDenominator</th>
-                    }
-                    @if(item.TeacherNumeratorId != null) {
-                        <th class="main_delimiter">
-                            <table width="100%" class="delimiter_teacher_table">
-                                <tr class="delimiter_main">
-                                    <th class="delimiter_denominator" height="30">
-                                        @item.TeacherDenominator?.teacherFullName
-                                    </th>
-                                </tr>
-                                <tr class="delimiter_main">
-                                    <th class="delimiter_numerator" height="30">
-                                        @item.TeacherNumerator?.teacherFullName
-                                    </th>
-                                </tr>
-                            </table>
-                    </th>
-                    } else
-                    {
-                        <th>@item.TeacherDenominator?.teacherFullName</th>
-                    }
-            </tr>
-            }
+        }
     </table>
 
     <div class="back_to_main">
-        <a class="back_btn" asp-action="GroupList" asp-controller="Home" asp-route-cource="@ViewData["cource"]"><i class="fa-solid fa-chevron-left"></i></a>
+        <a class="back_btn" asp-action="GroupList" asp-controller="Home" asp-route-course="@ViewData["course"]"><i class="fa-solid fa-chevron-left"></i></a>
     </div>
 
 
@@ -389,8 +136,10 @@
                 var currentTime = new Date();
                 var currentDay = currentTime.getDay();
                 console.log(currentDay);
-                var hours = currentTime.getHours();
-                var minutes = currentTime.getMinutes();
+                var hours = currentTime.getHours().toString().padStart(2, '0');
+                console.log(hours);
+                var minutes = currentTime.getMinutes().toString().padStart(2, '0');
+                console.log(minutes);
                 var formattedTime = `${hours}:${minutes}`;
                 console.log(formattedTime);
                 for(var i = 0; i < data.length; i++) {
@@ -398,7 +147,15 @@
                     if ((formattedTime >= data[i].StartOfLesson && formattedTime <= data[i].EndOfLesson) && currentDay == data[i].DayOfTheWeek) {
                         console.log(true);
                         $("#schedule_row_" + data[i].Id).css("background", "linear-gradient(92.42deg, #367AA5 0%, #4794C6 100%)");
-                        $("#schedule_row_" + data[i].Id).css("color", "#FAFAFA");
+                        $("#number_item_" + data[i].Id).css("color", "#FAFAFA");
+                        $("#start_time_" + data[i].Id).css("color", "#FAFAFA");
+                        $("#end_time_" + data[i].Id).css("color", "#FAFAFA");
+                        $("#denominator_" + data[i].Id).css("color", "#FAFAFA");
+                        $("#numerator_" + data[i].Id).css("color", "#FAFAFA");
+                        $("#teacher_denominator_" + data[i].Id).css("color", "#FAFAFA");
+                        $("#teacher_numerator_" + data[i].Id).css("color", "#FAFAFA");
+                        $("#room_denominator_" + data[i].Id).css("color", "#FAFAFA");
+                        $("#room_numerator_" + data[i].Id).css("color", "#FAFAFA").css("font-weight", "400");
                     }
                 }
             },

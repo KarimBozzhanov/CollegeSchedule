@@ -28,15 +28,14 @@
                     <button class="close_modal" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark fa-lg" style="color: #e60a0a;"></i></button>
                 </div>
                 <div class="modal-body">
-                    <form asp-action="AddTeacher" asp-controller="Home">
-                        <div class="groupName">
-                            <h5>ФИО преподавателя</h5>
-                            <input class="group_input" type="text" placeholder="ФИО" name="teacherName" autocomplete="off" required />
-                        </div>
-                        <div class="save_group_block" align="right">
-                            <button type="submit" class="save_group">Добавить</button>
-                        </div>
-                    </form>
+                    <div class="groupName">
+                        <h5>ФИО преподавателя</h5>
+                        <input id="teacherName" class="group_input" type="text" placeholder="ФИО" autocomplete="off" required />
+                    </div>
+                    <div class="save_group_block" align="right">
+                        <p id="createTeacher_error" class="createTeacher_error"></p>
+                        <button type="submit" class="save_group" onclick="addTeacher()">Добавить</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -52,21 +51,28 @@
         <div class="group_buttons">
             @foreach (var teacher in Model)
             {
-                <div class="group_list" align="center">
-                    <div class="group_info" align="left">
-                        <a class="group_btn" data-bs-toggle="modal" data-bs-target="#getTeacherSchedule" onclick="getTeacherInfo(@teacher.Id)">@teacher.teacherFullName</a>
-                    </div>
-                    <div class="change_group" align="right">
+                <div class="group_list">
+                    <div class="change_group">
                         @if (User.Identity.IsAuthenticated)
                         {
-                            <a class="edit_group" data-bs-toggle="modal" data-bs-target="#editTeacherModal" onclick="getTeacherInfo(@teacher.Id)">
-                                <i class="fa-solid fa-pen-to-square"></i>
-                            </a>
-                            <form class="delete_form" asp-action="DeleteTeacher" asp-controller="Home" asp-route-teacherId="@teacher.Id">
-                                <button class="delete_group">
-                                    <i class="fa-solid fa-square-minus"></i>
-                                </button>
-                            </form>
+                            <div class="group_info">
+                                <button class="teacher_btn" data-bs-toggle="modal" data-bs-target="#getTeacherSchedule" onclick="getTeacherInfo(@teacher.Id)">@teacher.teacherFullName</button>
+                                <div class="group_actions">
+                                    <a class="edit_group" data-bs-toggle="modal" data-bs-target="#editTeacherModal" onclick="getTeacherInfo(@teacher.Id)">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </a>
+                                    <form class="delete_form" asp-action="DeleteTeacher" asp-controller="Home" asp-route-teacherId="@teacher.Id">
+                                        <button class="delete_group">
+                                            <i class="fa-solid fa-square-minus"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        } else
+                        {
+                            <div class="group_info">
+                                <button class="group_btn" data-bs-toggle="modal" data-bs-target="#getTeacherSchedule" onclick="getTeacherInfo(@teacher.Id)">@teacher.teacherFullName</button>
+                            </div>
                         }
                     </div>
                 </div>
@@ -135,6 +141,35 @@
 </html>
 
 <script type="text/javascript">
+
+    function addTeacher() {
+        var teacherName = $("#teacherName").val();
+        console.log(teacherName);
+        if(teacherName != "") {
+            $.ajax({
+                url: "/home/AddTeacher",
+                method: "POST",
+                dataType: "json",
+                data: { teacherName: teacherName },
+                success: function (data) {
+                    if(data === 'Преподаватель добавлен') {
+                        window.location.reload();
+                    } else if(data === "Преподаватель с таким именем уже добавлен") {
+                        $("#createTeacher_error").text(data);
+                        $("#createTeacher_error").css("margin-bottom", 10);
+                    }
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        } else {
+            $("#createTeacher_error").text("Не удалось добавить преподавателя");
+            $("#createTeacher_error").css("margin-bottom", 10);
+            $("#createTeacher_error").css("margin-left", 10);
+        }
+    }
+
     function getTeacherInfo(id) {
         $.ajax({
             url: "/home/GetTeacherInfo/" + id,
@@ -178,4 +213,6 @@
             }
         });
     }
+
+    
 </script>

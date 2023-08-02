@@ -28,22 +28,21 @@
                     <button class="close_modal" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark fa-lg" style="color: #e60a0a;"></i></button>
                 </div>
                 <div class="modal-body">
-                    <form asp-action="CreateGroup" asp-controller="Home">
-                        <div class="groupName">
-                            <h5>Название группы</h5>
-                            <input class="group_input" type="text" placeholder="Название" name="groupName" autocomplete="off" required />
-                        </div>
-                        <div class="groupName">
-                            <h5>Смена</h5>
-                            <input class="group_input" type="text" placeholder="Смена" name="groupShift" autocomplete="off" required />
-                        </div>
-                        <div class="groupCource">
-                            <input name="groupCource" value="@ViewData["cource"]" hidden readonly />
-                        </div>
-                        <div class="save_group_block" align="right">
-                            <button type="submit" class="save_group">Добавить</button>
-                        </div>
-                    </form>
+                    <div class="groupName">
+                        <h5>Название группы</h5>
+                        <input id="createGroupName" class="group_input" type="text" placeholder="Название" autocomplete="off" required />
+                    </div>
+                    <div class="groupName">
+                        <h5>Смена</h5>
+                        <input id="createGroupShift" class="group_input" type="number" placeholder="Смена" autocomplete="off" required />
+                    </div>
+                    <div class="groupCource">
+                        <input id="createGroupCourse" value="@ViewData["course"]" hidden readonly />
+                    </div>
+                    <div class="save_group_block" align="right">
+                        <p id="createGroup_error" class="createGroup_error"></p>
+                        <button onclick="createGroup()" type="submit" class="save_group">Добавить</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -52,36 +51,35 @@
 
     <div class="container"> 
         <div class="search_block">
-            <form class="search_form" asp-action="GroupList" asp-controller="Home" asp-route-cource="@ViewData["cource"]">
+            <form class="search_form" asp-action="GroupList" asp-controller="Home" asp-route-course="@ViewData["course"]">
                 <input class="search_input" type="text" name="searchText" autocomplete="off" placeholder="Поиск" />
             </form>
         </div>
         <div class="group_buttons">
             @foreach (var group in Model)
             {
-                <div class="group_list" align="center">
-                    @if (User.Identity.IsAuthenticated)
-                    {
-                        <div class="group_info" align="left">
-                            <a class="group_btn" asp-action="EditSchedule" asp-controller="Home" asp-route-groupId="@group.Id">@group.GroupName</a>
-                        </div>
-                    } else
-                    {
-                        <div class="group_info" align="left">
-                            <a class="group_btn" asp-action="ScheduleTable" asp-controller="Home" asp-route-groupId="@group.Id">@group.GroupName</a>
-                        </div>
-                    }
-                    <div class="change_group" align="right">
+                <div class="group_list">
+                    <div class="change_group">
                         @if (User.Identity.IsAuthenticated)
                         {
-                            <a class="edit_group" data-bs-toggle="modal" data-bs-target="#editGroupModal" onclick="getGroupInfo(@group.Id)">
-                                <i class="fa-solid fa-pen-to-square"></i>
-                            </a>
-                            <form class="delete_form" asp-action="DeleteGroup" asp-controller="Home" asp-route-groupId="@group.Id" asp-route-groupCource="@group.GroupCource">
-                                <button class="delete_group">
-                                    <i class="fa-solid fa-square-minus"></i>
-                                </button>
-                            </form>
+                            <div class="group_info">
+                                <a class="group_btn" asp-action="EditSchedule" asp-controller="Home" asp-route-groupId="@group.Id">@group.GroupName</a>
+                                <div class="group_actions">
+                                    <a class="edit_group" data-bs-toggle="modal" data-bs-target="#editGroupModal" onclick="getGroupInfo(@group.Id)">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </a>
+                                    <form class="delete_form" asp-action="DeleteGroup" asp-controller="Home" asp-route-groupId="@group.Id" asp-route-groupCourse="@group.GroupCourse">
+                                        <button class="delete_group">
+                                            <i class="fa-solid fa-square-minus"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        } else
+                        {
+                            <div class="group_info">
+                                <a class="group_btn" asp-action="ScheduleTable" asp-controller="Home" asp-route-groupId="@group.Id">@group.GroupName</a>
+                            </div>
                         }
                     </div>
                 </div>
@@ -97,14 +95,14 @@
                     <button class="close_modal" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark fa-lg" style="color: #e60a0a;"></i></button>
                 </div>
                 <div class="modal-body">
-                    <form asp-action="EditGroup" asp-controller="Home" asp-route-currentCource="@ViewData["cource"]">
+                    <form asp-action="EditGroup" asp-controller="Home" asp-route-currentCourse="@ViewData["course"]">
                         <div class="groupName">
                             <h5>Название группы</h5>
                             <input class="group_input" id="groupName" type="text" placeholder="Название" name="groupName" autocomplete="off" required />
                         </div>
                         <div class="groupCource">
                             <h5>Курс группы</h5>
-                            <input class="group_input" id="groupCource" type="number" placeholder="Курс" name="groupCource" autocomplete="off" required />
+                            <input class="group_input" id="groupCourse" type="number" placeholder="Курс" name="groupCourse" autocomplete="off" required />
                         </div>
                         <div class="groupId">
                             <input class="group_input" id="groupId" type="text" placeholder="Id" name="groupId" autocomplete="off" required hidden readonly/>
@@ -143,12 +141,59 @@
                 data = JSON.parse(data);
                 console.log(data);
                 $("#groupName").val(data.GroupName);
-                $("#groupCource").val(data.GroupCource);
+                $("#groupCourse").val(data.GroupCourse);
                 $("#groupId").val(data.Id);
             },
             error: function (err) {
                 console.log(err);
             }
         });
+    }
+
+
+    function createGroup() {
+        var groupName = $("#createGroupName").val();
+        var groupShift = $("#createGroupShift").val();
+        var groupCourse = $("#createGroupCourse").val();
+        console.log(groupName + " " + groupShift + " " + groupCourse);
+        console.log(groupCourse);
+        if(groupName != "" && groupShift != 0 && groupCourse != 0 && (groupShift == 1 || groupShift == 2)) {
+            $.ajax({
+                url: "/home/CreateGroup",
+                method: "POST",
+                dataType: "json",
+                data: { groupName: groupName, groupCourse: groupCourse, groupShift: groupShift },
+                success: function (data) {
+                    if (data === "Группа сохранена") {
+                        window.location.reload();
+                    } else if (data === "Группа с таким именем уже создана") {
+                        textMessage(data)
+                    } else {
+                        textMessage("Не удалось создать группу");
+                    }
+                    console.log(data);
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        } else {
+            if(groupName === "" && groupShift == 0) {
+                textMessage("Введите название и смену")
+            } else if(groupName === "") {
+                textMessage("Введите название");
+            } else if(groupShift === "") {
+                textMessage("Введите смену");
+            } else if(groupShift != 1 || groupShift != 2) {
+                textMessage("Укажите корректную смену");
+            }
+        }
+    }
+
+
+    function textMessage(message) {
+        $("#createGroup_error").css("margin-left", 10);
+        $("#createGroup_error").css("margin-bottom", 10);
+        $("#createGroup_error").text(message);
     }
 </script>

@@ -175,13 +175,29 @@
 }
 
 .group_btn {
-    width: 70%;
     border: 0px;
     border-radius: 5px;
     color: #FAFAFA;
     font-weight: 600;
     font-size: 20px;
     text-align: left;
+    background-color: transparent;
+    padding: 0px;
+    margin-left: 20px;
+    
+}
+
+.teacher_btn {
+    border: 0px;
+    border-radius: 5px;
+    color: #FAFAFA;
+    font-weight: 600;
+    font-size: 20px;
+    text-align: left;
+    background-color: transparent;
+    padding: 0px;
+    margin-left: 20px;
+    flex: 1;
 }
 
 .back_to_main {
@@ -224,6 +240,23 @@ tr {
 
 th {
     border: 1px solid;
+}
+
+.change_group {
+    display: flex;
+}
+
+.group_info {
+    display: flex;
+    flex: 1;
+}
+
+.group_info a {
+    flex: 1;
+}
+
+.group_actions {
+    align-content: flex-end;
 }
 
 .day_of_the_week {
@@ -444,7 +477,11 @@ th {
     border: none;
 }
 
-.edit_group i{
+.delete_form {
+    display: inline;
+}
+
+.edit_group i {
     color: #FAFAFA;
     font-size: 20px;
 }
@@ -452,7 +489,8 @@ th {
 .delete_group {
     background-color: transparent;
     border: none;
-    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 2px;
 }
 
 .delete_group i {
@@ -460,18 +498,12 @@ th {
     font-size: 20px;
 }
 
-.change_group {
-    margin-right: 10px;
+
+.group_actions{
     float: right;
+
 }
 
-.delete_form {
-    float: right;
-}
-
-.group_list div {
-    display: inline;
-}
 
 .select_btn {
     margin-top: 20px;
@@ -842,4 +874,22 @@ th {
     font-size: 15px;
     padding: 0px;
     margin: 0px;
+}
+
+.createGroup_error {
+    float: left;
+    color: red;
+    font-size: 15px;
+    padding: 0px;
+    margin: 0px;
+}
+
+.schedule_th {
+    margin: 0;
+}
+
+.createTeacher_error {
+    color: red;
+    font-size: 15px;
+    float: left;
 }
