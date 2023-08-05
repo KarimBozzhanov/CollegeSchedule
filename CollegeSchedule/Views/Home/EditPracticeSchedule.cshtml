@@ -40,23 +40,21 @@
                 <th><input class="schedule_input" type="text" onchange="editPracticeStartDate(@item.Id, this.value)" autocomplete="off" value="@item.StartDate" /></th>
                 <th><input class="schedule_input" type="text" onchange="editPracticeEndDate(@item.Id, this.value)" autocomplete="off" value="@item.EndDate" /></th>
                 <th><input class="schedule_input" type="text" onchange="editPracticeName(@item.Id, this.value)" autocomplete="off" value="@item.PracticeName" /></th>
-                <th class="select_teachers">
-                    <div class="select_teachers_block">
-                        <select class="select_options" onchange="editPracticeTeacher(@item.Id, this.value)">
-                            <option value="@null"></option>
-                            @foreach (var teacher in Model.Teachers)
-                            {
-                                @if (teacher.Id == item.TeacherId)
-                                {
-                                    <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                                }
-                                else
-                                {
-                                    <option value="@teacher.Id">@teacher.teacherFullName</option>
-                                }
-                            }
-                        </select>
-                    </div>
+                <th class="exam_teacher">
+                    @if (item.TeacherId != null)
+                    {
+                        <input class="schedule_input" value="@item.Teacher?.teacherFullName" list="teachers_list" onchange="editPracticeTeacher(@item.Id, this.value)" />
+                    }
+                    else
+                    {
+                        <input class="schedule_input" list="teachers_list" onchange="editPracticeTeacher(@item.Id, this.value)" />
+                    }
+                    <datalist class="teachers_list" id="teachers_list">
+                        @foreach (var teacher in Model.Teachers)
+                        {
+                            <option class="list_options">@teacher.teacherFullName</option>
+                        }
+                    </datalist>
                 </th>
                 <th class="delete_exam">
                     <form asp-action="DeletePractice" asp-controller="home" asp-route-practiceId="@item.Id" asp-route-groupId="@item.GroupId">
@@ -129,12 +127,12 @@
         });
     }
 
-    function editPracticeTeacher(practiceId, practiceTeacherId) {
+    function editPracticeTeacher(practiceId, practiceTeacherName) {
         $.ajax({
             url: "/home/EditPracticeTeacher",
             method: "POST",
             dataType: "json",
-            data: { id: practiceId, teacherId: practiceTeacherId },
+            data: { id: practiceId, teacherName: practiceTeacherName },
             success: function (data) {
                 console.log(data);
             },

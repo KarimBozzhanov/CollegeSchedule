@@ -63,23 +63,21 @@
                     <th><input class="schedule_input" type="text" onchange="editConsultationTime(@item.Id, this.value)" autocomplete="off" value="@item.Time" /></th>
                     <th><input class="schedule_input" type="text" onchange="editConsultationRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
                     <th class="subject_name"><input class="schedule_input" type="text" onchange="editConsultationSubject(@item.Id, this.value)" autocomplete="off" value="@item.Subject" /></th>
-                    <th class="select_teachers" id="single_teacher_@item.Id">
-                        <div class="select_teachers_block">
-                            <select class="select_options" onchange="editConsultationTeacher(@item.Id, this.value)">
-                                <option value="@null"></option>
-                                @foreach (var teacher in Model.Teachers)
-                                {
-                                    @if (teacher.Id == item.TeacherId)
-                                    {
-                                        <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@teacher.Id">@teacher.teacherFullName</option>
-                                    }
-                                }
-                            </select>
-                        </div>
+                    <th class="exam_teacher">
+                        @if (item.TeacherId != null)
+                        {
+                            <input class="schedule_input" value="@item.Teacher?.teacherFullName" list="teachers_list" onchange="editConsultationTeacher(@item.Id, this.value)" />
+                        }
+                        else
+                        {
+                            <input class="schedule_input" list="teachers_list" onchange="editConsultationTeacher(@item.Id, this.value)" />
+                        }
+                        <datalist class="teachers_list" id="teachers_list">
+                            @foreach (var teacher in Model.Teachers)
+                            {
+                                <option class="list_options">@teacher.teacherFullName</option>
+                            }
+                        </datalist>
                     </th>
                     <th class="delete_exam">
                         <form asp-action="DeleteConsultation" asp-controller="home" asp-route-consultationId="@item.Id" asp-route-groupId="@item.GroupId">
@@ -119,23 +117,21 @@
                     <th><input class="schedule_input" type="text" onchange="editExamTime(@item.Id, this.value)" autocomplete="off" value="@item.Time" /></th>
                     <th><input class="schedule_input" type="text" onchange="editExamRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
                     <th class="subject_name"><input class="schedule_input" type="text" onchange="editExamName(@item.Id, this.value)" autocomplete="off" value="@item.ExamName" /></th>
-                    <th class="select_teachers" id="single_teacher_@item.Id">
-                        <div class="select_teachers_block">
-                            <select class="select_options" onchange="editExamTeacher(@item.Id, this.value)">
-                                <option value="@null"></option>
-                                @foreach (var teacher in Model.Teachers)
-                                {
-                                    @if (teacher.Id == item.TeacherId)
-                                    {
-                                        <option selected value="@teacher.Id">@teacher.teacherFullName</option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@teacher.Id">@teacher.teacherFullName</option>
-                                    }
-                                }
-                            </select>
-                        </div>
+                    <th class="exam_teacher">
+                        @if (item.TeacherId != null)
+                        {
+                            <input class="schedule_input" value="@item.Teacher?.teacherFullName" list="teachers_list" onchange="editExamTeacher(@item.Id, this.value)" />
+                        }
+                        else
+                        {
+                            <input class="schedule_input" list="teachers_list" onchange="editExamTeacher(@item.Id, this.value)" />
+                        }
+                        <datalist class="teachers_list" id="teachers_list">
+                            @foreach (var teacher in Model.Teachers)
+                            {
+                                <option class="list_options">@teacher.teacherFullName</option>
+                            }
+                        </datalist>
                     </th>
                     <th class="delete_exam">
                         <form asp-action="DeleteExam" asp-controller="home" asp-route-examId="@item.Id" asp-route-groupId="@item.GroupId">
@@ -222,12 +218,12 @@
         });
     }
 
-    function editExamTeacher(examId, examTeacherId) {
+    function editExamTeacher(examId, examTeacherName) {
         $.ajax({
             url: "/home/EditExamTeacher",
             method: "POST",
             dataType: "json",
-            data: { id: examId, teacherId: examTeacherId },
+            data: { id: examId, teacherName: examTeacherName },
             success: function (data) {
                 console.log(data);
             },
@@ -298,12 +294,12 @@
         });
     }
 
-    function editConsultationTeacher(consultationId, consultationTeacherId) {
+    function editConsultationTeacher(consultationId, consultationTeacherName) {
         $.ajax({
             url: "/home/EditConsultationTeacher",
             method: "POST",
             dataType: "json",
-            data: { id: consultationId, teacherId: consultationTeacherId },
+            data: { id: consultationId, teacherName: consultationTeacherName },
             success: function (data) {
                 console.log(data);
             },

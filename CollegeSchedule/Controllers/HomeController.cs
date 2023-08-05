@@ -706,13 +706,14 @@ namespace CollegeSchedule.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> EditExamTeacher(int? id, int? teacherId)
+        public async Task<JsonResult> EditExamTeacher(int? id, string teacherName)
         {
             if (id != null)
             {
                 ExamsSchedule exam = await db.ExamsSchedules.FirstOrDefaultAsync(e => e.Id == id);
+                Teacher teacher = await db.Teachers.FirstOrDefaultAsync(t => t.teacherFullName.Equals(teacherName));
                 var updateExam = await db.ExamsSchedules.Where(s => s.Id == id).AsQueryable().FirstOrDefaultAsync();
-                updateExam.TeacherId = teacherId;
+                updateExam.TeacherId = teacher.Id;
                 db.ExamsSchedules.UpdateRange(updateExam);
                 await db.SaveChangesAsync();
                 return Json("Преподаватель экзамена изменен");
@@ -801,13 +802,14 @@ namespace CollegeSchedule.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> EditPracticeTeacher(int? id, int? teacherId)
+        public async Task<JsonResult> EditPracticeTeacher(int? id, string teacherName)
         {
             if (id != null)
             {
                 PracticeSchedule practice = await db.PracticeSchedules.FirstOrDefaultAsync(e => e.Id == id);
+                Teacher teacher = await db.Teachers.FirstOrDefaultAsync(t => t.teacherFullName.Equals(teacherName));
                 var updatePractice = await db.PracticeSchedules.Where(p => p.Id == id).AsQueryable().FirstOrDefaultAsync();
-                updatePractice.TeacherId = teacherId;
+                updatePractice.TeacherId = teacher.Id;
                 db.PracticeSchedules.UpdateRange(updatePractice);
                 await db.SaveChangesAsync();
                 return Json("Преподаватель по практике изменен");
@@ -915,12 +917,13 @@ namespace CollegeSchedule.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> EditConsultationTeacher(int? id, int? teacherId)
+        public async Task<JsonResult> EditConsultationTeacher(int? id, string teacherName)
         {
             if (id != null)
             {
                 var updateConsultation = await db.ConsultationsSchedules.Where(s => s.Id == id).AsQueryable().FirstOrDefaultAsync();
-                updateConsultation.TeacherId = teacherId;
+                Teacher teacher = await db.Teachers.FirstOrDefaultAsync(t => t.teacherFullName.Equals(teacherName));
+                updateConsultation.TeacherId = teacher.Id;
                 db.ConsultationsSchedules.UpdateRange(updateConsultation);
                 await db.SaveChangesAsync();
                 return Json("Преподаватель консультации изменен");
