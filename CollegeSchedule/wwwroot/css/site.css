@@ -200,12 +200,45 @@
     flex: 1;
 }
 
+.password {
+    font-size: 15px;
+    margin: 0px;
+}
+
+.footer {
+    margin-left: 10px;
+    margin-top: 30px;
+    margin-bottom: 50px;
+}
+
 .back_to_main {
     position: fixed;
-    bottom: 10px;
-    left: 20px;
+    bottom: 20px;
+    left: 30px;
+    color: #5EA0CB;
+    font-size: 30px;
+    display: inline;
     color: #4794C6;
     font-size: 30px;
+}
+
+.back_to_list {
+    display: inline;
+    color: #4794C6;
+    font-size: 30px;
+    margin-left: 20px;
+}
+
+.pass_info {
+    float: right;
+    margin-right: 50px;
+}
+
+.change_pass {
+    background-color: transparent;
+    border: none;
+    color: #4794C6;
+    padding: 0px;
 }
 
 .group_list {
@@ -400,7 +433,7 @@ th {
     background: linear-gradient(92.42deg, #367AA5 0%, #4794C6 100%);
     border: 0px;
     border-radius: 3px;
-    color: black;
+    color: #FAFAFA;
     padding: 3px 78px;
 }
 
@@ -484,6 +517,13 @@ th {
 .edit_group i {
     color: #FAFAFA;
     font-size: 20px;
+}
+
+.copy_to_clickboard i {
+    color: #FAFAFA;
+    font-size: 20px;
+    margin-right: 10px;
+    margin-top: 2px;
 }
 
 .delete_group {
@@ -876,6 +916,12 @@ th {
     margin: 0px;
 }
 
+.changePass_error {
+    color: red;
+    font-size: 15px;
+    margin-left: 10px;
+}
+
 .createGroup_error {
     float: left;
     color: red;
@@ -892,4 +938,41 @@ th {
     color: red;
     font-size: 15px;
     float: left;
+}
+
+
+
+.pass_actions div{
+    display: inline-block;
+}
+
+.teachers_groupName {
+    font-size: 10px;
+    margin-bottom: 5px;
+}
+
+.teachers_subject {
+    font-size: 7px;
+    margin: 0px;
+}
+
+
+.teachers_lesson {
+    width: 5px;
+}
+
+.shift {
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+.teachers_schedule_table {
+    margin-top: 10px;
+    text-align: center;
+    margin-right: 10px;
+    margin-left: 10px;
+    margin-bottom: 20px;
+    z-index: 99;
+    font-size: 8px;
 }

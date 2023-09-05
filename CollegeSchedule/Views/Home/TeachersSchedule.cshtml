@@ -1,5 +1,17 @@
 ﻿@model IEnumerable<CollegeSchedule.Models.Schedule>
 
+
+@{
+    var teachersSchedule = Model.GroupBy(t => t.DayOfTheWeek).Select(t => new
+    {
+        t.Key
+    }).OrderBy(t => t.Key);
+
+    string[] DayOfTheWeek = new string[5] { "Понедельник", "Вторник", "Среда", "Четверг", "Пятница" };
+    int subjectNum = 1;
+    Console.WriteLine(subjectNum);
+}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,286 +23,169 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-    <table class="schedule_table">
+
+    <h3 class="shift">1 смена</h3>
+
+    <table class="teachers_schedule_table">
         <tr>
             <th class="days">Дни</th>
-            <th class="number">№</th>
-            <th class="time">Время</th>
-            <th class="cabinet">Кабинет</th>
-            <th class="group">@ViewData["teacherName"]</th>
-            <th class="teacher">Группа</th>
+            <th class="teachers_lesson">1</th>
+            <th class="teachers_lesson">2</th>
+            <th class="teachers_lesson">3</th>
+            <th class="teachers_lesson">4</th>
         </tr>
-        @if(ViewBag.MondayLessons > 1)
+        @foreach(var schedule in teachersSchedule)
         {
             <tr>
-                <th rowspan="@ViewBag.MondayLessons" class="day_of_the_week">Понедельник</th>
-            </tr>
-            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 1).OrderBy(s => s.SubjectNumber))
-            {
-                <tr>
-                    <th>@item.SubjectNumber</th>
-                    <th>@item.StartOfLesson</th>
-                    @if(item.SubjectNumerator == null && item.TeacherDenominatorId != null)
+                <th class="day_of_the_week">@DayOfTheWeek[schedule.Key - 1]</th>
+                @foreach (var item in Model.Where(s => (s.DayOfTheWeek == schedule.Key) &&
+                    (s.StartOfLesson.Equals("08:00") || s.StartOfLesson.Equals("09:30") || s.StartOfLesson.Equals("11:00") || s.StartOfLesson.Equals("12:30")))
+                    .OrderBy(s => s.SubjectNumber))
+                {
+                    if (item.SubjectNumber == subjectNum)
                     {
-                        <th>@item.RoomDenominator</th>
-                    } else if(item.SubjectNumerator == null && item.TeacherNumeratorId != null)
-                    {
-                        <th>@item.RoomNumerator</th>
-                    }
-                    @if(item.SubjectNumerator != null)
-                    {
-                        if (item.TeacherDenominatorId == ViewBag.teacherId)
-                        {
-                            <th class="main_delimiter">
-                                <table width="100%" class="delimiter_table">
-                                    <tr class="delimiter_main">
-                                        <th class="delimiter_denominator" height="30">
-                                            @item.RoomDenominator
-                                        </th>
-                                    </tr>
-                                    <tr class="delimiter_main">
-                                        <th class="delimiter_numerator" height="30">
-                                            @null
-                                        </th>
-                                    </tr>
-                                </table>
-                            </th>
-                        } else if(item.TeacherNumeratorId == ViewBag.teacherId)
-                        {
-                            <th class="main_delimiter">
-                                <table width="100%" class="delimiter_table">
-                                    <tr class="delimiter_main">
-                                        <th class="delimiter_denominator" height="30">
-                                            @null
-                                        </th>
-                                    </tr>
-                                    <tr class="delimiter_main">
-                                        <th class="delimiter_numerator" height="30">
-                                            @item.RoomNumerator
-                                        </th>
-                                    </tr>
-                                </table>
-                            </th>
-                        }
-                    }
-                    @if(item.TeacherNumeratorId == null) 
-                    {
-                        @if(item.TeacherDenominatorId == ViewBag.teacherId)
-                        {
-                            <th>@item.SubjectDenominator</th>
-                        }
-                    } else
-                    {
-                        @if(item.TeacherDenominatorId == ViewBag.teacherId)
-                        {
-                            @if(item.SubjectNumerator != null)
-                            {
-                                <th class="main_delimiter">
-                                    <table width="100%" class="delimiter_table">
-                                        <tr class="delimiter_main">
-                                            <th class="delimiter_denominator" height="30">
-                                                @item.SubjectDenominator
-                                            </th>
-                                        </tr>
-                                        <tr class="delimiter_main">
-                                            <th class="delimiter_numerator" height="30">
-                                                @null
-                                            </th>
-                                        </tr>
-                                    </table>
-                                </th>
-                            } else
-                            {
-                                <th>@item.SubjectDenominator</th>
+                        <th>
+                            <p class="teachers_groupName">@item.Group?.GroupName</p>
+                            <p class="teachers_subject">@item.SubjectDenominator</p>
+                            @{
+                                Console.WriteLine(schedule.Key + " - subject number - " + item.SubjectNumber + " - subjectNum - " + subjectNum);
+                                subjectNum++;
                             }
-                        } else if (item.TeacherNumeratorId == ViewBag.teacherId)
-                        {
-                            @if(item.SubjectNumerator != null)
-                            {
-                                <th class="main_delimiter">
-                                    <table width="100%" class="delimiter_table">
-                                        <tr class="delimiter_main">
-                                            <th class="delimiter_denominator" height="30">
-                                                @null
-                                            </th>
-                                        </tr>
-                                        <tr class="delimiter_main">
-                                            <th class="delimiter_numerator" height="30">
-                                                @item.SubjectNumerator
-                                            </th>
-                                        </tr>
-                                    </table>
-                                </th>
-                            } else
-                            {
-                                <th>@item.SubjectDenominator</th>
-                            }
-                        }
-                    }
-                    <th>@item.Group?.GroupName</th>
-                </tr>
-            }
-        }
-        @if (ViewBag.TuesdayLessons > 1)
-        {
-            <tr>
-                <th rowspan="@ViewBag.TuesdayLessons" class="day_of_the_week">Вторник</th>
-            </tr>
-            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 2).OrderBy(s => s.SubjectNumber))
-            {
-                <tr>
-                    <th>@item.SubjectNumber</th>
-                    <th>@item.StartOfLesson</th>
-                    @if (item.SubjectNumerator == null && item.TeacherDenominatorId != null)
-                    {
-                        <th>@item.RoomDenominator</th>
-                    }
-                    else if (item.SubjectNumerator == null && item.TeacherNumeratorId != null)
-                    {
-                        <th>@item.RoomNumerator</th>
-                    }
-                    @if (item.SubjectNumerator != null)
-                    {
-                        if (item.TeacherDenominatorId == ViewBag.teacherId)
-                        {
-                            <th class="main_delimiter">
-                                <table width="100%" class="delimiter_table">
-                                    <tr class="delimiter_main">
-                                        <th class="delimiter_denominator" height="30" style="padding-bottom: 17px;">
-                                            @item.RoomDenominator
-                                        </th>
-                                    </tr>
-                                    <tr class="delimiter_main">
-                                        <th class="delimiter_numerator" height="30">
-                                            @null
-                                        </th>
-                                    </tr>
-                                </table>
-                            </th>
-                        }
-                        else if (item.TeacherNumeratorId == ViewBag.teacherId)
-                        {
-                            <th class="main_delimiter">
-                                <table width="100%" class="delimiter_table">
-                                    <tr class="delimiter_main">
-                                        <th class="delimiter_denominator" height="30">
-                                            @null
-                                        </th>
-                                    </tr>
-                                    <tr class="delimiter_main">
-                                        <th class="delimiter_numerator" height="30" style="padding-top: 17px">
-                                            @item.RoomNumerator
-                                        </th>
-                                    </tr>
-                                </table>
-                            </th>
-                        }
-                    }
-                    @if (item.TeacherNumeratorId == null)
-                    {
-                        @if (item.TeacherDenominatorId == ViewBag.teacherId)
-                        {
-                            <th>@item.SubjectDenominator</th>
-                        }
+                        </th>
                     }
                     else
                     {
-                        @if (item.TeacherDenominatorId == ViewBag.teacherId)
-                        {
-                            <th class="main_delimiter">
-                                <table width="100%" class="delimiter_table">
-                                    <tr class="delimiter_main">
-                                        <th class="delimiter_denominator" height="30" style="padding-bottom: 17px">
-                                            @item.SubjectDenominator
-                                        </th>
-                                    </tr>
-                                    <tr class="delimiter_main">
-                                        <th class="delimiter_numerator" height="30">
-                                            @null
-                                        </th>
-                                    </tr>
-                                </table>
-                            </th>
-                        }
-                        else if (item.TeacherNumeratorId == ViewBag.teacherId)
-                        {
-                            <th class="main_delimiter">
-                                <table width="100%" class="delimiter_table">
-                                    <tr class="delimiter_main">
-                                        <th class="delimiter_denominator" height="30">
-                                            @null
-                                        </th>
-                                    </tr>
-                                    <tr class="delimiter_main">
-                                        <th class="delimiter_numerator" height="30" style="padding-top: 17px">
-                                            @item.SubjectNumerator
-                                        </th>
-                                    </tr>
-                                </table>
-                            </th>
-                        }
+                        <th>
+                            <p class="teachers_groupName"></p>
+                            <p class="teachers_subject"></p>
+                            @{
+                                Console.WriteLine(schedule.Key + " - wrong subject, subject number - " + item.SubjectNumber + " - subjectNum - " + subjectNum);
+                                subjectNum = item.SubjectNumber + 2;
+                            }
+                        </th>
                     }
-                    <th>@item.Group?.GroupName</th>
-                </tr>
-            }
-        }
-        @if (ViewBag.WednesdayLessons > 1)
-        {
-            <tr>
-                <th rowspan="@ViewBag.WednesdayLessons" class="day_of_the_week">Среда</th>
+                }
+                @{
+                    subjectNum = 1;
+                }
             </tr>
-            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 3).OrderBy(s => s.SubjectNumber))
-            {
-                <tr>
-                    <th>@item.SubjectNumber</th>
-                    <th>@item.StartOfLesson</th>
-                    <th>@item.RoomDenominator</th>
-                    <th>@item.SubjectDenominator</th>
-                    <th>@item.Group?.GroupName</th>
-                </tr>
-            }
-        }
-        @if (ViewBag.ThursdayLessons > 1)
-        {
-            <tr>
-                <th rowspan="@ViewBag.ThursdayLessons" class="day_of_the_week">Четверг</th>
-            </tr>
-            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 4).OrderBy(s => s.SubjectNumber))
-            {
-                <tr>
-                    <th>@item.SubjectNumber</th>
-                    <th>@item.StartOfLesson</th>
-                    <th>@item.RoomDenominator</th>
-                    <th>@item.SubjectDenominator</th>
-                    <th>@item.Group?.GroupName</th>
-                </tr>
-            }
-        }
-        @if (ViewBag.FridayLessons > 1)
-        {
-            <tr>
-                <th rowspan="@ViewBag.FridayLessons" class="day_of_the_week">Пятница</th>
-            </tr>
-            @foreach (var item in Model.Where(s => s.DayOfTheWeek == 5).OrderBy(s => s.SubjectNumber))
-            {
-                <tr>
-                    <th>@item.SubjectNumber</th>
-                    <th>@item.StartOfLesson</th>
-                    <th>@item.RoomDenominator</th>
-                    <th>@item.SubjectDenominator</th>
-                    <th>@item.Group?.GroupName</th>
-                </tr>
-            }
         }
     </table>
 
-    <div class="back_to_main">
-        <a class="back_btn" asp-action="TeachersList" asp-controller="Home"><i class="fa-solid fa-chevron-left"></i></a>
+
+    <h3 class="shift">2 смена</h3>
+
+    <table class="teachers_schedule_table">
+        <tr>
+            <th class="days">Дни</th>
+            <th class="teachers_lesson">1</th>
+            <th class="teachers_lesson">2</th>
+            <th class="teachers_lesson">3</th>
+            <th class="teachers_lesson">4</th>
+        </tr>
+        @foreach (var schedule in teachersSchedule)
+        {
+            <tr>
+                <th class="day_of_the_week">@DayOfTheWeek[schedule.Key - 1]</th>
+                @foreach (var item in Model.Where(s => (s.DayOfTheWeek == schedule.Key) &&
+                    (s.StartOfLesson.Equals("13:00") || s.StartOfLesson.Equals("14:30") || s.StartOfLesson.Equals("16:00") || s.StartOfLesson.Equals("17:30")))
+                    .OrderBy(s => s.SubjectNumber))
+                {
+                    <th>
+                        <p class="teachers_groupName">@item.Group?.GroupName</p>
+                        <p class="teachers_subject">@item.SubjectDenominator</p>
+                    </th>
+                }
+            </tr>
+        }
+    </table>
+
+
+    <div class="footer">
+        <div class="back_to_list">
+            <a class="back_btn" asp-action="TeachersList" asp-controller="Home"><i class="fa-solid fa-chevron-left"></i></a>
+        </div>
+        <div class="pass_info">
+            <p class="password" id="currentTeacherPass">@ViewBag.Pass</p>
+            <button class="change_pass" data-bs-toggle="modal" data-bs-target="#changePassword" onclick="getTeacherInfo(@ViewBag.teacherId)">Изменить пароль</button>
+        </div>
+    </div>
+
+    <div class="modal fade" id="changePassword" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="mainModal modal-header">
+                    <h5 class="modal-title fs-5" id="exampleModalLabel">Изменить пароль</h5>
+                    <button class="close_modal" id="close_modal" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark fa-lg" style="color: #e60a0a;"></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="groupName">
+                        <input class="group_input" id="newTeacherPass" type="text" placeholder="Новый пароль" autocomplete="off" required />
+                        <input class="group_input" id="teacherId" readonly hidden />
+                    </div>
+                    <div class="modal_footer">
+                        <div>
+                            <p id="passwordError" class="changePass_error"></p>
+                        </div>
+                        <div class="save_group_block" align="right">
+                            <button type="submit" class="save_group" onclick="changePassword()">Изменить</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/js/bootstrap.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/js/jquery-3.6.3.js"></script>
+    <script src="~/js/jquery-3.6.3.min.js"></script>
 </body>
 </html>
+
+<script type="text/javascript">
+
+    function getTeacherInfo(id) {
+        $.ajax({
+            url: "/home/GetTeacherInfo/" + id,
+            method: "GET",
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                data = JSON.parse(data);
+                console.log(data);
+                $("#teacherId").val(data.Id);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+
+
+    function changePassword() {
+        var id = $("#teacherId").val();
+        var newPassword = $("#newTeacherPass").val();
+        $.ajax({
+            url: "/home/ChangeTeacherPass",
+            method: "POST",
+            data: { teacherId: id, newTeacherPass: newPassword },
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                if (data === "Пароль изменен") {
+                    $('#currentTeacherPass').text(newPassword);
+                    $('#close_modal').click();
+                    window.location.reload();
+                } else {
+                    $('#passwordError').text(data);
+                }
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+</script>

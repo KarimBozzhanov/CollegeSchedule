@@ -186,6 +186,21 @@ namespace CollegeSchedule.Controllers
                     Schedule schedule = await db.Schedules.FirstOrDefaultAsync(s => s.Id == item.Id);
                     db.Entry(schedule).State = EntityState.Deleted;
                 }
+                foreach(var consultation in db.ConsultationsSchedules.Where(c => c.GroupId == groupId))
+                {
+                    ConsultationSchedule consultationSchedule = await db.ConsultationsSchedules.FirstOrDefaultAsync(s => s.Id == consultation.Id);
+                    db.Entry(consultationSchedule).State = EntityState.Deleted;
+                }
+                foreach (var exam in db.ExamsSchedules.Where(c => c.GroupId == groupId))
+                {
+                    ExamsSchedule examsSchedule = await db.ExamsSchedules.FirstOrDefaultAsync(s => s.Id == exam.Id);
+                    db.Entry(examsSchedule).State = EntityState.Deleted;
+                }
+                foreach (var practice in db.PracticeSchedules.Where(c => c.GroupId == groupId))
+                {
+                    PracticeSchedule practiceSchedule = await db.PracticeSchedules.FirstOrDefaultAsync(s => s.Id == practice.Id);
+                    db.Entry(practiceSchedule).State = EntityState.Deleted;
+                }
                 Group group = await db.Groups.FirstOrDefaultAsync(g => g.Id == groupId);
                 db.Entry(group).State = EntityState.Deleted;
                 await db.SaveChangesAsync();
@@ -452,13 +467,19 @@ namespace CollegeSchedule.Controllers
 
         public async Task<JsonResult> GetTeacherInfo(int? id)
         {
-            Teacher teacher = await db.Teachers.FirstOrDefaultAsync(t => t.Id == id);
-            if (teacher != null)
+            if(id != null)
             {
-                var teacherJson = JsonConvert.SerializeObject(teacher);
-                return Json(teacherJson);
+                Teacher teacher = await db.Teachers.FirstOrDefaultAsync(t => t.Id == id);
+                if (teacher != null)
+                {
+                    var teacherJson = JsonConvert.SerializeObject(teacher);
+                    return Json(teacherJson);
+                }
+                return Json(NotFound());
+            } else
+            {
+                return Json(NotFound());
             }
-            return Json(NotFound());
         }
 
         public async Task<JsonResult> CheckTeacherPass(int? teacherId, string teacherPass)
@@ -470,8 +491,6 @@ namespace CollegeSchedule.Controllers
                 {
                     if(teacherPass == teacher.TeacherPassword)
                     {
-                        TempData["teacherId"] = teacherId;
-                        TempData["teacherPassword"] = teacherPass;
                         return Json(new { success = true, teacherId = teacherId, teacherPass = teacherPass });
                     } else
                     {
@@ -580,17 +599,15 @@ namespace CollegeSchedule.Controllers
             return NotFound();
         }
 
-        public async Task<IActionResult> TeachersSchedule()
+        public async Task<IActionResult> TeachersSchedule(int? teacherId)
         {
-            int? teacherId = (int)TempData["teacherId"];
-            string teacherPass = TempData["teacherPassword"] as string;
             if (teacherId != null)
             {
-                Console.WriteLine(teacherId + " " + teacherPass);
                 Teacher teacher = await db.Teachers.FirstOrDefaultAsync(t => t.Id == teacherId);
-                if (teacher != null && teacher.TeacherPassword.Equals(teacherPass))
+                if (teacher != null)
                 {
                     ViewData["teacherName"] = teacher.teacherFullName;
+                    ViewBag.Pass = teacher.TeacherPassword;
                     ViewBag.teacherId = teacher.Id;
                     ViewBag.MondayLessons = db.Schedules.Count(s => s.DayOfTheWeek == 1 && (s.TeacherDenominator.Id == teacherId || s.TeacherNumeratorId == teacherId)) + 1;
                     ViewBag.TuesdayLessons = db.Schedules.Count(s => s.DayOfTheWeek == 2 && (s.TeacherDenominator.Id == teacherId || s.TeacherNumeratorId == teacherId)) + 1;
@@ -938,6 +955,34 @@ namespace CollegeSchedule.Controllers
             allSchedule = allSchedule.OrderBy(a => a.SubjectNumber).ToList();
             var scheduleJson = JsonConvert.SerializeObject(allSchedule);
             return Json(scheduleJson);
+        }
+
+        public async Task<JsonResult> ChangeTeacherPass(int? teacherId, string newTeacherPass)
+        {
+            if (teacherId != null)
+            {
+                var teacher = await db.Teachers.Where(t => t.Id == teacherId).AsQueryable().FirstOrDefaultAsync();
+                if (teacher != null)
+                {
+                    if (newTeacherPass.Length > 2 && newTeacherPass.Length < 10)
+                    {
+                        teacher.TeacherPassword = newTeacherPass;
+                        db.Teachers.UpdateRange(teacher);
+                        await db.SaveChangesAsync();
+                        return Json("Пароль изменен");
+                    }
+                    else
+                    {
+                        return Json("Пароль должен быть не меньше 2 и не больше 10 символов");
+                    }
+                } else
+                {
+                    return Json("Преподаватель не найден");
+                }
+            } else
+            {
+                return Json("Преподаватель не найден");
+            }
         }
 
 

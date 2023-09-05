@@ -30,7 +30,7 @@
                 <div class="modal-body">
                     <div class="groupName">
                         <h5>ФИО преподавателя</h5>
-                        <input id="teacherName" class="group_input" type="text" placeholder="ФИО" autocomplete="off" required />
+                        <input id="createTeacherName" class="group_input" type="text" placeholder="ФИО" autocomplete="off" required />
                     </div>
                     <div class="save_group_block" align="right">
                         <p id="createTeacher_error" class="createTeacher_error"></p>
@@ -58,6 +58,9 @@
                             <div class="group_info">
                                 <button class="teacher_btn" data-bs-toggle="modal" data-bs-target="#getTeacherSchedule" onclick="getTeacherInfo(@teacher.Id)">@teacher.teacherFullName</button>
                                 <div class="group_actions">
+                                    <a class="copy_to_clickboard" onclick="copyPass('@teacher.TeacherPassword')">
+                                        <i class="fa-solid fa-copy"></i>
+                                    </a>
                                     <a class="edit_group" data-bs-toggle="modal" data-bs-target="#editTeacherModal" onclick="getTeacherInfo(@teacher.Id)">
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </a>
@@ -143,7 +146,7 @@
 <script type="text/javascript">
 
     function addTeacher() {
-        var teacherName = $("#teacherName").val();
+        var teacherName = $("#createTeacherName").val();
         console.log(teacherName);
         if(teacherName != "") {
             $.ajax({
@@ -174,7 +177,6 @@
         $.ajax({
             url: "/home/GetTeacherInfo/" + id,
             method: "GET",
-            type: "json",
             dataType: "json",
             success: function (data) {
                 console.log(data);
@@ -197,13 +199,14 @@
         $.ajax({
             url: "/home/CheckTeacherPass",
             method: "GET",
-            type: "json",
             data: { teacherId: id, teacherPass: password },
             dataType: "json",
             success: function (data) {
                 console.log(data);
                 if (data.success){
-                    window.location.href = "@Url.Action("TeachersSchedule", "Home")";
+                    var url = '@Url.Action("TeachersSchedule", "Home", new { teacherId = "__teacherId__"})';
+                    url = url.replace('__teacherId__', data.teacherId);
+                    window.location.href = url;
                 } else {
                     $('#passwordError').text("Неверный пароль");
                 }
@@ -211,6 +214,16 @@
             error: function (err) {
                 console.log(err);
             }
+        });
+    }
+
+    function copyPass(pass) {
+        navigator.clipboard.writeText(pass)
+        .then(() => {
+            console.log("Скопировано");
+        })
+        .catch(err => {
+            console.log(err);
         });
     }
 

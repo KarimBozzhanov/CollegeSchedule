@@ -25,8 +25,6 @@
         <tr>
             <th class="days">Дни</th>
             <th class="number">№</th>
-            <th class="time">Начало</th>
-            <th class="time">Конец</th>
             <th class="cabinet">Кабинет</th>
             <th class="group">@ViewData["group"]</th>
             <th class="teacher">Преподаватель</th>
@@ -41,8 +39,6 @@
             {
                 <tr>
                     <th>@schedule.SubjectNumber</th>
-                    <th><input class="schedule_input" type="text" onchange="editStartOfLesson(@schedule.Id, this.value)" autocomplete="off" value="@schedule.StartOfLesson" /></th>
-                    <th><input class="schedule_input" type="text" onchange="editEndOfLesson(@schedule.Id, this.value)" autocomplete="off" value="@schedule.EndOfLesson" /></th>
                     @if (schedule.RoomNumerator == null)
                     {
                         <th class="room_block" id="single_room_@schedule.Id"><input class="schedule_input" type="text" onchange="editRoomDenominator(@schedule.Id, this.value)" autocomplete="off" value="@schedule.RoomDenominator" /></th>
