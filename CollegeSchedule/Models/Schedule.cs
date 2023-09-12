@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CollegeSchedule.Models
@@ -7,11 +8,15 @@ namespace CollegeSchedule.Models
     {
         public int Id { get; set; }
         public int DayOfTheWeek { get; set; }
-        public int SubjectNumber { get; set; }
+        public int? SubjectNumber { get; set; }
         public string StartOfLesson { get; set; }
         public string EndOfLesson { get; set; }
-        public string SubjectDenominator { get; set; }
-        public string SubjectNumerator { get; set; }
+        [ForeignKey("SubjectDenominatorId")]
+        public virtual Subject SubjectDenominator { get; set; }
+        public int? SubjectDenominatorId { get; set; }
+        [ForeignKey("SubjectNumeratorId")]
+        public virtual Subject SubjectNumerator { get; set; }
+        public int? SubjectNumeratorId { get; set; }
         [ForeignKey("TeacherDenominatorId")]
         public virtual Teacher TeacherDenominator { get; set; }
         public int? TeacherDenominatorId { get; set; }

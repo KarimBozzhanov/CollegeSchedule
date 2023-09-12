@@ -9,7 +9,9 @@ namespace CollegeSchedule.Models
         public string Date { get; set; }
         public string Time { get; set; }
         public string Room { get; set; }
-        public string Subject { get; set; }
+        [ForeignKey("ConsultationSubjectId")]
+        public virtual Subject ConsultationSubject { get; set; }
+        public int? ConsultationSubjectId { get; set; }
         [ForeignKey("TeacherId")]
         public virtual Teacher Teacher { get; set; }
         public int? TeacherId { get; set; }

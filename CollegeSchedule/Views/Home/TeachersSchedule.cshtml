@@ -1,4 +1,4 @@
-﻿@model IEnumerable<CollegeSchedule.Models.Schedule>
+﻿@model IEnumerable<CollegeSchedule.Models.TeachersSchedule>
 
 
 @{
@@ -8,8 +8,6 @@
     }).OrderBy(t => t.Key);
 
     string[] DayOfTheWeek = new string[5] { "Понедельник", "Вторник", "Среда", "Четверг", "Пятница" };
-    int subjectNum = 1;
-    Console.WriteLine(subjectNum);
 }
 
 <!DOCTYPE html>
@@ -26,77 +24,151 @@
 
     <h3 class="shift">1 смена</h3>
 
-    <table class="teachers_schedule_table">
+    <table class="schedule_table">
         <tr>
             <th class="days">Дни</th>
-            <th class="teachers_lesson">1</th>
-            <th class="teachers_lesson">2</th>
-            <th class="teachers_lesson">3</th>
-            <th class="teachers_lesson">4</th>
-        </tr>
-        @foreach(var schedule in teachersSchedule)
-        {
-            <tr>
-                <th class="day_of_the_week">@DayOfTheWeek[schedule.Key - 1]</th>
-                @foreach (var item in Model.Where(s => (s.DayOfTheWeek == schedule.Key) &&
-                    (s.StartOfLesson.Equals("08:00") || s.StartOfLesson.Equals("09:30") || s.StartOfLesson.Equals("11:00") || s.StartOfLesson.Equals("12:30")))
-                    .OrderBy(s => s.SubjectNumber))
-                {
-                    if (item.SubjectNumber == subjectNum)
-                    {
-                        <th>
-                            <p class="teachers_groupName">@item.Group?.GroupName</p>
-                            <p class="teachers_subject">@item.SubjectDenominator</p>
-                            @{
-                                Console.WriteLine(schedule.Key + " - subject number - " + item.SubjectNumber + " - subjectNum - " + subjectNum);
-                                subjectNum++;
-                            }
-                        </th>
-                    }
-                    else
-                    {
-                        <th>
-                            <p class="teachers_groupName"></p>
-                            <p class="teachers_subject"></p>
-                            @{
-                                Console.WriteLine(schedule.Key + " - wrong subject, subject number - " + item.SubjectNumber + " - subjectNum - " + subjectNum);
-                                subjectNum = item.SubjectNumber + 2;
-                            }
-                        </th>
-                    }
-                }
-                @{
-                    subjectNum = 1;
-                }
-            </tr>
-        }
-    </table>
-
-
-    <h3 class="shift">2 смена</h3>
-
-    <table class="teachers_schedule_table">
-        <tr>
-            <th class="days">Дни</th>
-            <th class="teachers_lesson">1</th>
-            <th class="teachers_lesson">2</th>
-            <th class="teachers_lesson">3</th>
-            <th class="teachers_lesson">4</th>
+            <th class="number">№</th>
+            <th class="cabinet">Кабинет</th>
+            <th class="group">@ViewData["teacherName"]</th>
+            <th class="teacher">Группа</th>
         </tr>
         @foreach (var schedule in teachersSchedule)
         {
             <tr>
-                <th class="day_of_the_week">@DayOfTheWeek[schedule.Key - 1]</th>
-                @foreach (var item in Model.Where(s => (s.DayOfTheWeek == schedule.Key) &&
-                    (s.StartOfLesson.Equals("13:00") || s.StartOfLesson.Equals("14:30") || s.StartOfLesson.Equals("16:00") || s.StartOfLesson.Equals("17:30")))
-                    .OrderBy(s => s.SubjectNumber))
-                {
-                    <th>
-                        <p class="teachers_groupName">@item.Group?.GroupName</p>
-                        <p class="teachers_subject">@item.SubjectDenominator</p>
-                    </th>
-                }
+                <th rowspan="5" class="day_of_the_week">@DayOfTheWeek[schedule.Key - 1]</th>
             </tr>
+            @foreach (var item in Model.Where(s => s.DayOfTheWeek == schedule.Key && s.Shift == 1))
+            {
+                <tr id="schedule_row_@item.Id">
+                    <th><p class="schedule_th" id="number_item_@item.Id">@item.SubjectNumber</p></th>
+                    @if (item.ScheduleNumeratorId != null)
+                    {
+                        <th class="main_delimiter">
+                            <table width="100%" class="delimiter_table">
+                                <tr class="delimiter_main">
+                                    <th class="delimiter_denominator" height="30">
+                                        <p class="schedule_th" id="room_denominator_@item.Id">@item.ScheduleDenominator?.RoomDenominator</p>
+                                    </th>
+                                </tr>
+                                <tr class="delimiter_main">
+                                    <th class="delimiter_numerator" height="30">
+                                        <p class="schedule_th" id="room_numerator_@item.Id">@item.ScheduleNumerator?.RoomNumerator</p>
+                                    </th>
+                                </tr>
+                            </table>
+                        </th>
+                        <th class="main_delimiter">
+                            <table width="100%" class="delimiter_table">
+                                <tr class="delimiter_main">
+                                    <th class="delimiter_denominator" height="30">
+                                        <p class="schedule_th" id="denominator_@item.Id">@item.ScheduleDenominator?.SubjectDenominator?.SubjectName</p>
+                                    </th>
+                                </tr>
+                                <tr class="delimiter_main">
+                                    <th class="delimiter_numerator" height="30">
+                                        <p class="schedule_th" id="numerator_@item.Id"> @item.ScheduleNumerator?.SubjectNumerator?.SubjectName</p>
+                                    </th>
+                                </tr>
+                            </table>
+                        </th>
+                        <th class="main_delimiter">
+                            <table width="100%" class="delimiter_teacher_table">
+                                <tr class="delimiter_main">
+                                    <th class="delimiter_denominator" height="30">
+                                        <p class="schedule_th" id="teacher_denominator_@item.Id">@item.ScheduleDenominator?.Group?.GroupName</p>
+                                    </th>
+                                </tr>
+                                <tr class="delimiter_main">
+                                    <th class="delimiter_numerator" height="30">
+                                        <p class="schedule_th" id="teacher_numerator_@item.Id">@item.ScheduleNumerator?.Group?.GroupName</p>
+                                    </th>
+                                </tr>
+                            </table>
+                        </th>
+                    }
+                    else
+                    {
+                        <th><p class="schedule_th" id="room_denominator_@item.Id">@item.ScheduleDenominator?.RoomDenominator</p></th>
+                        <th><p class="schedule_th" id="denominator_@item.Id">@item.ScheduleDenominator?.SubjectDenominator?.SubjectName</p></th>
+                        <th><p class="schedule_th" id="teacher_denominator_@item.Id">@item.ScheduleDenominator?.Group?.GroupName</p></th>
+                    }
+                </tr>
+            }
+        }
+    </table>
+
+    <h3 class="shift">2 смена</h3>
+
+    <table class="schedule_table">
+        <tr>
+            <th class="days">Дни</th>
+            <th class="number">№</th>
+            <th class="cabinet">Кабинет</th>
+            <th class="group">@ViewData["teacherName"]</th>
+            <th class="teacher">Группа</th>
+        </tr>
+        @foreach (var schedule in teachersSchedule)
+        {
+            <tr>
+                <th rowspan="5" class="day_of_the_week">@DayOfTheWeek[schedule.Key - 1]</th>
+            </tr>
+            @foreach (var item in Model.Where(s => s.DayOfTheWeek == schedule.Key && s.Shift == 2))
+            {
+                <tr id="schedule_row_@item.Id">
+                    <th><p class="schedule_th" id="number_item_@item.Id">@item.SubjectNumber</p></th>
+                    @if (item.ScheduleNumeratorId != null)
+                    {
+                        <th class="main_delimiter">
+                            <table width="100%" class="delimiter_table">
+                                <tr class="delimiter_main">
+                                    <th class="delimiter_denominator" height="30">
+                                        <p class="schedule_th" id="room_denominator_@item.Id">@item.ScheduleDenominator?.RoomDenominator</p>
+                                    </th>
+                                </tr>
+                                <tr class="delimiter_main">
+                                    <th class="delimiter_numerator" height="30">
+                                        <p class="schedule_th" id="room_numerator_@item.Id">@item.ScheduleNumerator?.RoomNumerator</p>
+                                    </th>
+                                </tr>
+                            </table>
+                        </th>
+                        <th class="main_delimiter">
+                            <table width="100%" class="delimiter_table">
+                                <tr class="delimiter_main">
+                                    <th class="delimiter_denominator" height="30">
+                                        <p class="schedule_th" id="denominator_@item.Id">@item.ScheduleDenominator?.SubjectDenominator?.SubjectName</p>
+                                    </th>
+                                </tr>
+                                <tr class="delimiter_main">
+                                    <th class="delimiter_numerator" height="30">
+                                        <p class="schedule_th" id="numerator_@item.Id"> @item.ScheduleNumerator?.SubjectNumerator?.SubjectName</p>
+                                    </th>
+                                </tr>
+                            </table>
+                        </th>
+                        <th class="main_delimiter">
+                            <table width="100%" class="delimiter_teacher_table">
+                                <tr class="delimiter_main">
+                                    <th class="delimiter_denominator" height="30">
+                                        <p class="schedule_th" id="teacher_denominator_@item.Id">@item.ScheduleDenominator?.Group?.GroupName</p>
+                                    </th>
+                                </tr>
+                                <tr class="delimiter_main">
+                                    <th class="delimiter_numerator" height="30">
+                                        <p class="schedule_th" id="teacher_numerator_@item.Id">@item.ScheduleNumerator?.Group?.GroupName</p>
+                                    </th>
+                                </tr>
+                            </table>
+                        </th>
+                    }
+                    else
+                    {
+                        <th><p class="schedule_th" id="room_denominator_@item.Id">@item.ScheduleDenominator?.RoomDenominator</p></th>
+                        <th><p class="schedule_th" id="denominator_@item.Id">@item.ScheduleDenominator?.SubjectDenominator?.SubjectName</p></th>
+                        <th><p class="schedule_th" id="teacher_denominator_@item.Id">@item.ScheduleDenominator?.Group?.GroupName</p></th>
+                    }
+                </tr>
+            }
         }
     </table>
 

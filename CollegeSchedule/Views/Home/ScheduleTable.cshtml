@@ -68,12 +68,12 @@
                             <table width="100%" class="delimiter_table">
                                 <tr class="delimiter_main">
                                     <th class="delimiter_denominator" height="30">
-                                        <p class="schedule_th" id="denominator_@item.Id">@item.SubjectDenominator</p>
+                                        <p class="schedule_th" id="denominator_@item.Id">@item.SubjectDenominator?.SubjectName</p>
                                     </th>
                                 </tr>
                                 <tr class="delimiter_main">
                                     <th class="delimiter_numerator" height="30">
-                                        <p class="schedule_th" id="numerator_@item.Id"> @item.SubjectNumerator</p>
+                                        <p class="schedule_th" id="numerator_@item.Id"> @item.SubjectNumerator?.SubjectName</p>
                                     </th>
                                 </tr>
                             </table>
@@ -81,7 +81,7 @@
                     }
                     else
                     {
-                        <th><p class="schedule_th" id="denominator_@item.Id">@item.SubjectDenominator</p></th>
+                        <th><p class="schedule_th" id="denominator_@item.Id">@item.SubjectDenominator?.SubjectName</p></th>
                     }
                     @if (item.TeacherNumeratorId != null)
                     {

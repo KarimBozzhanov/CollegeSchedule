@@ -1,11 +1,12 @@
 ﻿.main_page {
     background: linear-gradient(92.42deg, #367AA5 0%, #4794C6 100%);
-    height: 100%;
+    height: 100vh;
 }
 
 .main_buttons {
     background-color: #FAFAFA;
     border-top-right-radius: 35px;
+    height: 100%;
 }
 
 .main_header {
@@ -91,7 +92,7 @@
 }
 
 .teachers_schedule {
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 .first_cource {
@@ -975,4 +976,33 @@ th {
     margin-bottom: 20px;
     z-index: 99;
     font-size: 8px;
+}
+
+.subjects {
+    margin-bottom: 30px;
+}
+
+.subjects a {
+    display: inline-block;
+}
+
+.subjects_btn {
+    width: 87%;
+    border: 0px;
+    text-decoration: none;
+    border-radius: 5px;
+    background: linear-gradient(87.77deg, #367AA5 1.87%, #4794C6 110.82%);
+    padding-bottom: 13px;
+    padding-top: 13px;
+    color: #FAFAFA;
+    font-weight: 600;
+    font-size: 20px;
+    text-align: left;
+    padding-left: 20px;
+    margin-bottom: 30px;
+}
+
+
+.subjects_btn:hover {
+    color: #FAFAFA;
 }

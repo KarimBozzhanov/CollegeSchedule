@@ -59,6 +59,15 @@
                 Расписание преподавателей
             </a>
         </div>
+
+        @if(User.Identity.IsAuthenticated)
+        {
+            <div class="subjects">
+                <a class="subjects_btn" asp-action="SubjectsList" asp-controller="home">
+                    Предметы
+                </a>
+            </div>
+        }
     </div>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

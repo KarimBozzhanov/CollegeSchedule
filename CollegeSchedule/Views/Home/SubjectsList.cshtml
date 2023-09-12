@@ -1,0 +1,181 @@
+﻿@model IEnumerable<CollegeSchedule.Models.Subject>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - CollegeSchedule</title>
+    <link rel="stylesheet" href="~/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <a class="fixed-button" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <i class="fa-solid fa-plus"></i>
+        </a>
+    }
+
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="mainModal modal-header">
+                    <h5 class="modal-title fs-5" id="exampleModalLabel">Добавить предмет</h5>
+                    <button class="close_modal" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark fa-lg" style="color: #e60a0a;"></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="groupName">
+                        <h5>Название предмета</h5>
+                        <input id="createSubject" class="group_input" type="text" placeholder="Название" autocomplete="off" required />
+                    </div>
+                    <div class="save_group_block" align="right">
+                        <p id="createSubject_error" class="createTeacher_error"></p>
+                        <button type="submit" class="save_group" onclick="addSubject()">Добавить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container">
+        <div class="search_block">
+            <form class="search_form" asp-action="SubjectsList" asp-controller="Home">
+                <input class="search_input" type="text" name="searchText" autocomplete="off" placeholder="Поиск" />
+            </form>
+        </div>
+        <div class="group_buttons">
+            @foreach (var subject in Model)
+            {
+                <div class="group_list">
+                    <div class="change_group">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <div class="group_info">
+                                <button class="teacher_btn" onclick="getSubjectInfo(@subject.Id)" data-bs-toggle="modal" data-bs-target="#getSubject">@subject.SubjectName</button>
+                                <div class="group_actions">
+                                    <form class="delete_form" asp-action="DeleteSubject" asp-controller="Home" asp-route-subjectId="@subject.Id">
+                                        <button class="delete_group">
+                                            <i class="fa-solid fa-square-minus"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="getSubject" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="mainModal modal-header">
+                    <h5 class="modal-title fs-5" id="exampleModalLabel">Изменить предмет</h5>
+                    <p id="subjectError" class="password_error"></p>
+                    <button class="close_modal" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark fa-lg" style="color: #e60a0a;"></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="groupName">
+                        <input class="group_input" id="subjectName" type="text" placeholder="Название предмета" autocomplete="off" required />
+                        <input class="group_input" id="subjectId" readonly hidden />
+                    </div>
+                    <div class="save_group_block" align="right">
+                        <button type="submit" class="save_group" onclick="updateSubject()">Изменить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="back_to_main">
+        <a class="back_btn" asp-action="Index" asp-controller="Home"><i class="fa-solid fa-chevron-left"></i></a>
+    </div>
+
+
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/js/jquery-3.6.3.js"></script>
+    <script src="~/js/jquery-3.6.3.min.js"></script>
+</body>
+</html>
+
+<script type="text/javascript">
+
+    function addSubject() {
+        var subjectName = $("#createSubject").val();
+        console.log(subjectName);
+        if (subjectName != "") {
+            $.ajax({
+                url: "/Home/AddSubject",
+                method: "POST",
+                dataType: "json",
+                data: { subjectName: subjectName },
+                success: function (data) {
+                    console.log(data);
+                    if (data === 'Предмет добавлен') {
+                        window.location.reload();
+                    } else if (data === "Предмет с таким названием уже добавлен") {
+                        $("#createSubject_error").text(data);
+                        $("#createSubject_error").css("margin-bottom", 10);
+                    }
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        } else {
+            $("#createSubject_error").text("Не удалось добавить преподавателя");
+            $("#createSubject_error").css("margin-bottom", 10);
+            $("#createSubject_error").css("margin-left", 10);
+        }
+    }
+
+    function getSubjectInfo(id) {
+        console.log(id);
+        $.ajax({
+            url: "/home/GetSubjectInfo",
+            method: "GET",  
+            dataType: "json",
+            data: {subjectId: id},
+            success: function (data) {
+                console.log(data);
+                console.log(data.subjectName);
+                $("#subjectName").val(data.subjectName);
+                $("#subjectId").val(data.id);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+
+    function updateSubject() {
+        var subjectName = $("#subjectName").val();
+        console.log(subjectName);
+        var subjectId = $("#subjectId").val();
+        console.log(subjectId);
+        $.ajax({
+            url: "/Home/UpdateSubject",
+            method: "POST",
+            dataType: "json",
+            data: { subjectId: subjectId, subjectName: subjectName },
+            success: function(data) {
+                console.log(data);
+                if (data === "Предмет изменен") {
+                    window.location.reload();
+                } else {
+                    $("subjectError").text(data);
+                }
+            }
+        })
+    }
+
+</script>

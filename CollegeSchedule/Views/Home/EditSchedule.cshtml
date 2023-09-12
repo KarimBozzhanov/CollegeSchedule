@@ -75,11 +75,24 @@
                             </table>
                         </th>
                     }
-                    @if (schedule.SubjectNumerator == null)
+                    @if (schedule.SubjectNumeratorId == null)
                     {
                         <th class="subject_name" id="single_subject_@schedule.Id">
                             <div class="schedule_input_block">
-                                <input class="schedule_input" type="text" onchange="editDenominator(@schedule.Id, this.value)" autocomplete="off" value="@schedule.SubjectDenominator" />
+                                @if (schedule.SubjectDenominatorId != null)
+                                {
+                                    <input class="schedule_input" value="@schedule.SubjectDenominator?.SubjectName" list="subjects_list" onchange="editDenominator(@schedule.Id, this.value)" />
+                                }
+                                else
+                                {
+                                    <input class="schedule_input" list="subjects_list" onchange="editDenominator(@schedule.Id, this.value)" />
+                                }
+                                <datalist class="subjects_list" id="subjects_list">
+                                    @foreach (var subject in Model.Subjects)
+                                    {
+                                        <option class="list_options">@subject.SubjectName</option>
+                                    }
+                                </datalist>
                             </div>
                             <div class="add_numerator_block">
                                 <button class="add_numerator" onclick="displayDelimiter(@schedule.Id)" id="add_numerator_@schedule.Id"><i class="fa-solid fa-plus"></i></button>
@@ -90,7 +103,20 @@
                                 <tr class="delimiter_main">
                                     <th class="delimiter_denominator">
                                         <div class="schedule_input_block">
-                                            <input class="schedule_input" type="text" onchange="editDenominator(@schedule.Id, this.value)" autocomplete="off" value="@schedule.SubjectDenominator" />
+                                            @if (schedule.SubjectDenominatorId != null)
+                                            {
+                                                <input class="schedule_input" value="@schedule.SubjectDenominator?.SubjectName" list="subjects_list" onchange="editDenominator(@schedule.Id, this.value)" />
+                                            }
+                                            else
+                                            {
+                                                <input class="schedule_input" list="subjects_list" onchange="editDenominator(@schedule.Id, this.value)" />
+                                            }
+                                            <datalist class="subjects_list" id="subjects_list">
+                                                @foreach (var subject in Model.Subjects)
+                                                {
+                                                    <option class="list_options">@subject.SubjectName</option>
+                                                }
+                                            </datalist>
                                         </div>
                                         <div class="minus_delimiter_block">
                                             <button class="add_numerator" onclick="hiddenDelimiter(@schedule.Id)"><i class="fa-solid fa-minus"></i></button>
@@ -100,7 +126,20 @@
                                 <tr class="delimiter_main">
                                     <th class="delimiter_numerator">
                                         <div class="schedule_input_block">
-                                            <input class="schedule_input" type="text" onchange="editNumerator(@schedule.Id, this.value)" autocomplete="off" value="@schedule.SubjectNumerator" />
+                                            @if (schedule.SubjectNumeratorId != null)
+                                            {
+                                                <input class="schedule_input" value="@schedule.SubjectNumerator?.SubjectName" list="subjects_list" onchange="editNumerator(@schedule.Id, this.value)" />
+                                            }
+                                            else
+                                            {
+                                                <input class="schedule_input" list="subjects_list" onchange="editNumerator(@schedule.Id, this.value)" />
+                                            }
+                                            <datalist class="subjects_list" id="subjects_list">
+                                                @foreach (var subject in Model.Subjects)
+                                                {
+                                                    <option class="list_options">@subject.SubjectName</option>
+                                                }
+                                            </datalist>
                                         </div>
                                     </th>
                                 </tr>
@@ -111,7 +150,20 @@
                     {
                         <th class="subject_name" id="single_subject_@schedule.Id" hidden>
                             <div class="schedule_input_block">
-                                <input class="schedule_input" type="text" onchange="editDenominator(@schedule.Id, this.value)" autocomplete="off" value="@schedule.SubjectDenominator" />
+                                @if (schedule.SubjectDenominatorId != null)
+                                {
+                                    <input class="schedule_input" value="@schedule.SubjectDenominator?.SubjectName" list="subjects_list" onchange="editDenominator(@schedule.Id, this.value)" />
+                                }
+                                else
+                                {
+                                    <input class="schedule_input" list="subjects_list" onchange="editDenominator(@schedule.Id, this.value)" />
+                                }
+                                <datalist class="subjects_list" id="subjects_list">
+                                    @foreach (var subject in Model.Subjects)
+                                    {
+                                        <option class="list_options">@subject.SubjectName</option>
+                                    }
+                                </datalist>
                             </div>
                             <div class="add_numerator_block">
                                 <button class="add_numerator" onclick="displayDelimiter(@schedule.Id)" id="add_numerator_@schedule.Id"><i class="fa-solid fa-plus"></i></button>
@@ -122,7 +174,20 @@
                                 <tr class="delimiter_main">
                                     <th class="delimiter_denominator">
                                         <div class="schedule_input_block">
-                                            <input class="schedule_input" type="text" onchange="editDenominator(@schedule.Id, this.value)" autocomplete="off" value="@schedule.SubjectDenominator" />
+                                            @if (schedule.SubjectDenominatorId != null)
+                                            {
+                                                <input class="schedule_input" value="@schedule.SubjectDenominator?.SubjectName" list="subjects_list" onchange="editDenominator(@schedule.Id, this.value)" />
+                                            }
+                                            else
+                                            {
+                                                <input class="schedule_input" list="subjects_list" onchange="editDenominator(@schedule.Id, this.value)" />
+                                            }
+                                            <datalist class="subjects_list" id="subjects_list">
+                                                @foreach (var subject in Model.Subjects)
+                                                {
+                                                    <option class="list_options">@subject.SubjectName</option>
+                                                }
+                                            </datalist>
                                         </div>
                                         <div class="minus_delimiter_block">
                                             <button class="add_numerator" onclick="hiddenDelimiter(@schedule.Id)"><i class="fa-solid fa-minus"></i></button>
@@ -132,7 +197,20 @@
                                 <tr class="delimiter_main">
                                     <th class="delimiter_numerator">
                                         <div class="schedule_input_block">
-                                            <input class="schedule_input" type="text" onchange="editNumerator(@schedule.Id, this.value)" autocomplete="off" value="@schedule.SubjectNumerator" />
+                                            @if (schedule.SubjectNumeratorId != null)
+                                            {
+                                                <input class="schedule_input" value="@schedule.SubjectNumerator?.SubjectName" list="subjects_list" onchange="editNumerator(@schedule.Id, this.value)" />
+                                            }
+                                            else
+                                            {
+                                                <input class="schedule_input" list="subjects_list" onchange="editNumerator(@schedule.Id, this.value)" />
+                                            }
+                                            <datalist class="subjects_list" id="subjects_list">
+                                                @foreach (var subject in Model.Subjects)
+                                                {
+                                                    <option class="list_options">@subject.SubjectName</option>
+                                                }
+                                            </datalist>
                                         </div>
                                     </th>
                                 </tr>

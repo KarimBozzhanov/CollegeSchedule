@@ -8,7 +8,9 @@ namespace CollegeSchedule.Models
         public int ExamNumber { get; set; }
         public string Date { get; set; }
         public string Time { get; set; }
-        public string ExamName { get; set; }
+        [ForeignKey("ExamSubjectId")]
+        public virtual Subject ExamSubject { get; set; }
+        public int? ExamSubjectId { get; set; }
         public string Room { get; set; }
         [ForeignKey("TeacherId")]
         public virtual Teacher Teacher { get; set; }

@@ -155,6 +155,7 @@
                 dataType: "json",
                 data: { teacherName: teacherName },
                 success: function (data) {
+                    console.log(data);
                     if(data === 'Преподаватель добавлен') {
                         window.location.reload();
                     } else if(data === "Преподаватель с таким именем уже добавлен") {
