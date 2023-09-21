@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - CollegeSchedule</title>
+    <title>Список предметов</title>
     <link rel="stylesheet" href="~/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -44,9 +44,15 @@
 
     <div class="container">
         <div class="search_block">
-            <form class="search_form" asp-action="SubjectsList" asp-controller="Home">
-                <input class="search_input" type="text" name="searchText" autocomplete="off" placeholder="Поиск" />
-            </form>
+            <div>
+                <form class="search_form" asp-action="SubjectsList" asp-controller="Home">
+                    <input class="search_input" type="text" name="searchText" autocomplete="off" placeholder="Поиск" />
+                </form>
+            </div>
+            <div class="import_block">
+                <a class="import_btn" onclick="excelFile.click()">Импорт</a>
+                <input id="excelFile" accept=".xlsx" type="file" onchange="importSubject()" hidden />
+            </div>
         </div>
         <div class="group_buttons">
             @foreach (var subject in Model)
@@ -178,4 +184,29 @@
         })
     }
 
+
+    function importSubject() {
+        var files = $("#excelFile").prop("files");
+        var formData = new FormData();
+        formData.append("ExcelFile", files[0]);
+        
+        $.ajax({
+            url: "/Home/ImportSubjects",
+            method: "POST",
+            dataType: "json",
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                console.log(data);
+                if (data === "success") {
+                    window.location.reload();
+                }
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
 </script>

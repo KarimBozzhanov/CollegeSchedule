@@ -15,6 +15,11 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using XSystem.Security.Cryptography;
+using Microsoft.AspNetCore.Http;
+using System.Runtime.CompilerServices;
+using System.IO;
+using Aspose.Cells;
+using XAct;
 
 namespace CollegeSchedule.Controllers
 {
@@ -22,10 +27,12 @@ namespace CollegeSchedule.Controllers
     {
 
         private ApplicationDbContext db;
+        IWebHostEnvironment app;
  
-        public HomeController(ApplicationDbContext context)
+        public HomeController(ApplicationDbContext context, IWebHostEnvironment appEnvironment)
         {
             db = context;
+            app = appEnvironment;
         }
         
         public IActionResult Index()
@@ -164,6 +171,17 @@ namespace CollegeSchedule.Controllers
             {
                 foreach (var item in db.Schedules.Where(s => s.Group.Id == groupId))
                 {
+                    foreach(var teachersSchedule in db.TeachersSchedules.Where(t => t.ScheduleDenominatorId == item.Id || t.ScheduleNumeratorId == item.Id))
+                    {
+                        var updateTeachersSchedule = await db.TeachersSchedules.Where(t => t.Id == teachersSchedule.Id).AsQueryable().FirstOrDefaultAsync();
+                        if (teachersSchedule.ScheduleDenominatorId == item.Id)
+                        {
+                            updateTeachersSchedule.ScheduleDenominatorId = null;
+                        } else if(teachersSchedule.ScheduleNumeratorId == item.Id)
+                        {
+                            updateTeachersSchedule.ScheduleNumeratorId = null;
+                        }
+                    }
                     Schedule schedule = await db.Schedules.FirstOrDefaultAsync(s => s.Id == item.Id);
                     db.Entry(schedule).State = EntityState.Deleted;
                 }
@@ -245,7 +263,14 @@ namespace CollegeSchedule.Controllers
         {
             Group group = await db.Groups.FirstOrDefaultAsync(g => g.Id == groupId);
             var allModels = new AllModels();
-            allModels.Schedules = await db.Schedules.Where(g => g.GroupId == groupId).OrderBy(s => s.SubjectNumber).ToListAsync();
+            allModels.Schedules = await db.Schedules
+                .Include(s => s.TeacherDenominator)
+                .Include(s => s.TeacherNumerator)
+                .Include(s => s.SubjectDenominator)
+                .Include(s => s.SubjectNumerator)
+                .Where(g => g.GroupId == groupId)
+                .OrderBy(s => s.SubjectNumber)
+                .ToListAsync();
             allModels.Teachers = await db.Teachers.OrderBy(t => t.teacherFullName).ToListAsync();
             allModels.Subjects = await db.Subjects.ToListAsync();
             ViewData["group"] = group.GroupName;
@@ -526,7 +551,6 @@ namespace CollegeSchedule.Controllers
             }
         }
 
-
         public string GetHash(string text)
         {
             byte[] bytes = Encoding.Unicode.GetBytes(text);
@@ -615,6 +639,7 @@ namespace CollegeSchedule.Controllers
                 if (teacher != null)
                 {
                     ViewData["teacherName"] = teacher.teacherFullName;
+                    ViewData["teacherId"] = teacher.Id;
                     ViewBag.Pass = teacher.TeacherPassword;
                     ViewBag.teacherId = teacher.Id;
                     return View(await db.TeachersSchedules
@@ -728,8 +753,14 @@ namespace CollegeSchedule.Controllers
             ViewBag.examsCount = examsCount;
             Group group = await db.Groups.FirstOrDefaultAsync(g => g.Id == groupId);
             ViewData["course"] = group.GroupCourse;
+            ViewData["groupName"] = group.GroupName;
             var allModels = new AllModels();
-            allModels.ExamsSchedules = await db.ExamsSchedules.Include(e => e.Teacher).Where(e => e.GroupId == groupId).ToListAsync();
+            allModels.ExamsSchedules = await db.ExamsSchedules
+                .Include(e => e.Teacher)
+                .Include(e => e.ExamSubject)
+                .Include(e => e.Group)
+                .Where(e => e.GroupId == groupId)
+                .ToListAsync();
             allModels.ConsultationSchedules = await db.ConsultationsSchedules.Include(e => e.Teacher).Where(e => e.GroupId == groupId).ToListAsync();
             return View(allModels);
         }
@@ -750,8 +781,14 @@ namespace CollegeSchedule.Controllers
             ViewData["groupId"] = groupId;
             var allModels = new AllModels();
             allModels.Teachers = await db.Teachers.OrderBy(t => t.teacherFullName).ToListAsync();
-            allModels.ExamsSchedules = await db.ExamsSchedules.Where(e => e.GroupId == groupId).ToListAsync();
+            allModels.ExamsSchedules = await db.ExamsSchedules
+                .Include(e => e.ExamSubject)
+                .Include(e => e.Teacher)
+                .Include(e => e.Group)
+                .Where(e => e.GroupId == groupId)
+                .ToListAsync();
             allModels.ConsultationSchedules = await db.ConsultationsSchedules.Where(c => c.GroupId == groupId).ToListAsync();
+            allModels.Subjects = await db.Subjects.ToListAsync();
             return View(allModels);
         }
 
@@ -821,13 +858,25 @@ namespace CollegeSchedule.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> EditExamName(int? id, string name)
+        public async Task<JsonResult> EditExamSubject(int? id, string subjectName)
         {
             if (id != null)
             {
-                ExamsSchedule exam = await db.ExamsSchedules.FirstOrDefaultAsync(e => e.Id == id);
                 var updateExam = await db.ExamsSchedules.Where(s => s.Id == id).AsQueryable().FirstOrDefaultAsync();
-                updateExam.ExamName = name;
+                if(subjectName != null)
+                {
+                    Subject subject = await db.Subjects.FirstOrDefaultAsync(s => s.SubjectName.Equals(subjectName));
+                    if (subject != null)
+                    {
+                        updateExam.ExamSubjectId = subject.Id;
+                    } else
+                    {
+                        return Json("Предмет не найден");
+                    }
+                } else
+                {
+                    updateExam.ExamSubject = null;
+                }
                 db.ExamsSchedules.UpdateRange(updateExam);
                 await db.SaveChangesAsync();
                 return Json("Предмет экзамена изменен");
@@ -840,10 +889,21 @@ namespace CollegeSchedule.Controllers
         {
             if (id != null)
             {
-                ExamsSchedule exam = await db.ExamsSchedules.FirstOrDefaultAsync(e => e.Id == id);
-                Teacher teacher = await db.Teachers.FirstOrDefaultAsync(t => t.teacherFullName.Equals(teacherName));
                 var updateExam = await db.ExamsSchedules.Where(s => s.Id == id).AsQueryable().FirstOrDefaultAsync();
-                updateExam.TeacherId = teacher.Id;
+                if (teacherName != null)
+                {
+                    Teacher teacher = await db.Teachers.FirstOrDefaultAsync(t => t.teacherFullName.Equals(teacherName));
+                    if(teacher != null)
+                    {
+                        updateExam.TeacherId = teacher.Id;
+                    } else
+                    {
+                        return Json("Преподаватель не найден");
+                    }
+                } else
+                {
+                    updateExam.TeacherId = null;
+                }
                 db.ExamsSchedules.UpdateRange(updateExam);
                 await db.SaveChangesAsync();
                 return Json("Преподаватель экзамена изменен");
@@ -869,6 +929,7 @@ namespace CollegeSchedule.Controllers
         {
             Group group = await db.Groups.FirstOrDefaultAsync(g => g.Id == groupId);
             ViewData["course"] = group.GroupCourse;
+            ViewData["groupName"] = group.GroupName;
             return View(await db.PracticeSchedules.Include(p => p.Teacher).Where(p => p.GroupId == groupId).ToListAsync());
         }
 
@@ -880,6 +941,7 @@ namespace CollegeSchedule.Controllers
             Console.WriteLine(practiceCount);
             ViewBag.practiceCount = practiceCount;
             ViewData["groupId"] = groupId;
+            ViewData["groupName"] = group.GroupName;
             var allModels = new AllModels();
             allModels.Teachers = await db.Teachers.OrderBy(t => t.teacherFullName).ToListAsync();
             allModels.PracticesSchedule = await db.PracticeSchedules.Where(p => p.GroupId == groupId).ToListAsync();
@@ -1033,15 +1095,29 @@ namespace CollegeSchedule.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> EditConsultationSubject(int? id, string subject)
+        public async Task<JsonResult> EditConsultationSubject(int? id, string subjectName)
         {
             if (id != null)
             {
                 var updateConsultation = await db.ConsultationsSchedules.Where(s => s.Id == id).AsQueryable().FirstOrDefaultAsync();
-                updateConsultation.Subject = subject;
+                if (subjectName != null)
+                {
+                    Subject subject = await db.Subjects.FirstOrDefaultAsync(s => s.SubjectName.Equals(subjectName));
+                    if(subject != null)
+                    {
+                        updateConsultation.ConsultationSubjectId = subject.Id;
+                    } else
+                    {
+                        return Json("Предмет не найден");
+                    }
+                } else
+                {
+                    updateConsultation.ConsultationSubjectId = null;
+                }
                 db.ConsultationsSchedules.UpdateRange(updateConsultation);
                 await db.SaveChangesAsync();
                 return Json("Предмет консультации изменен");
+
             }
             return Json(NotFound());
         }
@@ -1052,8 +1128,20 @@ namespace CollegeSchedule.Controllers
             if (id != null)
             {
                 var updateConsultation = await db.ConsultationsSchedules.Where(s => s.Id == id).AsQueryable().FirstOrDefaultAsync();
-                Teacher teacher = await db.Teachers.FirstOrDefaultAsync(t => t.teacherFullName.Equals(teacherName));
-                updateConsultation.TeacherId = teacher.Id;
+                if(teacherName != null)
+                {
+                    Teacher teacher = await db.Teachers.FirstOrDefaultAsync(t => t.teacherFullName.Equals(teacherName));
+                    if(teacher != null)
+                    {
+                        updateConsultation.TeacherId = teacher.Id;
+                    } else
+                    {
+                        return Json("Преподаватель не найден");
+                    }
+                } else
+                {
+                    updateConsultation.TeacherId = null;
+                }
                 db.ConsultationsSchedules.UpdateRange(updateConsultation);
                 await db.SaveChangesAsync();
                 return Json("Преподаватель консультации изменен");
@@ -1181,6 +1269,179 @@ namespace CollegeSchedule.Controllers
             }
         }
 
+
+        [HttpPost]
+        public async Task<JsonResult> ImportSubjects(IFormFile excelFile)
+        {
+            if (excelFile != null)
+            {
+                string path = app.WebRootPath + "/ExcelFiles/" + excelFile.FileName;
+                using (var fileStream = new FileStream(path, FileMode.Create))
+                {
+                    await excelFile.CopyToAsync(fileStream);
+                }
+                Workbook wb = new Workbook(path);
+                WorksheetCollection collection = wb.Worksheets;
+
+                Worksheet worksheet = collection[0];
+                Console.WriteLine("Worksheet - " + worksheet.Name);
+
+                int rows = worksheet.Cells.MaxDataRow;
+                int cols = worksheet.Cells.MaxDataColumn;
+
+                for (int i = 0; i <= rows; i++)
+                {
+                    string newSubject = (string)worksheet.Cells[i, 0].Value;
+                    if (newSubject != null)
+                    {
+                        Subject subject = await db.Subjects.FirstOrDefaultAsync(s => s.SubjectName.Equals(newSubject));
+                        if (subject == null)
+                        {
+                            await db.Subjects.AddAsync(new Subject { SubjectName = newSubject });
+                        }
+                    }
+                }
+                await db.SaveChangesAsync();
+                FileInfo fileInfo = new FileInfo(path);
+
+                if (fileInfo.Exists)
+                {
+                    fileInfo.Delete();
+                }
+                return Json("success");
+            }
+            else
+            {
+                return Json("unsuccessfull");
+            }
+        }
+
+
+        public async Task<ActionResult> ExportTeacherSchedule(int? teacherId)
+        {
+            if(teacherId != null)
+            {
+                Teacher teacher = await db.Teachers.FirstOrDefaultAsync(t => t.Id == teacherId);
+                if(teacher != null)
+                {
+                    Workbook wb = new Workbook();
+                    Worksheet worksheet = wb.Worksheets[0];
+                    string[] days = new string[5] { "Понедельник", "Вторник", "Среда", "Четверг", "Пятница" };
+                    worksheet.Cells.Merge(1, 1, 1, 4);
+                    worksheet.Cells.Merge(1, 5, 1, 4);
+                    worksheet.Cells[1, 1].PutValue("1 смена");
+                    worksheet.Cells[1, 5].PutValue("2 смена");
+                    Style style = wb.CreateStyle();
+                    style.HorizontalAlignment = TextAlignmentType.Center;
+                    style.Font.IsBold = true;
+                    Style daysStyle = wb.CreateStyle();
+                    daysStyle.VerticalAlignment = TextAlignmentType.Center;
+                    daysStyle.Font.IsBold = true;
+                    Style scheduleStyle = wb.CreateStyle();
+                    scheduleStyle.VerticalAlignment = TextAlignmentType.Center;
+                    scheduleStyle.HorizontalAlignment = TextAlignmentType.Center;
+                    scheduleStyle.IsTextWrapped = true;
+                    worksheet.Cells[1, 1].SetStyle(style);
+                    worksheet.Cells[1, 5].SetStyle(style);
+                    worksheet.Cells.SetColumnWidth(0, 13.0);
+                    for (int i = 1; i < 5; i++)
+                    {
+                        worksheet.Cells[2, i].PutValue(i);
+                        worksheet.Cells[2, i].SetStyle(style);
+                        worksheet.Cells[2, i + 4].PutValue(i);
+                        worksheet.Cells[2, i + 4].SetStyle(style);
+                    }
+                    for(int i = 0; i < 10; i+=2)
+                    {
+                        worksheet.Cells.InsertRow(i + 4);
+                        worksheet.Cells.Merge(i + 3, 0, 2, 1);
+                        worksheet.Cells[i + 3, 0].PutValue(days[i / 2]);
+                        worksheet.Cells.SetRowHeight(i + 3, 35.0);
+                        worksheet.Cells.SetRowHeight(i + 4, 35.0);
+                        worksheet.Cells[i + 3, 0].SetStyle(daysStyle);
+                    }
+                    for (int i = 1; i < 11; i += 2)
+                    {
+                        int lessonNumber = 1;
+                        var teachersSchedule = await db.TeachersSchedules
+                            .Include(t => t.ScheduleDenominator)
+                            .Include(t => t.ScheduleDenominator.SubjectDenominator)
+                            .Include(t => t.ScheduleDenominator.SubjectNumerator)
+                            .Include(t => t.ScheduleDenominator.Group)
+                            .Include(t => t.ScheduleNumerator.SubjectDenominator)
+                            .Include(t => t.ScheduleNumerator.SubjectNumerator)
+                            .Include(t => t.ScheduleNumerator.Group)
+                            .Where(t => t.TeacherId == teacher.Id && (t.DayOfTheWeek == ((i + 1) / 2)) && t.Shift == 1)
+                            .OrderBy(t => t.DayOfTheWeek)
+                            .OrderBy(t => t.SubjectNumber)
+                            .ToListAsync();
+                        foreach (var item in teachersSchedule)
+                        {
+                            Console.WriteLine(item.TeacherId);
+                            worksheet.Cells.SetColumnWidth(lessonNumber, 30.0);
+                            worksheet.Cells[i + 2, lessonNumber].SetStyle(scheduleStyle);
+                            worksheet.Cells[i + 3, lessonNumber].SetStyle(scheduleStyle);
+                            if (item.ScheduleNumeratorId != null)
+                            {
+                                worksheet.Cells[i + 2, lessonNumber].PutValue(item.ScheduleDenominator?.SubjectDenominator?.SubjectName + "\n" + item.ScheduleDenominator?.Group?.GroupName + "\n" + item.ScheduleDenominator?.RoomDenominator);
+                                worksheet.Cells[i + 3, lessonNumber].PutValue(item.ScheduleNumerator?.SubjectNumerator?.SubjectName + "\n" + item.ScheduleNumerator?.Group?.GroupName + "\n" + item.ScheduleNumerator?.RoomNumerator);
+                            }
+                            else
+                            {
+                                worksheet.Cells.Merge(i + 2, lessonNumber, 2, 1);
+                                worksheet.Cells[i + 2, lessonNumber].PutValue(item.ScheduleDenominator?.SubjectDenominator?.SubjectName + "\n" + item.ScheduleDenominator?.Group?.GroupName + "\n" + item.ScheduleDenominator?.RoomDenominator);
+                            }
+                            lessonNumber++;
+                        }
+                    }
+
+                    for (int i = 1; i < 11; i += 2)
+                    {
+                        int lessonNumber = 5;
+                        var teachersSchedule = await db.TeachersSchedules
+                            .Include(t => t.ScheduleDenominator)
+                            .Include(t => t.ScheduleDenominator.SubjectDenominator)
+                            .Include(t => t.ScheduleDenominator.SubjectNumerator)
+                            .Include(t => t.ScheduleDenominator.Group)
+                            .Include(t => t.ScheduleNumerator.SubjectDenominator)
+                            .Include(t => t.ScheduleNumerator.SubjectNumerator)
+                            .Include(t => t.ScheduleNumerator.Group)
+                            .Where(t => t.TeacherId == teacher.Id && (t.DayOfTheWeek == ((i + 1) / 2)) && t.Shift == 2)
+                            .OrderBy(t => t.DayOfTheWeek)
+                            .OrderBy(t => t.SubjectNumber)
+                            .ToListAsync();
+                        foreach (var item in teachersSchedule)
+                        {
+                            Console.WriteLine(item.TeacherId);
+                            worksheet.Cells.SetColumnWidth(lessonNumber, 30.0);
+                            worksheet.Cells[i + 2, lessonNumber].SetStyle(scheduleStyle);
+                            worksheet.Cells[i + 3, lessonNumber].SetStyle(scheduleStyle);
+                            if (item.ScheduleNumeratorId != null)
+                            {
+                                worksheet.Cells[i + 2, lessonNumber].PutValue(item.ScheduleDenominator?.SubjectDenominator?.SubjectName + "\n" + item.ScheduleDenominator?.Group?.GroupName + "\n" + item.ScheduleDenominator?.RoomDenominator);
+                                worksheet.Cells[i + 3, lessonNumber].PutValue(item.ScheduleNumerator?.SubjectNumerator?.SubjectName + "\n" + item.ScheduleNumerator?.Group?.GroupName + "\n" + item.ScheduleNumerator?.RoomNumerator);
+                            }
+                            else
+                            {
+                                worksheet.Cells.Merge(i + 2, lessonNumber, 2, 1);
+                                worksheet.Cells[i + 2, lessonNumber].PutValue(item.ScheduleDenominator?.SubjectDenominator?.SubjectName + "\n" + item.ScheduleDenominator?.Group?.GroupName + "\n" + item.ScheduleDenominator?.RoomDenominator);
+                            }
+                            lessonNumber++;
+                        }
+                    }
+                    string path = app.WebRootPath + "/ExcelFiles/" + teacher.teacherFullName + ".xlsx";
+                    wb.Save(path, SaveFormat.Xlsx);
+                    byte[] fileBytes = System.IO.File.ReadAllBytes(path);
+                    return File(fileBytes, "application/x-msdownload", teacher.teacherFullName + ".xlsx"); 
+                } else
+                {
+                    return Json("unsuccessfull");
+                }
+            } else
+            {
+                return Json("unsuccessfull");
+            }
+        }
 
 
 

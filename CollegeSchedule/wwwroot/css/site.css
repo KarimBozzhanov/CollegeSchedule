@@ -230,9 +230,17 @@
     margin-left: 20px;
 }
 
-.pass_info {
+.back_to_teachers_list {
+    display: inline-block;
+    color: #4794C6;
+    font-size: 30px;
+    margin-left: 20px;
+}
+
+.teachers_footer {
+    text-align: right;
     float: right;
-    margin-right: 50px;
+    margin-right: 20px;
 }
 
 .change_pass {
@@ -240,6 +248,7 @@
     border: none;
     color: #4794C6;
     padding: 0px;
+    font-weight: 700;
 }
 
 .group_list {
@@ -646,10 +655,14 @@ th {
 }
 
 .add_numerator {
-    background: linear-gradient(87.77deg, #4794C5 1.87%, #90BAD3 110.82%);
+    background-color: #4794C5;
     border: none;
     padding: 5px 10px;
     border-radius: 5px;
+}
+
+.add_numerator i {
+    color: #FAFAFA;
 }
 
 .delimiter_denominator {
@@ -867,7 +880,11 @@ th {
 }
 
 .search_block {
-    margin-top: 20px;
+    padding-top: 20px;
+}
+
+.search_block div {
+    display: inline-block;
 }
 
 .examOrConsultation {
@@ -1005,4 +1022,26 @@ th {
 
 .subjects_btn:hover {
     color: #FAFAFA;
+}
+
+
+.import_btn {
+    padding: 5px 15px;
+    border-radius: 5px;
+    background: linear-gradient(92.42deg, #367AA5 0%, #4794C6 100%);
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    margin-left: 30px;
+}
+
+
+.import_btn:hover {
+    color: white;
+}
+
+.export_btn {
+    text-decoration: none;
+    color: #47A76A;
+    font-weight: 700;
 }

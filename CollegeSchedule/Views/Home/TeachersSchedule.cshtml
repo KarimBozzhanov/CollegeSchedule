@@ -15,13 +15,12 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - CollegeSchedule</title>
+    <title>@ViewData["teacherName"]</title>
     <link rel="stylesheet" href="~/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-
     <h3 class="shift">1 смена</h3>
 
     <table class="schedule_table">
@@ -174,12 +173,16 @@
 
 
     <div class="footer">
-        <div class="back_to_list">
+        <div class="back_to_teachers_list">
             <a class="back_btn" asp-action="TeachersList" asp-controller="Home"><i class="fa-solid fa-chevron-left"></i></a>
         </div>
-        <div class="pass_info">
-            <p class="password" id="currentTeacherPass">@ViewBag.Pass</p>
-            <button class="change_pass" data-bs-toggle="modal" data-bs-target="#changePassword" onclick="getTeacherInfo(@ViewBag.teacherId)">Изменить пароль</button>
+        <div class="teachers_footer">
+            <div>
+                <button class="change_pass" data-bs-toggle="modal" data-bs-target="#changePassword" onclick="getTeacherInfo(@ViewBag.teacherId)">Изменить пароль</button>
+            </div>
+            <div>
+                <a class="export_btn" asp-action="ExportTeacherSchedule" asp-route-teacherId="@ViewData["teacherId"]">Экспорт</a>
+            </div>
         </div>
     </div>
 

@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - CollegeSchedule</title>
+    <title>@ViewData["groupName"]</title>
     <link rel="stylesheet" href="~/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -43,7 +43,7 @@
     </div>
     <div>
         <table class="exam_table">
-            @if (ViewBag.examsCount != 0)
+            @if (ViewBag.consultationsCount != 0)
             {
                 <tr>
                     <th class="number">№</th>
@@ -62,7 +62,24 @@
                     <th><input class="schedule_input" type="text" onchange="editConsultationDate(@item.Id, this.value)" autocomplete="off" value="@item.Date" /></th>
                     <th><input class="schedule_input" type="text" onchange="editConsultationTime(@item.Id, this.value)" autocomplete="off" value="@item.Time" /></th>
                     <th><input class="schedule_input" type="text" onchange="editConsultationRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
-                    <th class="subject_name"><input class="schedule_input" type="text" onchange="editConsultationSubject(@item.Id, this.value)" autocomplete="off" value="@item.Subject" /></th>
+                    <th class="subject_name">
+                        <div class="schedule_input_block">
+                            @if (item.ConsultationSubjectId != null)
+                            {
+                                <input class="schedule_input" value="@item.ConsultationSubject?.SubjectName" list="subjects_list" onchange="editConsultationSubject(@item.Id, this.value)" />
+                            }
+                            else
+                            {
+                                <input class="schedule_input" list="subjects_list" onchange="editConsultationSubject(@item.Id, this.value)" />
+                            }
+                            <datalist class="subjects_list" id="subjects_list">
+                                @foreach (var subject in Model.Subjects)
+                                {
+                                    <option class="list_options">@subject.SubjectName</option>
+                                }
+                            </datalist>
+                        </div>
+                    </th>
                     <th class="exam_teacher">
                         @if (item.TeacherId != null)
                         {
@@ -116,7 +133,24 @@
                     <th><input class="schedule_input" type="text" onchange="editExamDate(@item.Id, this.value)" autocomplete="off" value="@item.Date" /></th>
                     <th><input class="schedule_input" type="text" onchange="editExamTime(@item.Id, this.value)" autocomplete="off" value="@item.Time" /></th>
                     <th><input class="schedule_input" type="text" onchange="editExamRoom(@item.Id, this.value)" autocomplete="off" value="@item.Room" /></th>
-                    <th class="subject_name"><input class="schedule_input" type="text" onchange="editExamName(@item.Id, this.value)" autocomplete="off" value="@item.ExamName" /></th>
+                    <th class="subject_name">
+                        <div class="schedule_input_block">
+                            @if (item.ExamSubjectId != null)
+                            {
+                                <input class="schedule_input" value="@item.ExamSubject?.SubjectName" list="subjects_list" onchange="editExamSubject(@item.Id, this.value)" />
+                            }
+                            else
+                            {
+                                <input class="schedule_input" list="subjects_list" onchange="editExamSubject(@item.Id, this.value)" />
+                            }
+                            <datalist class="subjects_list" id="subjects_list">
+                                @foreach (var subject in Model.Subjects)
+                                {
+                                    <option class="list_options">@subject.SubjectName</option>
+                                }
+                            </datalist>
+                        </div>
+                    </th>
                     <th class="exam_teacher">
                         @if (item.TeacherId != null)
                         {
@@ -203,12 +237,12 @@
         });
     }
 
-    function editExamName(examId, examName) {
+    function editExamSubject(examId, examSubject) {
         $.ajax({
-            url: "/home/EditExamName",
+            url: "/home/EditExamSubject",
             method: "POST",
             dataType: "json",
-            data: { id: examId, name: examName },
+            data: { id: examId, subjectName: examSubject },
             success: function (data) {
                 console.log(data);
             },
@@ -284,7 +318,7 @@
             url: "/home/EditConsultationSubject",
             method: "POST",
             dataType: "json",
-            data: { id: consultationId, subject: consultationSubject },
+            data: { id: consultationId, subjectName: consultationSubject },
             success: function (data) {
                 console.log(data);
             },
