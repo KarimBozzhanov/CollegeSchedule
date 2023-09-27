@@ -24,8 +24,6 @@
         <tr>
             <th class="days">Дни</th>
             <th class="number">№</th>
-            <th class="time">Начало</th>
-            <th class="time">Конец</th>
             <th class="cabinet">Кабинет</th>
             <th class="group">@ViewData["group"]</th>
             <th class="teacher">Преподаватель</th>
@@ -39,8 +37,6 @@
             {
                 <tr id="schedule_row_@item.Id">
                     <th><p class="schedule_th" id="number_item_@item.Id">@item.SubjectNumber</p></th>
-                    <th><p class="schedule_th" id="start_time_@item.Id">@item.StartOfLesson</p></th>
-                    <th><p class="schedule_th" id="end_time_@item.Id">@item.EndOfLesson</p></th>
                     @if (item.RoomNumerator != null)
                     {
                         <th class="main_delimiter">

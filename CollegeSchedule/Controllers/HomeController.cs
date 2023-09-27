@@ -82,17 +82,10 @@ namespace CollegeSchedule.Controllers
             return RedirectToAction("Index");
         }
 
-        public async Task<IActionResult> GroupList(string searchText, int course)
+        public async Task<IActionResult> GroupList(int course)
         {
             ViewData["course"] = course;
-            if (!String.IsNullOrEmpty(searchText))
-            {
-                Console.WriteLine(searchText);
-                return View(await db.Groups.Where(g => g.GroupName.Contains(searchText) && g.GroupCourse == course).OrderBy(g => g.GroupName).ToListAsync());
-            } else
-            {
-                return View(await db.Groups.Where(g => g.GroupCourse == course).OrderBy(g => g.GroupName).ToListAsync());
-            }
+            return View(await db.Groups.Where(g => g.GroupCourse == course).OrderBy(g => g.GroupName).ToListAsync());
         }
 
         [HttpPost]
@@ -116,16 +109,16 @@ namespace CollegeSchedule.Controllers
                                 switch (j)
                                 {
                                     case 1:
-                                        await db.Schedules.AddAsync(new Schedule { DayOfTheWeek = i, SubjectNumber = j, GroupId = group.Id, StartOfLesson = "08:00", EndOfLesson = "09:20" });
+                                        await db.Schedules.AddAsync(new Schedule { DayOfTheWeek = i, SubjectNumber = j, GroupId = group.Id, StartOfLesson = "07:50", EndOfLesson = "09:19" });
                                         break;
                                     case 2:
-                                        await db.Schedules.AddAsync(new Schedule { DayOfTheWeek = i, SubjectNumber = j, GroupId = group.Id, StartOfLesson = "09:30", EndOfLesson = "10:50" });
+                                        await db.Schedules.AddAsync(new Schedule { DayOfTheWeek = i, SubjectNumber = j, GroupId = group.Id, StartOfLesson = "09:20", EndOfLesson = "10:49" });
                                         break;
                                     case 3:
-                                        await db.Schedules.AddAsync(new Schedule { DayOfTheWeek = i, SubjectNumber = j, GroupId = group.Id, StartOfLesson = "11:00", EndOfLesson = "12:20" });
+                                        await db.Schedules.AddAsync(new Schedule { DayOfTheWeek = i, SubjectNumber = j, GroupId = group.Id, StartOfLesson = "10:50", EndOfLesson = "12:19" });
                                         break;
                                     case 4:
-                                        await db.Schedules.AddAsync(new Schedule { DayOfTheWeek = i, SubjectNumber = j, GroupId = group.Id, StartOfLesson = "12:30", EndOfLesson = "13:50" });
+                                        await db.Schedules.AddAsync(new Schedule { DayOfTheWeek = i, SubjectNumber = j, GroupId = group.Id, StartOfLesson = "12:20", EndOfLesson = "13:50" });
                                         break;
                                 }
                             }
@@ -134,16 +127,16 @@ namespace CollegeSchedule.Controllers
                                 switch (j)
                                 {
                                     case 1:
-                                        await db.Schedules.AddAsync(new Schedule { DayOfTheWeek = i, SubjectNumber = j, GroupId = group.Id, StartOfLesson = "13:00", EndOfLesson = "14:20" });
+                                        await db.Schedules.AddAsync(new Schedule { DayOfTheWeek = i, SubjectNumber = j, GroupId = group.Id, StartOfLesson = "12:50", EndOfLesson = "14:19" });
                                         break;
                                     case 2:
-                                        await db.Schedules.AddAsync(new Schedule { DayOfTheWeek = i, SubjectNumber = j, GroupId = group.Id, StartOfLesson = "14:30", EndOfLesson = "15:50" });
+                                        await db.Schedules.AddAsync(new Schedule { DayOfTheWeek = i, SubjectNumber = j, GroupId = group.Id, StartOfLesson = "14:20", EndOfLesson = "15:49" });
                                         break;
                                     case 3:
-                                        await db.Schedules.AddAsync(new Schedule { DayOfTheWeek = i, SubjectNumber = j, GroupId = group.Id, StartOfLesson = "16:00", EndOfLesson = "17:20" });
+                                        await db.Schedules.AddAsync(new Schedule { DayOfTheWeek = i, SubjectNumber = j, GroupId = group.Id, StartOfLesson = "15:50", EndOfLesson = "17:19" });
                                         break;
                                     case 4:
-                                        await db.Schedules.AddAsync(new Schedule { DayOfTheWeek = i, SubjectNumber = j, GroupId = group.Id, StartOfLesson = "17:30", EndOfLesson = "18:50" });
+                                        await db.Schedules.AddAsync(new Schedule { DayOfTheWeek = i, SubjectNumber = j, GroupId = group.Id, StartOfLesson = "17:20", EndOfLesson = "18:50" });
                                         break;
                                 }
                             }
@@ -165,7 +158,7 @@ namespace CollegeSchedule.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> DeleteGroup(int? groupId, int groupCourse)
+        public async Task<JsonResult> DeleteGroup(int? groupId)
         {
             if (groupId != null)
             {
@@ -203,9 +196,9 @@ namespace CollegeSchedule.Controllers
                 Group group = await db.Groups.FirstOrDefaultAsync(g => g.Id == groupId);
                 db.Entry(group).State = EntityState.Deleted;
                 await db.SaveChangesAsync();
-                return RedirectToAction("GroupList", new { course = groupCourse });
+                return Json("Группа удалена");
             }
-            return NotFound();
+            return Json("Не удалось удалить группу");
         }
 
         [HttpGet]

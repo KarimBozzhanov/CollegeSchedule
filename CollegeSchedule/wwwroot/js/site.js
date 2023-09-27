@@ -1,4 +1,19 @@
-﻿function scheduleDropdown() {
+﻿let cords = ['scrollX', 'scrollY'];
+window.addEventListener('unload', e => cords.forEach(cord => localStorage[cord] = window[cord]));
+window.addEventListener('load', e => {
+    if (localStorage[cords[0]]) {
+        window.scroll(...cords.map(cord => localStorage[cord]));
+        cords.forEach(cord => localStorage.removeItem(cord));
+    }
+}); 
+
+
+function clearShiftStatus() {
+    localStorage.setItem("first_shift_btn", JSON.stringify("close"));
+    localStorage.setItem("second_shift_btn", JSON.stringify("close"));
+}
+
+function scheduleDropdown() {
     var schedule = document.getElementById("hidden_main_schedule");
     var schedule_btn = document.getElementById("schedule_btn");
     var practice_btn = document.getElementById("practice_btn");
@@ -52,6 +67,77 @@ function examsScheduleDropdown() {
         exams_schedule_btn.style.color = "#FAFAFA";
         exams_schedule_btn.style.border = "0px";
         teachers_schedule.style.marginTop = "19px";
+    }
+}
+
+function openFirstShift() {
+    var first_shift = document.getElementById("first_shift");
+    var firstShift_btn = document.getElementById("firstShift_btn");
+    if (first_shift.style.display == "none") {
+        first_shift.style.display = "block";
+        firstShift_btn.style.background = "#FAFAFA";
+        firstShift_btn.style.color = "#4794C6";
+        firstShift_btn.style.border = "2px solid #4794C6";
+        localStorage.setItem("first_shift_btn", JSON.stringify("open"));
+        console.log(JSON.parse(localStorage.getItem("first_shift_btn")));
+    } else {
+        first_shift.style.display = "none";
+        firstShift_btn.style.background = "linear-gradient(87.77deg, #367AA5 1.87%, #4794C6 110.82%)";
+        firstShift_btn.style.color = "#FAFAFA";
+        firstShift_btn.style.border = "0px";
+        localStorage.setItem("first_shift_btn", JSON.stringify("close"));
+    }
+}
+
+function openSecondShift() {
+    var second_shift = document.getElementById("second_shift");
+    var secondShift_btn = document.getElementById("secondShift_btn");
+    if (second_shift.style.display == "none") {
+        second_shift.style.display = "block";
+        secondShift_btn.style.background = "#FAFAFA";
+        secondShift_btn.style.color = "#4794C6";
+        secondShift_btn.style.border = "2px solid #4794C6";
+        localStorage.setItem("second_shift_btn", JSON.stringify("open"));
+    } else {
+        second_shift.style.display = "none";
+        secondShift_btn.style.background = "linear-gradient(87.77deg, #367AA5 1.87%, #4794C6 110.82%)";
+        secondShift_btn.style.color = "#FAFAFA";
+        secondShift_btn.style.border = "0px";
+        localStorage.setItem("second_shift_btn", JSON.stringify("close"));
+    }
+}
+
+function checkShiftButtonStatus() {
+    var first_shift = document.getElementById("first_shift");
+    var firstShift_btn = document.getElementById("firstShift_btn");
+    var second_shift = document.getElementById("second_shift");
+    var secondShift_btn = document.getElementById("secondShift_btn");
+    var firstShiftStatus = JSON.parse(localStorage.getItem("first_shift_btn"));
+    var secondShiftStatus = JSON.parse(localStorage.getItem("second_shift_btn"));
+    console.log(firstShiftStatus);
+    console.log(secondShiftStatus);
+    if (firstShiftStatus === "close") {
+        first_shift.style.display = "none";
+        firstShift_btn.style.background = "linear-gradient(87.77deg, #367AA5 1.87%, #4794C6 110.82%)";
+        firstShift_btn.style.color = "#FAFAFA";
+        firstShift_btn.style.border = "0px";
+    } else if (firstShiftStatus === "open") {
+        first_shift.style.display = "block";
+        firstShift_btn.style.background = "#FAFAFA";
+        firstShift_btn.style.color = "#4794C6";
+        firstShift_btn.style.border = "2px solid #4794C6";
+    }
+
+    if (secondShiftStatus === "close") {
+        second_shift.style.display = "none";
+        secondShift_btn.style.background = "linear-gradient(87.77deg, #367AA5 1.87%, #4794C6 110.82%)";
+        secondShift_btn.style.color = "#FAFAFA";
+        secondShift_btn.style.border = "0px";
+    } else if (secondShiftStatus === "open") {
+        second_shift.style.display = "block";
+        secondShift_btn.style.background = "#FAFAFA";
+        secondShift_btn.style.color = "#4794C6";
+        secondShift_btn.style.border = "2px solid #4794C6";
     }
 }
 

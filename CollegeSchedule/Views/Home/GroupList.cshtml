@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
-<body>
+<body onload="checkShiftButtonStatus()">
     
     @if(User.Identity.IsAuthenticated)
     {
@@ -25,6 +25,7 @@
             <div class="modal-content">
                 <div class="mainModal modal-header">
                     <h5 class="modal-title fs-5" id="exampleModalLabel">Добавить группу</h5>
+                    <div id="modal_loader" class="hidden"></div>
                     <button class="close_modal" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark fa-lg" style="color: #e60a0a;"></i></button>
                 </div>
                 <div class="modal-body">
@@ -50,13 +51,14 @@
 
 
     <div class="container"> 
-        <div class="search_block">
-            <form class="search_form" asp-action="GroupList" asp-controller="Home" asp-route-course="@ViewData["course"]">
-                <input class="search_input" type="text" name="searchText" autocomplete="off" placeholder="Поиск" />
-            </form>
+        <div align="center">
+            <button class="shift_schedule_btn" id="firstShift_btn" onclick="openFirstShift()">
+                1 смена
+            </button>
         </div>
-        <div class="group_buttons">
-            @foreach (var group in Model)
+
+        <div class="group_buttons" id="first_shift" style="display: none" align="center">
+            @foreach (var group in Model.Where(g => g.GroupShift == 1))
             {
                 <div class="group_list">
                     <div class="change_group">
@@ -64,18 +66,59 @@
                         {
                             <div class="group_info">
                                 <a class="group_btn" asp-action="EditSchedule" asp-controller="Home" asp-route-groupId="@group.Id">@group.GroupName</a>
+                                <div class="loader_block">
+                                    <div id="card_loader_@group.Id"></div>
+                                </div>
                                 <div class="group_actions">
                                     <a class="edit_group" data-bs-toggle="modal" data-bs-target="#editGroupModal" onclick="getGroupInfo(@group.Id)">
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </a>
-                                    <form class="delete_form" asp-action="DeleteGroup" asp-controller="Home" asp-route-groupId="@group.Id" asp-route-groupCourse="@group.GroupCourse">
-                                        <button class="delete_group">
-                                            <i class="fa-solid fa-square-minus"></i>
-                                        </button>
-                                    </form>
+                                    <button class="delete_group" onclick="deleteGroup(@group.Id)">
+                                        <i class="fa-solid fa-square-minus"></i>
+                                    </button>
                                 </div>
                             </div>
-                        } else
+                        }
+                        else
+                        {
+                            <div class="group_info">
+                                <a class="group_btn" asp-action="ScheduleTable" asp-controller="Home" asp-route-groupId="@group.Id">@group.GroupName</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div align="center">
+            <button class="shift_schedule_btn" id="secondShift_btn" onclick="openSecondShift()">
+                2 смена
+            </button>
+        </div>
+
+        <div class="group_buttons" id="second_shift" style="display: none" align="center">
+            @foreach (var group in Model.Where(g => g.GroupShift == 2))
+            {
+                <div class="group_list">
+                    <div class="change_group">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <div class="group_info">
+                                <a class="group_btn" asp-action="EditSchedule" asp-controller="Home" asp-route-groupId="@group.Id">@group.GroupName</a>
+                                <div class="loader_block">
+                                    <div id="card_loader_@group.Id" class="hidden"></div>
+                                </div>
+                                <div class="group_actions">
+                                    <a class="edit_group" data-bs-toggle="modal" data-bs-target="#editGroupModal" onclick="getGroupInfo(@group.Id)">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </a>
+                                    <button class="delete_group" onclick="deleteGroup(@group.Id)">
+                                        <i class="fa-solid fa-square-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        }
+                        else
                         {
                             <div class="group_info">
                                 <a class="group_btn" asp-action="ScheduleTable" asp-controller="Home" asp-route-groupId="@group.Id">@group.GroupName</a>
@@ -120,6 +163,8 @@
         <a class="back_btn" asp-action="Index" asp-controller="Home"><i class="fa-solid fa-chevron-left"></i></a>
     </div>
 
+    
+
 
     <script src="~/js/bootstrap.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
@@ -130,6 +175,7 @@
 </html>
 
 <script type="text/javascript">
+
     function getGroupInfo(id) {
         $.ajax({
             url: "/home/getGroupInfo/" + id,
@@ -158,12 +204,14 @@
         console.log(groupName + " " + groupShift + " " + groupCourse);
         console.log(groupCourse);
         if(groupName != "" && groupShift != 0 && groupCourse != 0 && (groupShift == 1 || groupShift == 2)) {
+            document.getElementById("modal_loader").classList.remove("hidden");
             $.ajax({
                 url: "/home/CreateGroup",
                 method: "POST",
                 dataType: "json",
                 data: { groupName: groupName, groupCourse: groupCourse, groupShift: groupShift },
                 success: function (data) {
+                    document.getElementById("modal_loader").classList.add("hidden");
                     if (data === "Группа сохранена") {
                         window.location.reload();
                     } else if (data === "Группа с таким именем уже создана") {
@@ -174,6 +222,7 @@
                     console.log(data);
                 },
                 error: function (err) {
+                    document.getElementById("modal_loader").classList.add("hidden");
                     console.log(err);
                 }
             });
@@ -190,10 +239,35 @@
         }
     }
 
+    function deleteGroup(id) {
+        var groupCard = "card_loader_" + id;
+        console.log(groupCard);
+        document.getElementById(groupCard).style.display = "block";
+        $.ajax({
+            url: "/home/DeleteGroup",
+            method: "POST",
+            dataType: "json",
+            data: { groupId: id },
+            success: function (data) {
+                //document.getElementById("card_loader_" + id).classList.add("hidden");
+                if (data === "Группа удалена") {
+                    //window.location.reload();
+                }
+                console.log(data);
+            },
+            error: function (err) {
+                document.getElementById("card_loader_" + id).classList.add("hidden");
+                console.log(err);
+            }
+        });
+    }
+
 
     function textMessage(message) {
         $("#createGroup_error").css("margin-left", 10);
         $("#createGroup_error").css("margin-bottom", 10);
         $("#createGroup_error").text(message);
     }
+
+
 </script>
